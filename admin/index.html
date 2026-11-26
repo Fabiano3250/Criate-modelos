@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Painel de controle · Criate</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22white%22/%3E%3Ccircle cx=%2213.6%22 cy=%229.6%22 r=%224%22 fill=%22%23E63946%22/%3E%3Ccircle cx=%2221.3%22 cy=%2217.6%22 r=%223.6%22 fill=%22%23FFC21A%22/%3E%3Ccircle cx=%2212.5%22 cy=%2222.9%22 r=%224.3%22 fill=%22%231F6FEB%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;--bg:#F6F6F9;--card:#fff;--card2:#F0F0F5;--line:#E5E5EC;--ink:#14141A;--mut:#6C6C7D;--blu:#1F6FEB;--red:#E63946;--yel:#FFC21A;--ok:#14A35A}
+@media(prefers-color-scheme:dark){:root{--bg:#0F0F14;--card:#1A1A22;--card2:#24242E;--line:#2E2E3A;--ink:#F1F1F6;--mut:#9A9AAD}}
+*{box-sizing:border-box;min-width:0}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.5 Inter,system-ui,sans-serif}
+h1,h2{font-family:Montserrat,Inter,sans-serif;letter-spacing:-.01em;margin:0}
+h1{font-size:22px;font-weight:800}h2{font-size:17px;font-weight:800}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px 120px}
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 16px}
+.dots{width:22px;height:26px;flex:none}.sp{flex:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:14px}
+.card>p{margin:4px 0 0;color:var(--mut);font-size:14px}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+.dica{font-weight:500;color:var(--mut);font-size:13px}
+input,textarea{font:16px Inter,sans-serif;width:100%;min-height:48px;padding:11px 13px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);outline:none}
+textarea{min-height:92px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--blu);box-shadow:0 0 0 3px rgba(31,111,235,.15)}
+input[type=color]{width:58px;min-height:48px;padding:4px}
+input[type=checkbox]{width:22px;min-height:22px;height:22px;accent-color:var(--blu)}
+button,.btn{font:700 15px Inter,sans-serif;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;min-height:46px;padding:0 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+button:disabled{opacity:.45;cursor:default}
+.btn,button{white-space:nowrap}
+.pri{background:var(--blu);border-color:var(--blu);color:#fff}
+.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.mini{min-height:38px;font-size:14px;padding:0 12px}
+.del{color:var(--red)}
+.item{border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:12px;background:var(--bg)}
+.item .row{display:flex;gap:8px;align-items:center}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;gap:10px;align-items:center;margin-top:12px;font-weight:600}
+.msg{margin-top:14px;border-radius:12px;padding:10px 12px;font-weight:600;font-size:14.5px}
+.msg.erro{background:#FDECEE;color:#A61E2A}.msg.bom{background:#E9F8F0;color:#0E7A43}
+.foot{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 16px max(10px,env(safe-area-inset-bottom));z-index:6}
+.foot .in{max-width:640px;margin:0 auto;display:flex;gap:8px;align-items:center}.foot button{flex:1}
+#st{font-size:13px;color:var(--mut);font-weight:600;text-align:center;flex:1.2}
+.login{max-width:400px;margin:8vh auto 0;padding:0 18px}
+.nav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:12px 0 0}.nav::-webkit-scrollbar{display:none}
+.nav a{flex:none;font-size:14px;font-weight:700;color:var(--ink);text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:7px 12px}
+@media(max-width:420px){.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="26 18 72 86"><circle cx="51" cy="36" r="15" fill="#E63946"/><circle cx="80" cy="66" r="13.5" fill="#FFC21A"/><circle cx="47" cy="86" r="16" fill="#1F6FEB"/></symbol></svg>
+
+<!-- entrar -->
+<main class="login" id="telaLogin">
+  <div style="display:flex;align-items:center;gap:10px;justify-content:center"><svg class="dots" style="width:30px;height:36px"><use href="#lg"/></svg><h1>Painel de controle</h1></div>
+  <p style="text-align:center;color:var(--mut);margin:8px 0 18px">Edite o seu portfólio. Entre com o mesmo usuário e senha da Criate Academy.</p>
+  <form class="card" id="fLogin" novalidate>
+    <label for="u">Usuário</label><input id="u" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="20">
+    <label for="p">Senha</label><input id="p" type="password" autocomplete="current-password" maxlength="72">
+    <button class="pri" style="width:100%;margin-top:18px" id="bEntrar">Entrar</button>
+    <div class="msg erro" id="mLogin" hidden></div>
+  </form>
+</main>
+
+<!-- painel -->
+<div id="telaPainel" hidden>
+  <div class="top"><div class="in"><svg class="dots"><use href="#lg"/></svg><h1 style="font-size:18px;white-space:nowrap">Painel</h1><span class="sp"></span><a class="btn mini" href="/" target="_blank" rel="noopener">Ver site ↗</a><button class="mini" id="bSair">Sair</button></div></div>
+  <main class="wrap" id="form">
+    <div class="nav"><a href="#c-contato">Contato</a><a href="#c-topo">Topo</a><a href="#c-serv">Serviços</a><a href="#c-trab">Trabalhos</a><a href="#c-inc">Incluso</a><a href="#c-final">Final</a></div>
+
+    <section class="card" id="c-contato"><h2>📱 Contato</h2><p>Com o WhatsApp preenchido, os botões verdes aparecem no site.</p>
+      <label for="whats">Seu WhatsApp <span class="dica">(com DDD)</span></label><input id="whats" data-k="whats" inputmode="tel" placeholder="49 99999-9999">
+      <label for="msgWa">Mensagem que o cliente manda <span class="dica">(já vem escrita)</span></label><textarea id="msgWa" data-k="msgWa"></textarea>
+      <label for="insta">Instagram <span class="dica">(opcional, ex.: @criatesolutions)</span></label><input id="insta" data-k="insta" autocapitalize="none">
+      <div class="two"><div><label for="nome">Seu nome</label><input id="nome" data-k="nome"></div><div><label for="empresa">Empresa</label><input id="empresa" data-k="empresa"></div></div>
+    </section>
+
+    <section class="card" id="c-topo"><h2>🏠 Topo do site</h2>
+      <label for="titulo">Título principal</label><textarea id="titulo" data-k="titulo" style="min-height:70px"></textarea>
+      <label for="destaque">Palavras em destaque <span class="dica">(ficam coloridas; precisam estar no título)</span></label><input id="destaque" data-k="destaque">
+      <label for="sub">Texto abaixo do título</label><textarea id="sub" data-k="sub"></textarea>
+    </section>
+
+    <section class="card" id="c-serv"><h2>🧩 O que a Criate faz</h2>
+      <label for="servTit">Título da seção</label><input id="servTit" data-k="servTit">
+      <label for="servSub">Frase da seção</label><input id="servSub" data-k="servSub">
+      <div id="lServ"></div>
+      <button class="mini" id="addServ" style="margin-top:12px">+ Serviço</button>
+    </section>
+
+    <section class="card" id="c-trab"><h2>🖼️ Trabalhos</h2><p>Coloque só sites de clientes que autorizaram aparecer aqui. Marque "Modelo" pra clínicas fictícias.</p>
+      <div id="lTrab"></div>
+      <button class="mini" id="addTrab" style="margin-top:12px">+ Trabalho</button>
+    </section>
+
+    <section class="card" id="c-inc"><h2>✅ O que está incluso</h2>
+      <label for="inclui">Um item por linha</label><textarea id="inclui" style="min-height:160px"></textarea>
+    </section>
+
+    <section class="card" id="c-final"><h2>📣 Chamada final</h2>
+      <label for="finalTit">Título</label><input id="finalTit" data-k="finalTit">
+      <label for="finalSub">Texto</label><textarea id="finalSub" data-k="finalSub"></textarea>
+    </section>
+    <div class="msg erro" id="mErro" hidden></div>
+  </main>
+  <div class="foot"><div class="in"><span id="st">Tudo salvo</span><button class="pri" id="bSalvar" disabled>Salvar</button></div></div>
+</div>
+
+<script>
+(()=>{
+'use strict';
+const SB='https://ozdvjnqdkhzhegdnebso.supabase.co',KEY='sb_publishable_t3hCFgwJh0IFrNi9fDd2bQ_MPHhwihB',DOM='@criateacademy.app',K='criate-admin-sessao';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let ses=null,D=null,sujo=false;
+
+/* ---------- sessão ---------- */
+function guardar(j){ses={a:j.access_token,r:j.refresh_token,exp:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600)};try{sessionStorage.setItem(K,JSON.stringify(ses))}catch(e){}}
+async function auth(path,body){const r=await fetch(SB+'/auth/v1/'+path,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});let j={};try{j=await r.json()}catch(e){}return{ok:r.ok,status:r.status,j}}
+async function token(){if(!ses)return null;if(ses.exp-Date.now()/1000<90){const r=await auth('token?grant_type=refresh_token',{refresh_token:ses.r});if(r.ok&&r.j.access_token)guardar(r.j);else{sair('Sua sessão expirou. Entre de novo.');return null}}return ses.a}
+function sair(txt){ses=null;try{sessionStorage.removeItem(K)}catch(e){}$('telaPainel').hidden=true;$('telaLogin').hidden=false;$('p').value='';if(txt){$('mLogin').textContent=txt;$('mLogin').hidden=false}}
+
+/* ---------- dados ---------- */
+async function api(method,body){
+  const t=await token();if(!t)throw{status:401};
+  const h={apikey:KEY,Authorization:'Bearer '+t,'Content-Type':'application/json'};if(method==='PATCH')h.Prefer='return=representation';
+  const r=await fetch(SB+'/rest/v1/portfolio?id=eq.principal'+(method==='GET'?'&select=dados,dono':''),{method,headers:h,body:body?JSON.stringify(body):undefined});
+  if(!r.ok)throw{status:r.status};return r.json();
+}
+async function padrao(){/* textos que estão hoje no site, pra começar */
+  try{const t=await (await fetch('/',{cache:'no-cache'})).text();const m=t.match(/<script id="data" type="application\/json">([\s\S]*?)<\/script>/);return m?JSON.parse(m[1]):{}}catch(e){return {}}
+}
+async function carregar(){
+  $('mErro').hidden=true;
+  let linhas;try{linhas=await api('GET')}catch(e){return erro(e)}
+  if(!linhas.length){$('mErro').textContent='Ainda falta criar a área do portfólio no Supabase (o código SQL que te mandei). Depois disso, é só entrar de novo.';$('mErro').hidden=false;$('bSalvar').disabled=true;return}
+  const base=await padrao(),x=linhas[0].dados||{};
+  D={...base,...x};D.servicos=Array.isArray(D.servicos)?D.servicos:[];D.works=Array.isArray(D.works)?D.works:[];D.inclui=Array.isArray(D.inclui)?D.inclui:[];
+  preencher();marcar(false);
+}
+function erro(e){
+  const s=e&&e.status;
+  $('mErro').textContent=s===404?'A tabela do portfólio ainda não existe no Supabase. Rode o código SQL que te mandei e tente de novo.':s===401||s===403?'Sem permissão. Entre de novo.':'Não consegui falar com o servidor. Confira a internet e tente de novo.';
+  $('mErro').hidden=false;
+}
+
+/* ---------- formulário ---------- */
+function preencher(){
+  document.querySelectorAll('[data-k]').forEach(el=>{el.value=D[el.dataset.k]??''});
+  $('inclui').value=(D.inclui||[]).join('\n');
+  listas();
+}
+function listas(){
+  $('lServ').innerHTML=D.servicos.map((v,i)=>`<div class="item"><div class="row"><b style="flex:1">Serviço ${i+1}${i===0?' <span class="dica">(cartão escuro, em destaque)</span>':''}</b>${i>0?`<button class="mini" data-up="s${i}" aria-label="Subir">↑</button>`:''}<button class="mini del" data-rm="s${i}">Remover</button></div>
+    <label>Nome</label><input data-s="${i}" data-f="t" value="${esc(v.t)}">
+    <label>Descrição</label><textarea data-s="${i}" data-f="d">${esc(v.d)}</textarea>
+    <label>Etiqueta <span class="dica">(opcional, ex.: Principal)</span></label><input data-s="${i}" data-f="tag" value="${esc(v.tag)}"></div>`).join('');
+  $('lTrab').innerHTML=D.works.map((w,i)=>`<div class="item"><div class="row"><b style="flex:1">${esc(w.nome||'Trabalho '+(i+1))}</b>${i>0?`<button class="mini" data-up="w${i}" aria-label="Subir">↑</button>`:''}<button class="mini del" data-rm="w${i}">Remover</button></div>
+    <div class="two"><div><label>Nome</label><input data-w="${i}" data-f="nome" value="${esc(w.nome)}"></div><div><label>Área</label><input data-w="${i}" data-f="area" value="${esc(w.area)}" placeholder="Odontologia"></div></div>
+    <div class="two"><div><label>Cidade</label><input data-w="${i}" data-f="cidade" value="${esc(w.cidade)}"></div><div><label>Cor principal</label><input type="color" data-w="${i}" data-f="cor" value="${esc(/^#[0-9a-fA-F]{6}$/.test(w.cor||'')?w.cor:'#1F6FEB')}"></div></div>
+    <label>Link do site <span class="dica">(começa com https://)</span></label><input type="url" data-w="${i}" data-f="link" value="${esc(w.link)}" placeholder="https://…">
+    <label class="chk"><input type="checkbox" data-w="${i}" data-f="modelo" ${w.modelo?'checked':''}> É um modelo (clínica fictícia)</label></div>`).join('');
+}
+function marcar(s){sujo=s;$('bSalvar').disabled=!s;$('st').textContent=s?'Alterações não salvas':'Tudo salvo ✓'}
+document.addEventListener('input',e=>{
+  if(!D)return;const t=e.target,d=t.dataset;
+  if(d.k)D[d.k]=t.value;
+  else if(t.id==='inclui')D.inclui=t.value.split('\n').map(x=>x.trim()).filter(Boolean);
+  else if(d.s!==undefined)D.servicos[+d.s][d.f]=t.value;
+  else if(d.w!==undefined)D.works[+d.w][d.f]=t.type==='checkbox'?t.checked:t.value;
+  else return;
+  marcar(true);
+});
+document.addEventListener('change',e=>{if(e.target.type==='checkbox'&&e.target.dataset.w!==undefined){D.works[+e.target.dataset.w].modelo=e.target.checked;marcar(true)}});
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b||!D&&b.id!=='bEntrar'&&b.id!=='bSair')return;
+  if(b.id==='addServ'){D.servicos.push({t:'Novo serviço',d:'',tag:''});listas();marcar(true)}
+  if(b.id==='addTrab'){D.works.push({nome:'Nova clínica',area:'Odontologia',cidade:'',link:'',cor:'#1F6FEB',modelo:false});listas();marcar(true)}
+  if(b.dataset.rm){const k=b.dataset.rm[0],i=+b.dataset.rm.slice(1),arr=k==='s'?D.servicos:D.works;const nome=(k==='s'?arr[i].t:arr[i].nome)||'este item';if(confirm('Remover "'+nome+'"?')){arr.splice(i,1);listas();marcar(true)}}
+  if(b.dataset.up){const k=b.dataset.up[0],i=+b.dataset.up.slice(1),arr=k==='s'?D.servicos:D.works;[arr[i-1],arr[i]]=[arr[i],arr[i-1]];listas();marcar(true)}
+  if(b.id==='bSalvar')salvar();
+  if(b.id==='bSair'){if(sujo&&!confirm('Sair sem salvar as alterações?'))return;sair()}
+});
+function validar(){
+  const ruins=D.works.filter(w=>w.link&&!/^https:\/\//.test(w.link));
+  if(ruins.length)return 'O link de "'+(ruins[0].nome||'um trabalho')+'" precisa começar com https://';
+  const n=String(D.whats||'').replace(/\D/g,'');if(n&&!(n.length===10||n.length===11||((n.length===12||n.length===13)&&n.startsWith('55'))))return 'O WhatsApp parece incompleto. Use DDD + número, ex.: 49 99999-9999';
+  return '';
+}
+async function salvar(){
+  const v=validar();if(v){$('mErro').textContent=v;$('mErro').hidden=false;return}
+  $('mErro').hidden=true;$('bSalvar').disabled=true;$('st').textContent='Salvando…';
+  const limpo={};for(const k of['empresa','nome','whats','msgWa','insta','titulo','destaque','sub','servTit','servSub','finalTit','finalSub'])limpo[k]=String(D[k]??'').slice(0,600);
+  limpo.inclui=D.inclui.slice(0,20).map(x=>String(x).slice(0,140));
+  limpo.servicos=D.servicos.slice(0,6).map(s=>({t:String(s.t||'').slice(0,80),d:String(s.d||'').slice(0,300),tag:String(s.tag||'').slice(0,24)}));
+  limpo.works=D.works.slice(0,30).map(w=>({nome:String(w.nome||'').slice(0,80),area:String(w.area||'').slice(0,60),cidade:String(w.cidade||'').slice(0,60),link:String(w.link||'').slice(0,300),cor:/^#[0-9a-fA-F]{6}$/.test(w.cor||'')?w.cor:'#1F6FEB',modelo:!!w.modelo}));
+  try{const r=await api('PATCH',{dados:limpo,atualizado:new Date().toISOString()});
+    if(!r.length){$('mErro').textContent='Essa conta não tem permissão pra editar o portfólio.';$('mErro').hidden=false;$('st').textContent='Não salvo';$('bSalvar').disabled=false;return}
+    marcar(false);$('st').textContent='Salvo ✓ já está no site';
+  }catch(e){erro(e);$('st').textContent='Não salvo';$('bSalvar').disabled=false}
+}
+addEventListener('beforeunload',e=>{if(sujo){e.preventDefault();e.returnValue=''}});
+
+/* ---------- entrar ---------- */
+$('fLogin').addEventListener('submit',async ev=>{
+  ev.preventDefault();const u=$('u').value.trim().toLowerCase(),p=$('p').value;
+  if(!/^[a-z0-9_]{3,20}$/.test(u)||p.length<8){$('mLogin').textContent='Confira o usuário e a senha.';$('mLogin').hidden=false;return}
+  $('bEntrar').disabled=true;$('bEntrar').textContent='Entrando…';
+  try{const r=await auth('token?grant_type=password',{email:u+DOM,password:p});
+    if(r.ok&&r.j.access_token){guardar(r.j);$('mLogin').hidden=true;abrir()}
+    else{$('mLogin').textContent=r.status===429?'Muitas tentativas. Espere um pouco.':'Usuário ou senha incorretos.';$('mLogin').hidden=false}
+  }catch(e){$('mLogin').textContent='Sem conexão. Confira a internet.';$('mLogin').hidden=false}
+  $('bEntrar').disabled=false;$('bEntrar').textContent='Entrar';
+});
+function abrir(){$('telaLogin').hidden=true;$('telaPainel').hidden=false;carregar()}
+try{ses=JSON.parse(sessionStorage.getItem(K)||'null')}catch(e){}
+if(ses&&ses.a)abrir();else $('u').focus();
+})();
+</script>
+</body>
+</html>
