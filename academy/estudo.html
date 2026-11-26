@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Estudar · Criate Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#F6F6F9;--card:#fff;--card2:#F0F0F5;--line:#E5E5EC;--ink:#14141A;--mut:#6C6C7D;--blu:#1F6FEB;--red:#E63946;--yel:#FFC21A;--ok:#14A35A}
+*{box-sizing:border-box;min-width:0}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.55 Inter,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,.big{font-family:Montserrat,Inter,sans-serif;letter-spacing:-.01em;margin:0}
+h1{font-size:26px;font-weight:800}h2{font-size:19px;font-weight:800;margin:26px 0 10px}h3{font-size:16.5px;font-weight:700}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 120px}
+.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .in{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 16px}
+.top a{color:var(--ink);text-decoration:none;font-weight:700;display:flex;align-items:center;gap:6px;min-height:40px}
+.top .sp{flex:1}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:12px 0 2px}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none}
+button,.btn{font:700 15px Inter,sans-serif;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;min-height:46px;padding:0 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.pri{background:var(--blu);border-color:var(--blu);color:#fff}
+button.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+button:disabled{opacity:.45}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(20,20,40,.04)}
+.hero{background:var(--ink);color:#fff;border-radius:22px;padding:20px;position:relative;overflow:hidden;margin-top:14px}
+.hero p{color:#c9c9d6;margin:6px 0 14px}
+.hero .dots{position:absolute;right:14px;top:14px;width:46px;height:54px;opacity:.95}
+.big{font-size:40px;font-weight:800;line-height:1}
+.mut{color:var(--mut)}.small{font-size:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.k{background:var(--card2);border-radius:16px;padding:12px}.k b{font:800 22px Montserrat,sans-serif;display:block}
+.bar{height:10px;border-radius:99px;background:var(--card2);overflow:hidden}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--blu),#5B8DFF);border-radius:99px}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:#14141A;color:#f1f1f6;border-radius:14px;padding:12px 14px;overflow-x:auto;font-size:14px;line-height:1.5;margin:10px 0 0;white-space:pre-wrap;word-break:break-word}
+code{background:var(--card2);border-radius:6px;padding:1px 6px;font-size:.92em}
+pre code{background:none;padding:0}
+.q{font:700 19px/1.3 Montserrat,sans-serif;margin:6px 0 14px}
+.opts{display:grid;gap:8px}
+.opts button{justify-content:flex-start;text-align:left;min-height:54px;font-weight:600;padding:10px 14px;border-width:2px}
+.opts button.sel{border-color:var(--blu);background:#EEF3FF}
+.opts button.certo{border-color:var(--ok);background:#E8F7EF}
+.opts button.errado{border-color:var(--red);background:#FDECEE}
+.chips{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;padding:8px;border:2px dashed var(--line);border-radius:14px;margin-bottom:10px}
+.chips button{min-height:40px;font-family:ui-monospace,Menlo,monospace;font-size:14px;padding:0 12px}
+.fb{border-radius:16px;padding:14px;margin-top:14px;font-size:15px}
+.fb.bom{background:#E8F7EF;border:1px solid #bfe8d0}.fb.mau{background:#FDECEE;border:1px solid #f6c5cb}
+.fb b{display:block;font-family:Montserrat,sans-serif;margin-bottom:4px}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;border-radius:99px;padding:3px 10px;background:var(--card2);color:var(--mut)}
+.pill.y{background:#FFF4D1;color:#7a5600}.pill.g{background:#E8F7EF;color:#0E7A43}.pill.b{background:#EEF3FF;color:#174fb0}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.chk:first-of-type{border-top:0}
+.chk input{width:22px;height:22px;margin:1px 0 0;flex:none;accent-color:var(--ok)}
+textarea{font:16px Inter,sans-serif;width:100%;min-height:110px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--ink)}
+details{border-top:1px solid var(--line);padding:6px 0}details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:700;padding:8px 0;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::after{content:"+";color:var(--blu);font-size:20px;line-height:1}details[open] summary::after{content:"−"}
+.unit{border-left:4px solid var(--blu);padding-left:12px;margin:18px 0 6px}
+.cur-h{display:flex;align-items:center;gap:10px;margin-top:22px}
+.cur-h span{font-size:24px}
+.vazio{text-align:center;padding:26px 16px}
+.vazio .big{font-size:46px}
+.foot{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 16px max(10px,env(safe-area-inset-bottom))}
+.foot .in{max-width:720px;margin:0 auto;display:flex;gap:8px}.foot button{flex:1}
+ul.tips{margin:8px 0 0;padding-left:20px}ul.tips li{margin:4px 0}
+@media(min-width:900px){.grid2.pc3{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body data-proprio="1">
+<div class="top"><div class="in"><a href="/app.html">← Aulas</a><span class="sp"></span><b style="font-family:Montserrat,sans-serif">📚 Estudar</b></div></div>
+<main class="wrap" id="main"><p class="mut" style="padding:30px 0">Carregando…</p></main>
+<div class="foot" id="foot" hidden><div class="in" id="footIn"></div></div>
+
+<script>
+{
+/* ============ dados das aulas: lidos do próprio app, sem copiar ============ */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DOTS='<svg class="dots" viewBox="26 18 72 86" aria-hidden="true"><circle cx="51" cy="36" r="15" fill="#E63946"/><circle cx="80" cy="66" r="13.5" fill="#FFC21A"/><circle cx="47" cy="86" r="16" fill="#1F6FEB"/></svg>';
+const PK='criate-academy';
+const hoje=()=>{const d=new Date();return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')};
+const somaDias=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')};
+const INTERV=[0,1,3,7,16,35]; /* caixa 1..5: dias até rever (repetição espaçada) */
+function lerP(){try{return JSON.parse(localStorage.getItem(PK)||'null')||{}}catch(e){return {}}}
+function gravar(f){const p=lerP();f(p);try{localStorage.setItem(PK,JSON.stringify(p))}catch(e){}}
+
+/* ============ conteúdo do professor: desafios práticos e perguntas pra explicar ============ */
+const PROF={
+'html:0':{d:'Seu cartão de visita',o:'Criar sua primeira página de verdade no VS Code, do zero.',p:['Crie uma pasta chamada <code>criate-estudos</code> e abra ela no VS Code (Arquivo → Abrir pasta).','Crie o arquivo <code>index.html</code>. Digite <code>!</code> e aperte Enter: o VS Code monta a estrutura básica sozinho.','Dentro do <code>&lt;body&gt;</code>, coloque um <code>&lt;h1&gt;</code> com o seu nome.','Embaixo, um <code>&lt;h2&gt;</code> "Sobre mim" e um <code>&lt;p&gt;</code> com 2 frases sobre você.','Faça uma lista <code>&lt;ul&gt;</code> com 3 coisas que você curte.','Salve (Ctrl+S) e abra o arquivo no navegador (botão direito → Open with Live Server, ou dois cliques no arquivo).'],c:'Aparece seu nome grande, o subtítulo, o texto e a lista com bolinhas.',b:'Coloque uma palavra em <code>&lt;strong&gt;</code> e outra em <code>&lt;em&gt;</code>.',e:'Explique com suas palavras: o que é uma tag e por que quase toda tag precisa ser fechada?',r:'Tag é a etiqueta que diz ao navegador o que cada coisa é (título, parágrafo, lista). Ela abre antes do conteúdo e fecha depois, com a barra, pra marcar onde aquele elemento começa e termina.'},
+'html:1':{d:'Página da clínica fictícia',o:'Usar links, imagens e a estrutura que todo site profissional tem.',p:['No mesmo projeto, crie <code>clinica.html</code>.','Divida em <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code> e <code>&lt;footer&gt;</code>.','No header: o nome da clínica e um menu com 2 links internos (<code>href="#servicos"</code> e <code>href="#contato"</code>).','Crie uma pasta <code>img</code>, coloque uma foto nela e mostre com <code>&lt;img src="img/foto.jpg" alt="..."&gt;</code>.','Crie uma <code>&lt;section id="contato"&gt;</code> com um link pro Instagram que abre em outra aba (<code>target="_blank"</code>).','No footer, escreva "© 2026" e o nome da clínica.'],c:'Clicando no menu, a página rola até a seção certa, e a foto aparece (se não aparecer, confira o caminho no src).',b:'Faça a pessoa voltar ao topo com um link <code>href="#"</code> no footer.',e:'Por que o atributo alt é importante, e o que acontece se o src estiver com o caminho errado?',r:'O alt descreve a imagem pra quem usa leitor de tela e pro Google, e aparece se a imagem não carregar. Se o src estiver errado, o navegador não encontra o arquivo e mostra a imagem quebrada.'},
+'html:2':{d:'Tabela de preços + contato',o:'Organizar informação em tabela e montar um formulário acessível.',p:['Em <code>clinica.html</code>, crie uma <code>&lt;table&gt;</code> com 3 serviços e o preço de cada um.','Use <code>&lt;th&gt;</code> no cabeçalho ("Serviço" e "Valor").','Crie um <code>&lt;form&gt;</code> com nome, telefone (<code>type="tel"</code>) e mensagem (<code>&lt;textarea&gt;</code>).','Cada campo com seu <code>&lt;label for="..."&gt;</code> ligado ao <code>id</code> do campo.','Coloque <code>required</code> no nome e um <code>&lt;button&gt;</code> "Enviar".'],c:'Clicar no texto do label coloca o cursor no campo certo, e enviar com o nome vazio mostra um aviso.',b:'Adicione um <code>&lt;select&gt;</code> pra pessoa escolher o serviço.',e:'Pra que serve ligar o label ao campo com for e id?',r:'Fica acessível (o leitor de tela lê o nome do campo) e fica mais fácil de usar: tocar no texto já seleciona o campo, o que ajuda muito no celular.'},
+'css:0':{d:'Pinte a página com a sua marca',o:'Separar o visual do conteúdo e aplicar cores, fontes e espaçamento.',p:['Crie <code>style.css</code> e ligue no HTML com <code>&lt;link rel="stylesheet" href="style.css"&gt;</code> dentro do head.','No <code>body</code>: uma fonte (font-family), cor de fundo e cor do texto.','Crie variáveis em <code>:root</code>, por exemplo <code>--azul:#1F6FEB</code>, e use com <code>var(--azul)</code>.','Crie a classe <code>.botao</code> com padding, border-radius e cor de fundo, e aplique num link.','Dê margin entre as seções e veja a diferença entre margin (fora) e padding (dentro).'],c:'Trocando o valor da variável, a cor muda em todos os lugares de uma vez.',b:'Faça o botão mudar de cor no <code>:hover</code>.',e:'Qual a diferença entre margin e padding? Dê um exemplo de quando usar cada um.',r:'Padding é o espaço de dentro, entre a borda e o conteúdo (ex.: deixar o botão mais "gordinho"). Margin é o espaço de fora, entre um elemento e outro (ex.: afastar uma seção da outra).'},
+'css:1':{d:'Layout que se adapta ao celular',o:'Montar menu com flexbox e cartões com grid que viram uma coluna no celular.',p:['No header, use <code>display:flex</code> e <code>justify-content:space-between</code> pra deixar o nome à esquerda e o menu à direita.','Crie 3 cartões de serviço dentro de uma <code>&lt;div class="cards"&gt;</code>.','Em <code>.cards</code>: <code>display:grid</code>, <code>grid-template-columns:repeat(3,1fr)</code> e <code>gap</code>.','Crie uma <code>@media(max-width:700px)</code> que troca pra 1 coluna.','Abra o DevTools (F12 → ícone de celular) e teste vários tamanhos.'],c:'No computador ficam 3 cartões lado a lado; no celular, um embaixo do outro.',b:'Centralize um texto na vertical e na horizontal com flex (<code>align-items</code> + <code>justify-content</code>).',e:'Quando você usaria flexbox e quando usaria grid?',r:'Flexbox é ótimo pra alinhar coisas numa linha ou numa coluna (menu, botões lado a lado). Grid é melhor quando tem linhas e colunas ao mesmo tempo, como uma grade de cartões.'},
+'js:0':{d:'O site que cumprimenta',o:'Usar variáveis, condições, listas e funções de verdade.',p:['Crie <code>script.js</code> e ligue no fim do body: <code>&lt;script src="script.js"&gt;&lt;/script&gt;</code>.','Crie <code>const nome = "Fabiano"</code> e mostre com <code>console.log</code> (veja no F12 → Console).','Pegue a hora com <code>new Date().getHours()</code> e use if/else pra escrever "Bom dia", "Boa tarde" ou "Boa noite".','Crie um array com 3 serviços e mostre cada um com um <code>for</code>.','Crie <code>function preco(valor, desconto)</code> que devolve o valor com desconto, e teste com alguns números.'],c:'O console mostra a saudação certa pro horário e os 3 serviços.',b:'Mostre a saudação na página, trocando o texto de um <code>&lt;h1&gt;</code> com <code>textContent</code>.',e:'Explique, como se fosse pra um amigo, o que é uma função e por que ela ajuda.',r:'Uma função é um bloco de código com nome que você pode chamar quantas vezes quiser. Ela evita repetir código: você escreve a regra uma vez e só muda os valores que passa pra ela.'},
+'js:1':{d:'Botões que fazem coisas',o:'Mexer na página com eventos: o que separa um site parado de um site vivo.',p:['Crie um botão "Menu" e um <code>&lt;nav&gt;</code>. No CSS, crie <code>.aberto{display:block}</code> e deixe o nav escondido.','No JS: <code>botao.addEventListener("click", ...)</code> com <code>nav.classList.toggle("aberto")</code>.','Crie um contador: um botão que soma 1 a cada clique e mostra o número na tela.','Crie um campo de texto e um botão "Chamar no WhatsApp" que monta o link <code>https://wa.me/55DDDNUMERO?text=</code> com <code>encodeURIComponent</code> do texto digitado.'],c:'O menu abre e fecha, o contador sobe e o botão abre o WhatsApp com a mensagem pronta.',b:'Salve o contador no <code>localStorage</code> pra ele não zerar ao recarregar.',e:'O que é um evento? Dê 3 exemplos de eventos que um site pode "escutar".',r:'Evento é algo que acontece na página e que o JavaScript pode escutar pra reagir. Exemplos: click (tocar num botão), input (digitar num campo) e submit (enviar um formulário).'},
+'edit:0':{d:'Edite um site real sem quebrar nada',o:'Fazer o fluxo completo que você vai usar com clientes.',p:['Pegue um index.html seu (ou um modelo) e faça um <b>backup</b> antes de tudo (copie o arquivo com outro nome).','Abra no VS Code e use Ctrl+F pra achar o nome da clínica e trocar pelo nome de um cliente fictício.','Ache as cores no CSS (procure por <code>:root</code> ou <code>#</code>) e troque pelas cores do cliente.','Troque o número do WhatsApp em todos os links <code>wa.me</code>.','Teste no navegador e no modo celular do F12. Só depois publique no Vercel.'],c:'Todas as menções foram trocadas (Ctrl+F não acha mais o nome antigo) e os botões levam pro WhatsApp novo.',b:'Use Ctrl+H (substituir tudo) e confira um por um antes de confirmar.',e:'Por que fazer backup e testar no celular antes de publicar?',r:'O backup deixa você voltar se algo quebrar. E a maioria dos pacientes vai abrir o site no celular, então é lá que ele precisa estar perfeito antes do cliente ver.'}
+};
+
+let CURSOS=[];
+async function carregar(){
+  const r=await fetch('/app.html',{cache:'no-cache'});const t=await r.text();
+  const i=t.indexOf('const CURSOS=');const j=t.indexOf('\n];\n',i);
+  if(i<0||j<0)throw new Error('cursos');
+  CURSOS=new Function('return '+t.slice(i+13,j+3))();
+}
+
+/* ============ índices ============ */
+function lic(c){const out=[];c.units.forEach((u,ui)=>u.l.forEach(l=>out.push({ui,l})));return out}
+const revisavel=x=>x.t==='mc'||x.t==='fill'||x.t==='build';
+function itensDaLicao(c,k){const L=lic(c)[k];if(!L)return [];return L.l.ex.map((x,e)=>({x,e})).filter(o=>revisavel(o.x)).map(o=>({id:c.id+':'+k+':'+o.e,c,k,x:o.x,lic:L.l,ui:L.ui}))}
+function itemPorId(id){const [cid,k,e]=id.split(':');const c=CURSOS.find(x=>x.id===cid);if(!c)return null;const L=lic(c)[+k];if(!L)return null;const x=L.l.ex[+e];return x&&revisavel(x)?{id,c,k:+k,x,lic:L.l,ui:L.ui}:null}
+
+/* novas lições concluídas entram na revisão, começando amanhã */
+function sincronizarRev(){
+  gravar(p=>{p.rev=p.rev||{};
+    for(const c of CURSOS)lic(c).forEach((L,k)=>{if(p.done&&p.done[c.id+':'+k])for(const it of itensDaLicao(c,k))if(!p.rev[it.id])p.rev[it.id]='1|'+somaDias(1)});
+  });
+}
+function pendentes(){const p=lerP(),h=hoje();return Object.entries(p.rev||{}).filter(([id,v])=>String(v).split('|')[1]<=h).map(([id])=>itemPorId(id)).filter(Boolean)}
+function caixa(id){const v=(lerP().rev||{})[id];return v?+String(v).split('|')[0]:0}
+function marcar(id,acertou){gravar(p=>{p.rev=p.rev||{};const b=acertou?Math.min(5,(+String(p.rev[id]||'1|').split('|')[0]||1)+1):1;p.rev[id]=b+'|'+somaDias(INTERV[b])})}
+
+/* ============ telas ============ */
+let aba='hoje',sess=null;
+const ABAS=[['hoje','Hoje'],['revisar','Revisar'],['provas','Testes'],['desafios','Desafios VS Code'],['resumos','Resumos']];
+function tabs(){return `<div class="tabs">${ABAS.map(([k,t])=>`<button data-aba="${k}" class="${aba===k?'on':''}">${t}</button>`).join('')}</div>`}
+function render(){
+  $('foot').hidden=true;
+  if(sess){telaSessao();return}
+  $('main').innerHTML=tabs()+(V[aba]||V.hoje)();
+  scrollTo(0,0);
+}
+const V={};
+function feitasCurso(c,p){return lic(c).filter((L,k)=>p.done&&p.done[c.id+':'+k]).length}
+function unidadesLiberadas(p){const out=[];for(const c of CURSOS)c.units.forEach((u,ui)=>{const ks=lic(c).map((L,k)=>({L,k})).filter(o=>o.L.ui===ui);const f=ks.filter(o=>p.done&&p.done[c.id+':'+o.k]).length;out.push({c,u,ui,tot:ks.length,f,key:c.id+':'+ui})});return out}
+
+V.hoje=()=>{
+  const p=lerP(),pen=pendentes(),total=Object.keys(p.rev||{}).length;
+  const dom=Object.values(p.rev||{}).filter(v=>+String(v).split('|')[0]>=4).length;
+  const un=unidadesLiberadas(p),comecadas=un.filter(x=>x.f>0);
+  const prox=comecadas.find(x=>!(p.prova||{})[x.key]||(p.prova[x.key]<80));
+  const des=comecadas.find(x=>x.f===x.tot&&!(p.des||{})[x.key]&&PROF[x.key]);
+  return `<section class="hero">${DOTS}<span class="pill y">Plano de hoje</span>
+    <h1 style="margin-top:10px;color:#fff">${pen.length?pen.length+' cartões pra revisar':'Revisão em dia ✓'}</h1>
+    <p>${pen.length?'Uns 3 minutos. Revisar no dia certo é o que faz o conteúdo ficar na cabeça.':total?'Volte amanhã pra próxima revisão. Enquanto isso, faça uma lição nova.':'Termine uma lição nas Aulas e as perguntas dela entram aqui pra você revisar nos dias certos.'}</p>
+    ${pen.length?'<button class="pri" data-go="rev" style="width:100%">▶ Revisar agora</button>':'<a class="btn" href="/app.html" style="width:100%">Fazer uma lição nova</a>'}</section>
+  <div class="grid2" style="margin-top:12px"><div class="k"><b>${total}</b><span class="small mut">perguntas na sua memória</span></div><div class="k"><b>${dom}</b><span class="small mut">já dominadas (caixa 4+)</span></div></div>
+  <h2>Próximos passos</h2>
+  ${prox?`<div class="card"><span class="pill b">Teste da unidade</span><h3 style="margin-top:8px">${esc(prox.c.icone)} ${esc(prox.c.nome)} · ${esc(prox.u.t)}</h3><p class="small mut" style="margin:4px 0 12px">10 perguntas misturadas. Passou de 80%, a unidade está dominada.</p><button data-prova="${prox.key}" style="width:100%">Fazer o teste</button></div>`:''}
+  ${des?`<div class="card"><span class="pill g">Desafio prático liberado</span><h3 style="margin-top:8px">💻 ${esc(PROF[des.key].d)}</h3><p class="small mut" style="margin:4px 0 12px">${PROF[des.key].o}</p><button data-des="${des.key}" style="width:100%">Ver o desafio</button></div>`:''}
+  <div class="card"><h3>🧠 Como aprender de verdade aqui</h3><ul class="tips small">
+    <li><b>Pouco todo dia</b> vale mais que muito num dia só: 1 lição nova + a revisão do dia.</li>
+    <li><b>Tente lembrar antes de olhar.</b> O esforço de puxar da memória é o que fixa.</li>
+    <li><b>Errar faz parte.</b> A pergunta errada volta amanhã, e é assim que ela fica.</li>
+    <li><b>Digite o código no VS Code</b>, nunca copie e cole. A mão aprende junto.</li>
+    <li><b>Explique em voz alta.</b> Se você consegue explicar pra alguém, você aprendeu.</li></ul></div>`;
+};
+
+V.revisar=()=>{
+  const p=lerP(),pen=pendentes(),rev=p.rev||{};
+  const cx=[1,2,3,4,5].map(b=>Object.values(rev).filter(v=>+String(v).split('|')[0]===b).length);
+  const tot=Object.keys(rev).length||1;
+  return `<h2>Revisão espaçada</h2><p class="mut small" style="margin-top:-4px">Acertou, a pergunta sobe de caixa e volta mais tarde (1, 3, 7, 16, 35 dias). Errou, volta pra caixa 1 e aparece amanhã.</p>
+  <div class="card">${cx.map((n,i)=>`<div class="row" style="margin:6px 0"><span style="width:64px" class="small"><b>Caixa ${i+1}</b></span><div class="bar" style="flex:1"><i style="width:${Math.round(n/tot*100)}%"></i></div><span class="small mut" style="width:28px;text-align:right">${n}</span></div>`).join('')}</div>
+  ${pen.length?`<button class="pri" data-go="rev" style="width:100%">▶ Revisar ${pen.length} agora</button>`:`<div class="card vazio"><div class="big">✓</div><p class="mut">Nada pra revisar hoje.</p></div>`}
+  ${Object.keys(rev).length?`<button data-go="treino" style="width:100%;margin-top:10px">🎲 Treino extra (10 aleatórias)</button>`:''}`;
+};
+
+V.provas=()=>{
+  const p=lerP(),un=unidadesLiberadas(p);
+  return `<h2>Testes de unidade</h2><p class="mut small" style="margin-top:-4px">Perguntas de todas as lições da unidade, misturadas. Misturar assuntos é mais difícil, e é exatamente por isso que funciona.</p>
+  ${CURSOS.map(c=>`<div class="cur-h"><span>${esc(c.icone)}</span><h3>${esc(c.nome)}</h3></div>${un.filter(x=>x.c===c).map(x=>{const nota=(p.prova||{})[x.key];const lib=x.f>0;return `<div class="card"><div class="row"><div style="flex:1"><b>${esc(x.u.u)} · ${esc(x.u.t)}</b><div class="small mut">${x.f}/${x.tot} lições feitas</div></div>${nota!=null?`<span class="pill ${nota>=80?'g':'y'}">${nota>=80?'Dominada':'Melhor'}: ${nota}%</span>`:''}</div>
+   <button data-prova="${x.key}" ${lib?'':'disabled'} style="width:100%;margin-top:10px">${lib?(nota!=null?'Refazer o teste':'Fazer o teste'):'🔒 Faça uma lição da unidade primeiro'}</button></div>`}).join('')}`).join('')}`;
+};
+
+V.desafios=()=>{
+  const p=lerP(),un=unidadesLiberadas(p);
+  return `<h2>Desafios no VS Code</h2><p class="mut small" style="margin-top:-4px">Aqui é onde o conhecimento vira habilidade. Faça no computador, sem copiar: digite tudo.</p>
+  ${un.filter(x=>PROF[x.key]).map(x=>{const P=PROF[x.key],ok=(p.des||{})[x.key];return `<div class="card"><div class="row"><span class="pill">${esc(x.c.icone)} ${esc(x.c.nome)} · ${esc(x.u.u)}</span>${ok?'<span class="pill g">✓ Feito</span>':''}</div><h3 style="margin-top:8px">${esc(P.d)}</h3><p class="small mut" style="margin:4px 0 12px">${P.o}</p><button data-des="${x.key}" style="width:100%">${ok?'Ver de novo':'Abrir o desafio'}</button></div>`}).join('')}`;
+};
+
+V.resumos=()=>{
+  return `<h2>Resumos (cola rápida)</h2><p class="mut small" style="margin-top:-4px">Tudo que as lições ensinaram, organizado por unidade. Ótimo pra consultar enquanto faz os desafios.</p>
+  ${CURSOS.map(c=>`<div class="cur-h"><span>${esc(c.icone)}</span><h3>${esc(c.nome)}</h3></div>${c.units.map((u,ui)=>{const ls=lic(c).filter(L=>L.ui===ui);return `<div class="card"><b>${esc(u.u)} · ${esc(u.t)}</b>${ls.map(L=>{const infos=L.l.ex.filter(x=>x.t==='info');return `<details><summary>${esc(L.l.i||'')} ${esc(L.l.n)}</summary>${L.l.obj?`<p class="small mut" style="margin:0 0 6px">Você aprende a: ${L.l.obj.map(esc).join(' · ')}</p>`:''}${infos.map(x=>`<div style="margin:10px 0 4px"><b>${esc(x.q)}</b>${x.code?`<pre><code>${esc(x.code)}</code></pre>`:''}${x.tip?`<p class="small mut" style="margin:6px 0 0">💡 ${x.tip}</p>`:''}</div>`).join('')}</details>`}).join('')}</div>`}).join('')}`).join('')}`;
+};
+
+/* ============ desafio ============ */
+function abrirDesafio(key){
+  const P=PROF[key],p=lerP(),feito=(p.des||{})[key];const st=(p.desChk||{})[key]||'';
+  $('main').innerHTML=`<p style="margin:14px 0 0"><button data-aba="desafios">← Desafios</button></p>
+  <section class="hero">${DOTS}<span class="pill y">Desafio prático</span><h1 style="margin-top:10px;color:#fff;padding-right:50px">${esc(P.d)}</h1><p>${P.o}</p></section>
+  <h2>Passo a passo</h2><div class="card">${P.p.map((t,i)=>`<label class="chk"><input type="checkbox" data-chk="${key}" data-i="${i}" ${st[i]==='1'?'checked':''}><span>${t}</span></label>`).join('')}</div>
+  <div class="card"><h3>✅ Como saber que deu certo</h3><p class="small" style="margin:6px 0 0">${P.c}</p></div>
+  <div class="card"><h3>⭐ Desafio bônus</h3><p class="small" style="margin:6px 0 0">${P.b}</p></div>
+  <div class="card"><h3>🗣️ Explique com suas palavras</h3><p class="small" style="margin:6px 0 10px">${esc(P.e)}</p>
+    <textarea id="expl" placeholder="Escreva como se estivesse explicando pra um amigo…">${esc(((p.expl||{})[key])||'')}</textarea>
+    <button id="verResp" style="width:100%;margin-top:8px">Comparar com a resposta do professor</button><div id="resp" hidden class="fb bom"><b>Resposta do professor</b>${esc(P.r)}<p class="small mut" style="margin:8px 0 0">Não precisa ser igual. Se a ideia principal está na sua resposta, você entendeu.</p></div></div>
+  <button class="${feito?'':'ok'}" id="desOk" data-k="${key}" style="width:100%">${feito?'✓ Desafio concluído':'Marcar como concluído (+30 XP)'}</button>`;
+  scrollTo(0,0);
+}
+
+/* ============ sessão de perguntas ============ */
+const emb=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function iniciar(tipo,itens,extra){
+  if(!itens.length){alert('Ainda não há perguntas aqui.');return}
+  sess={tipo,itens,i:0,ok:0,erros:[],resp:null,sel:[],extra};render();
+}
+function telaSessao(){
+  const s=sess;
+  if(s.i>=s.itens.length){fimSessao();return}
+  const it=s.itens[s.i],x=it.x;
+  const pct=Math.round(s.i/s.itens.length*100);
+  let corpo='';
+  if(x.t==='mc')corpo=`<div class="opts">${x.o.map((o,j)=>`<button data-op="${j}" class="${s.sel[0]===j?'sel':''}">${esc(o)}</button>`).join('')}</div>`;
+  if(x.t==='fill')corpo=`${x.code?`<pre><code>${esc(x.code)}</code></pre>`:''}<div class="opts" style="margin-top:10px">${x.o.map((o,j)=>`<button data-op="${j}" class="${s.sel[0]===j?'sel':''}">${esc(o)}</button>`).join('')}</div>`;
+  if(x.t==='build'){if(!s.ordem)s.ordem=emb(x.o.map((o,j)=>j));corpo=`<div class="chips" id="montado">${s.sel.map((j,n)=>`<button data-tira="${n}">${esc(x.o[j])}</button>`).join('')||'<span class="small mut" style="padding:8px">Toque nas peças na ordem certa</span>'}</div><div class="chips" style="border-style:solid">${s.ordem.filter(j=>!s.sel.includes(j)).map(j=>`<button data-poe="${j}">${esc(x.o[j])}</button>`).join('')}</div>`}
+  const rot={rev:'Revisão',treino:'Treino extra',prova:'Teste da unidade'}[s.tipo];
+  $('main').innerHTML=`<div class="row" style="margin-top:14px"><button data-sair="1" aria-label="Sair">✕</button><div class="bar" style="flex:1"><i style="width:${pct}%"></i></div><span class="small mut">${s.i+1}/${s.itens.length}</span></div>
+  <p class="small mut" style="margin:14px 0 0">${rot} · ${esc(it.c.icone)} ${esc(it.lic.n)}${s.tipo!=='prova'?` · caixa ${caixa(it.id)||1}`:''}</p>
+  <div class="q">${esc(x.q)}</div>${corpo}<div id="fbx"></div>`;
+  footer();
+}
+function footer(){
+  const s=sess;$('foot').hidden=false;
+  if(s.resp===null)$('footIn').innerHTML=`<button class="pri" id="conf" ${s.sel.length?'':'disabled'}>Verificar</button>`;
+  else $('footIn').innerHTML=`<button class="${s.resp?'ok':'pri'}" id="prox">Continuar</button>`;
+}
+function certa(x,sel){
+  if(x.t==='mc')return sel[0]===x.a;
+  if(x.t==='fill'){const a=Array.isArray(x.a)?x.a:[x.a];return a.some(v=>typeof v==='number'?v===sel[0]:x.o[sel[0]]===v)}
+  if(x.t==='build')return sel.map(j=>x.o[j]).join('\u0001')===x.a.join('\u0001');
+  return false;
+}
+function respostaCerta(x){
+  if(x.t==='mc')return x.o[x.a];
+  if(x.t==='fill'){const a=Array.isArray(x.a)?x.a:[x.a];return a.map(v=>typeof v==='number'?x.o[v]:v)[0]}
+  if(x.t==='build')return x.a.join(' ');
+  return '';
+}
+function verificar(){
+  const s=sess,it=s.itens[s.i],x=it.x,ok=certa(x,s.sel);
+  s.resp=ok;if(ok)s.ok++;else s.erros.push(it);
+  if(s.tipo==='rev')marcar(it.id,ok);
+  else if(s.tipo==='treino'&&!ok)marcar(it.id,false);
+  if(x.t!=='build')document.querySelectorAll('[data-op]').forEach(b=>{const j=+b.dataset.op;if(certa(x,[j]))b.classList.add('certo');else if(j===s.sel[0])b.classList.add('errado');b.disabled=true});
+  $('fbx').innerHTML=`<div class="fb ${ok?'bom':'mau'}"><b>${ok?['Isso!','Mandou bem!','Exato!','Perfeito!'][s.i%4]:'Ainda não. A resposta é: '+esc(respostaCerta(x))}</b>${x.w?esc(x.w):''}${!ok&&s.tipo!=='prova'?'<div class="small mut" style="margin-top:6px">Essa volta amanhã pra você fixar.</div>':''}</div>`;
+  footer();
+}
+function fimSessao(){
+  const s=sess,pct=Math.round(s.ok/s.itens.length*100);
+  let xp=s.ok*2;
+  if(s.tipo==='prova'){gravar(p=>{p.prova=p.prova||{};p.prova[s.extra]=Math.max(p.prova[s.extra]||0,pct)});if(pct>=80)xp+=20;
+    /* erros do teste voltam pra revisão de amanhã */
+    for(const it of s.erros)marcar(it.id,false);}
+  gravar(p=>{p.xp=(+p.xp||0)+xp;const d=new Date(),h=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(p.day!==h){p.day=h;p.dayXp=0}p.dayXp=(+p.dayXp||0)+xp});
+  $('foot').hidden=true;
+  const msg=s.tipo==='prova'?(pct>=80?'Unidade dominada! 🏆':'Quase lá. Revise os erros e tente de novo amanhã.'):(pct>=80?'Memória afiada! 🔥':'Ótimo treino. Os erros voltam amanhã, é assim que fixa.');
+  $('main').innerHTML=`<section class="hero" style="margin-top:20px;text-align:center">${DOTS}<span class="big" style="font-size:54px;color:#fff">${pct}%</span><h1 style="color:#fff;margin-top:8px">${msg}</h1><p>${s.ok} de ${s.itens.length} certas · +${xp} XP</p></section>
+  ${s.erros.length?`<h2>Pra revisar com calma</h2>${s.erros.map(it=>`<div class="card"><b>${esc(it.x.q)}</b><p class="small" style="margin:6px 0 0">Resposta: <code>${esc(respostaCerta(it.x))}</code></p>${it.x.w?`<p class="small mut" style="margin:4px 0 0">${esc(it.x.w)}</p>`:''}</div>`).join('')}`:''}
+  <button class="pri" data-fim="1" style="width:100%;margin-top:12px">Concluir</button>`;
+  scrollTo(0,0);
+}
+
+/* ============ cliques ============ */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button,[data-chk]');if(!b)return;
+  const d=b.dataset;
+  if(d.aba){sess=null;aba=d.aba;render();return}
+  if(d.go==='rev'){iniciar('rev',emb(pendentes()).slice(0,20));return}
+  if(d.go==='treino'){const ids=Object.keys(lerP().rev||{});iniciar('treino',emb(ids).slice(0,10).map(itemPorId).filter(Boolean));return}
+  if(d.prova){const [cid,ui]=d.prova.split(':');const c=CURSOS.find(x=>x.id===cid);const its=[];lic(c).forEach((L,k)=>{if(L.ui===+ui)its.push(...itensDaLicao(c,k))});iniciar('prova',emb(its).slice(0,10),d.prova);return}
+  if(d.des){abrirDesafio(d.des);return}
+  if(d.sair||d.fim){sess=null;render();return}
+  if(b.id==='conf'){verificar();return}
+  if(b.id==='prox'){sess.i++;sess.resp=null;sess.sel=[];sess.ordem=null;render();return}
+  if(sess&&sess.resp===null){
+    if(d.op!==undefined){sess.sel=[+d.op];telaSessao();return}
+    if(d.poe!==undefined){sess.sel.push(+d.poe);telaSessao();return}
+    if(d.tira!==undefined){sess.sel.splice(+d.tira,1);telaSessao();return}
+  }
+  if(b.id==='verResp'){$('resp').hidden=false;return}
+  if(b.id==='desOk'){const k=d.k;if((lerP().des||{})[k])return;gravar(p=>{p.des=p.des||{};p.des[k]=1;p.xp=(+p.xp||0)+30});abrirDesafio(k);return}
+});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset.chk){const k=t.dataset.chk;gravar(p=>{p.desChk=p.desChk||{};const n=PROF[k].p.length;let s=(p.desChk[k]||'').padEnd(n,'0').split('');s[+t.dataset.i]=t.checked?'1':'0';p.desChk[k]=s.join('')})}});
+document.addEventListener('input',e=>{if(e.target.id==='expl'){const v=e.target.value.slice(0,300),k=document.getElementById('desOk').dataset.k;clearTimeout(window.__t);window.__t=setTimeout(()=>gravar(p=>{p.expl=p.expl||{};p.expl[k]=v}),600)}});
+
+carregar().then(()=>{sincronizarRev();const h=location.hash.slice(1);if(ABAS.some(a=>a[0]===h))aba=h;render()}).catch(()=>{$('main').innerHTML='<div class="card vazio" style="margin-top:20px"><p>Não consegui carregar as aulas. Confira a internet e tente de novo.</p><button onclick="location.reload()">Tentar de novo</button></div>'});
+}
+</script>
+</body>
+</html>

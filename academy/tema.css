@@ -1,0 +1,99 @@
+/* Criate Academy · tema claro com as cores da marca (vermelho, amarelo, azul) */
+:root{color-scheme:light;--bg:#F6F6F9;--card:#FFFFFF;--card2:#F0F0F5;--line:#E5E5EC;--ink:#14141A;--mut:#6C6C7D;--pri:#1F6FEB;--pri2:#1F6FEB;--xp:#FFB800;--bad:#E63946;--bad2:#B3242F;--ok:#14A35A;--ok2:#0E7A43;--red:#E63946;--yel:#FFC21A;--blu:#1F6FEB}
+html,body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-weight:500}
+h1,h2,h3,.q,.logo,.unit h2,.ccard h3,.end h2,.fbt,.big,.cont b{font-family:Montserrat,Inter,system-ui,sans-serif;letter-spacing:-.01em}
+.top{background:rgba(255,255,255,.86);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;color:var(--ink)}
+.logo b{color:var(--mut);font-weight:600}
+.st{font-weight:700;font-size:15px}
+.st span{background:var(--card2);border-radius:99px;padding:4px 10px}
+.goal{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 1px 2px rgba(20,20,40,.04)}
+.goal .row{font-weight:700}
+.bar{height:10px;background:var(--card2)}
+.bar>i{background:linear-gradient(90deg,var(--blu),#5B8DFF);box-shadow:none}
+.home h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.home p.sub{font-weight:500}
+.cont{background:var(--ink);color:#fff;box-shadow:0 10px 30px -12px rgba(20,20,40,.45);border-radius:22px;position:relative;overflow:hidden}
+.cont{padding-right:84px}.cont::after{content:"";position:absolute;right:18px;top:50%;width:50px;height:50px;transform:translateY(-50%) rotate(-8deg);background:radial-gradient(circle at 34% 24%,var(--red) 0 15%,transparent 16%),radial-gradient(circle at 74% 52%,var(--yel) 0 13%,transparent 14%),radial-gradient(circle at 30% 80%,var(--blu) 0 16%,transparent 17%)}
+.cont small{opacity:.7;font-weight:700;letter-spacing:.04em}
+.ccard{background:var(--card);border:1px solid var(--line);border-bottom-width:1px;border-radius:22px;box-shadow:0 1px 2px rgba(20,20,40,.04);transition:transform .15s,box-shadow .15s}
+.ccard:hover{transform:translateY(-2px);box-shadow:0 12px 28px -14px rgba(20,20,40,.25)}
+.ccard h3{font-weight:800}
+.ccard p{font-weight:500}
+.ccard .meta{font-weight:600}
+.cinfo{background:var(--card);border:1px solid var(--line);color:#3B3B4A}
+.voltar{font-weight:700}
+.unit{border-radius:20px;background:var(--ink)!important;box-shadow:none!important;color:#fff!important}
+.unit small{opacity:.85;font-weight:700}
+.unit.lock{background:var(--card2)!important;color:var(--mut)!important}
+.node{background:var(--card);border:1px solid var(--line);box-shadow:0 6px 0 #DADAE3;color:var(--mut)}
+.node.open{background:var(--blu);border-color:var(--blu);color:#fff;box-shadow:0 6px 0 #1550B3,0 0 0 8px rgba(31,111,235,.12)}
+.node.done{background:var(--yel);border-color:var(--yel);color:#3B2A00;box-shadow:0 6px 0 #D69B00}
+.node:active{box-shadow:0 1px 0 #DADAE3}
+.node .lbl{font-weight:700;color:var(--ink)}
+.node.open::after{background:var(--ink);color:#fff;font-family:Montserrat,sans-serif}
+.lesson{background:var(--bg)}
+.lhead .bar{height:12px}
+.hearts{color:var(--red)}
+.q{font-weight:800}
+.tag{color:var(--blu);font-weight:800}
+.txt{color:#3B3B4A}
+.txt b{color:var(--ink)}
+.codebox{background:#14141A;border:0;color:#EDEDF3;box-shadow:0 10px 24px -16px rgba(20,20,40,.6)}
+.codebox .t{color:#7CB4FF}.codebox .a{color:#FFC21A}.codebox .s{color:#7EE2A8}
+.blank{border-bottom-color:#7CB4FF;color:#7CB4FF}
+.blank.fill{border-bottom-color:var(--yel);color:var(--yel)}
+.opt{background:var(--card);border:1.5px solid var(--line);border-bottom-width:4px;font-weight:600}
+.opt.sel{border-color:var(--blu);background:rgba(31,111,235,.07);color:var(--blu)}
+.chip{background:var(--card);border:1.5px solid var(--line);border-bottom-width:3px}
+.ans{border-color:#CFCFDA;background:rgba(255,255,255,.6)}
+textarea.ed{background:#14141A;color:#F2F2F7;border:0}
+textarea.ed:focus{box-shadow:0 0 0 3px rgba(31,111,235,.35)}
+.pv{border:1px solid var(--line)}
+.lfoot{border-top:1px solid var(--line);background:var(--card)}
+.big{background:var(--blu);color:#fff;box-shadow:0 5px 0 #1550B3;font-weight:800}
+.big:active:not(:disabled){box-shadow:0 1px 0 #1550B3}
+.big:disabled{background:var(--card2);color:#A3A3B3;box-shadow:0 5px 0 #DADAE3}
+.fb.ok{background:#E9F8F0}.fb.bad{background:#FDECEE}
+.ok .fbt{color:var(--ok)}.bad .fbt{color:var(--red)}
+.ok .big{background:var(--ok);box-shadow:0 5px 0 var(--ok2)}
+.bad .big{background:var(--red);color:#fff;box-shadow:0 5px 0 var(--bad2)}
+.fbx{color:#3B3B4A}
+.res div{background:var(--card);border:1px solid var(--line)}
+.tip{background:#FFF7E0;border:1px solid #FFE08A;color:#5A4500}
+.tip b{color:#B37F00}
+.objs li{background:var(--card);border:1px solid var(--line);font-weight:600}
+.objs li::before{background:var(--blu);color:#fff}
+.prof{font-weight:600}
+.cert{background:linear-gradient(135deg,#FFF7E0,#EAF1FF);border:1px solid #FFE08A}
+.cert b{color:#B37F00}
+.som{filter:grayscale(.2)}
+.reset{font-weight:700}
+.end h2{font-weight:800}
+::selection{background:rgba(31,111,235,.2)}
+/* topo cabe no celular */
+.top .in{gap:8px}.logo{flex:none;white-space:nowrap}
+.st{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+@media(max-width:440px){.logo b{display:none}.st{font-size:14px}.st span{padding:4px 8px}}
+/* ===== modo escuro (mesma marca, fundo escuro) ===== */
+html.escuro{color-scheme:dark;--bg:#0F0F14;--card:#1A1A22;--card2:#24242E;--line:#2E2E3A;--ink:#F1F1F6;--mut:#9A9AAD}
+html.escuro .top{background:rgba(15,15,20,.86)}
+html.escuro .cont,html.escuro .unit{background:#22222C!important;border:1px solid #33333F}
+html.escuro .node{box-shadow:0 6px 0 #09090D}
+html.escuro .node.open::after{background:#F1F1F6;color:#14141A}
+html.escuro .cinfo,html.escuro .txt,html.escuro .fbx{color:#C9C9D6}
+html.escuro .opt.sel{background:rgba(31,111,235,.18);color:#8CB6FF}
+html.escuro .ans{border-color:#3A3A48;background:rgba(255,255,255,.03)}
+html.escuro .big:disabled{background:#24242E;color:#6C6C7D;box-shadow:0 5px 0 #09090D}
+html.escuro .fb.ok{background:#0F2A1D}html.escuro .fb.bad{background:#2E1418}
+html.escuro .tip{background:rgba(255,194,26,.10);border-color:rgba(255,194,26,.3);color:#F2DFA6}
+html.escuro .tip b{color:#FFC21A}
+html.escuro .cert{background:linear-gradient(135deg,#2A2414,#14203A);border-color:#4A3D14}
+html.escuro .cert b{color:#FFC21A}
+html.escuro #contaBtn{background:#24242E!important}
+html.escuro #estudoBtn{background:rgba(255,194,26,.16)!important}
+/* aulas mais didáticas: comparação e erro comum */
+.ana{background:#F1EEFF;border-color:#D9D1FF;color:#2B2350}
+.erro{background:#FDECEE;border-color:#F6C5CB;color:#5A1A20}
+html.escuro .ana{background:rgba(124,92,255,.14);border-color:rgba(124,92,255,.35);color:#E4E0FF}
+html.escuro .erro{background:rgba(230,57,70,.12);border-color:rgba(230,57,70,.35);color:#FFD6DA}

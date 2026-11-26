@@ -1,0 +1,16 @@
+/* modo escuro da área Estudar */
+html.escuro{color-scheme:dark;--bg:#0F0F14;--card:#1A1A22;--card2:#24242E;--line:#2E2E3A;--ink:#F1F1F6;--mut:#9A9AAD}
+html.escuro .top{background:rgba(15,15,20,.9)}
+html.escuro .foot{background:rgba(15,15,20,.94)}
+html.escuro .hero{background:#22222C;border:1px solid #33333F}
+html.escuro button.on{background:#F1F1F6;color:#14141A;border-color:#F1F1F6}
+html.escuro .opts button.sel{background:rgba(31,111,235,.18)}
+html.escuro .opts button.certo{background:#0F2A1D}
+html.escuro .opts button.errado{background:#2E1418}
+html.escuro .fb.bom{background:#0F2A1D;border-color:#1D4A33}
+html.escuro .fb.mau{background:#2E1418;border-color:#5A2329}
+html.escuro .pill.y{background:rgba(255,194,26,.16);color:#FFD866}
+html.escuro .pill.g{background:rgba(20,163,90,.18);color:#6FDCA0}
+html.escuro .pill.b{background:rgba(31,111,235,.2);color:#8CB6FF}
+html.escuro textarea{background:var(--card)}
+html.escuro .card{box-shadow:none}

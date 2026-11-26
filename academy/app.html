@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Criate Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: brincalhão e encorajador, lição curtinha de cada vez
+   IDEA: uma trilha de fases que vai acendendo, como um mapa de jogo
+   PICTURE: o caminho em zigue-zague com bolinhas que brilham quando liberadas
+   COLOUR and TYPE: preto, verde neon, amarelo pro XP e coral pro erro; Nunito arredondada, código em JetBrains Mono
+   LAYOUT: barra de status em cima, trilha no meio, lição em tela cheia com botão grande embaixo */
+:root{color-scheme:dark;--bg:#0a0a0f;--card:#14141c;--card2:#1c1c27;--line:#2a2a38;--ink:#f4f4f8;--mut:#8f8fa6;--pri:#22e57a;--pri2:#16b35e;--xp:#ffc83d;--bad:#ff5a5a;--bad2:#c93838}
+*{box-sizing:border-box;min-width:0}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 Nunito,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+code,.code{font-family:"JetBrains Mono",ui-monospace,monospace}
+.top{position:sticky;top:0;z-index:5;background:rgba(10,10,15,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;gap:10px}
+.logo{font-weight:900;font-size:19px}.logo b{color:var(--pri)}
+.st{display:flex;gap:14px;font-weight:900;font-size:16px}
+.st span{display:flex;align-items:center;gap:4px}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px 120px}
+.goal{margin:16px 0;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 16px}
+.goal .row{display:flex;justify-content:space-between;font-weight:800}
+.bar{height:14px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;background:var(--pri);border-radius:99px;box-shadow:0 0 12px rgba(34,229,122,.6);transition:width .35s}
+.unit{margin:26px 0 8px;padding:16px 18px;border-radius:18px;background:var(--pri2);color:#04130a;box-shadow:0 5px 0 #0d7a40}
+.unit small{display:block;font-weight:800;opacity:.75;font-size:13px;letter-spacing:.02em}
+.unit h2{margin:2px 0 0;font-size:21px;font-weight:900}
+.unit.lock{background:var(--card2);color:var(--mut);box-shadow:0 5px 0 #111}
+.path{display:flex;flex-direction:column;align-items:center;gap:18px;padding:22px 0}
+.node{width:78px;height:78px;border-radius:50%;border:0;display:grid;place-items:center;font-size:30px;position:relative;background:var(--card2);box-shadow:0 7px 0 #0c0c12;color:var(--mut)}
+.node.open{background:var(--pri);color:#04130a;box-shadow:0 7px 0 #0d7a40,0 0 28px rgba(34,229,122,.45)}
+.node.done{background:var(--xp);color:#3b2a00;box-shadow:0 7px 0 #b38600}
+.node:active{transform:translateY(5px);box-shadow:0 2px 0 #0c0c12}
+.node .lbl{position:absolute;top:100%;margin-top:12px;white-space:nowrap;font-size:14px;font-weight:800;color:var(--ink)}
+.node.open::after{content:"COMEÇAR";position:absolute;bottom:100%;margin-bottom:10px;background:var(--ink);color:var(--bg);font-size:12px;font-weight:900;padding:4px 10px;border-radius:10px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.n0{transform:translateX(0)}.n1{transform:translateX(60px)}.n2{transform:translateX(90px)}.n3{transform:translateX(60px)}.n4{transform:translateX(0)}.n5{transform:translateX(-60px)}.n6{transform:translateX(-90px)}.n7{transform:translateX(-60px)}
+.spacer{height:16px}
+/* lição */
+.lesson{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column}
+.lhead{max-width:640px;width:100%;margin:0 auto;display:flex;align-items:center;gap:12px;padding:14px 16px}
+.lhead .bar{flex:1;margin:0;height:16px}
+.x{background:none;border:0;font-size:24px;color:var(--mut);padding:4px 8px}
+.hearts{font-weight:900;color:var(--bad);white-space:nowrap}
+.lbody{flex:1;overflow:auto}
+.lbody .in{max-width:640px;margin:0 auto;padding:8px 18px 30px}
+.q{font-size:22px;font-weight:900;line-height:1.25;margin:10px 0 16px}
+.tag{display:inline-block;font-size:13px;font-weight:900;color:var(--pri);margin-bottom:4px;letter-spacing:.03em}
+.txt{color:#d6d6e2;font-size:17px}
+.txt b{color:var(--ink)}
+.codebox{background:#0f1117;border:2px solid var(--line);border-radius:16px;padding:14px 16px;font-family:"JetBrains Mono",monospace;font-size:15px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0}
+.codebox .t{color:#7ee2ff}.codebox .a{color:#ffc83d}.codebox .s{color:#9cf08f}
+.blank{display:inline-block;min-width:54px;border-bottom:3px solid var(--pri);text-align:center;padding:0 6px;margin:0 2px;color:var(--pri);font-weight:700;cursor:pointer}
+.blank.fill{border-bottom-color:var(--xp);color:var(--xp)}
+.opts{display:grid;gap:10px;margin-top:8px}
+.opt{text-align:left;background:var(--card);border:2px solid var(--line);border-bottom-width:5px;border-radius:16px;padding:14px 16px;font-weight:800;font-size:16px}
+.opt.sel{border-color:var(--pri);background:rgba(34,229,122,.1);color:var(--pri)}
+.opt code{font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{background:var(--card);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;padding:8px 12px;font-family:"JetBrains Mono",monospace;font-size:15px;font-weight:700}
+.chip.used{opacity:.25;pointer-events:none}
+.ans{min-height:64px;border:2px dashed var(--line);border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;margin:8px 0}
+textarea.ed{width:100%;min-height:150px;background:#0f1117;color:var(--ink);border:2px solid var(--line);border-radius:16px;padding:14px;font:15px/1.6 "JetBrains Mono",monospace;resize:vertical;tab-size:2}
+textarea.ed:focus{outline:none;border-color:var(--pri)}
+.pv{margin-top:10px;border-radius:16px;overflow:hidden;border:2px solid var(--line);background:#fff}
+.pv b{display:block;background:#e9e9ef;color:#555;font-size:12px;padding:6px 12px;font-weight:800}
+.pv iframe{width:100%;height:170px;border:0;display:block;background:#fff}
+.lfoot{border-top:2px solid var(--line);padding:16px}
+.lfoot .in{max-width:640px;margin:0 auto}
+.big{width:100%;border:0;border-radius:16px;padding:16px;font-size:18px;font-weight:900;letter-spacing:.02em;background:var(--pri);color:#04130a;box-shadow:0 5px 0 #0d7a40}
+.big:disabled{background:var(--card2);color:var(--mut);box-shadow:0 5px 0 #0c0c12}
+.big:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 #0d7a40}
+.fb{border-top:0}
+.fb.ok{background:#0f2a1b}.fb.bad{background:#2a1214}
+.fbt{font-size:21px;font-weight:900;margin-bottom:4px}
+.ok .fbt{color:var(--pri)}.bad .fbt{color:var(--bad)}
+.fbx{font-size:15px;color:#d6d6e2;margin-bottom:12px}
+.bad .big{background:var(--bad);color:#2a0606;box-shadow:0 5px 0 var(--bad2)}
+.end{text-align:center;padding-top:30px}
+.end .trofeu{font-size:84px;line-height:1;animation:pop .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(.2)}}
+.end h2{font-size:28px;font-weight:900;margin:12px 0 6px}
+.res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}
+.res div{border:2px solid var(--line);border-radius:16px;padding:12px 6px;font-weight:900}
+.res b{display:block;font-size:24px}.res small{color:var(--mut);font-size:12.5px}
+.confete{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+.confete i{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;animation:cai linear forwards}
+@keyframes cai{to{top:105%;transform:rotate(720deg) translateX(40px)}}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.som{background:none;border:0;font-size:20px;padding:0 4px}
+.reset{background:none;border:0;color:var(--mut);font-weight:800;font-size:14px;text-decoration:underline;padding:6px 0}
+.home h1{font-size:28px;font-weight:900;margin:22px 0 4px;line-height:1.15}
+.home p.sub{color:var(--mut);margin:0 0 16px;font-weight:700}
+.cont{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:linear-gradient(135deg,var(--pri2),#0d7a40);border:0;border-radius:20px;padding:16px;color:#04130a;box-shadow:0 6px 0 #095c30;margin-bottom:6px}
+.cont .ic{font-size:36px}.cont b{display:block;font-size:18px;font-weight:900}.cont small{font-weight:800;opacity:.8}
+.cgrid{display:grid;gap:12px;margin-top:18px}
+.ccard{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-bottom-width:6px;border-radius:20px;padding:16px}
+.ccard .ic{width:62px;height:62px;flex:none;border-radius:18px;display:grid;place-items:center;font-size:32px}
+.ccard h3{margin:0;font-size:19px;font-weight:900}.ccard p{margin:2px 0 8px;color:var(--mut);font-size:14.5px;font-weight:700}
+.ccard .bar{height:10px;margin-top:0}
+.ccard .meta{font-size:12.5px;color:var(--mut);font-weight:800;margin-top:6px}
+.ccard.lock{opacity:.55}
+.voltar{background:none;border:0;color:var(--mut);font-weight:900;font-size:15px;padding:14px 0 0}
+.cinfo{margin:10px 0 0;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 16px;font-size:15px;color:#d6d6e2}
+.cinfo b{color:var(--ink)}
+.tip{margin-top:14px;background:rgba(255,200,61,.1);border:2px solid rgba(255,200,61,.35);border-radius:16px;padding:12px 14px;font-size:15px;color:#ffe7a8}
+.tip b{color:var(--xp)}
+.objs{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
+.objs li{display:flex;gap:10px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:800}
+.objs li::before{content:"✓";width:26px;height:26px;flex:none;border-radius:50%;background:var(--pri);color:#04130a;display:grid;place-items:center;font-weight:900}
+.prof{display:flex;gap:12px;align-items:center;margin-top:18px;color:var(--mut);font-weight:800;font-size:14.5px}
+.prof span{font-size:34px}
+.cert{margin:20px 0;text-align:center;background:linear-gradient(135deg,rgba(255,200,61,.18),rgba(34,229,122,.12));border:2px solid rgba(255,200,61,.4);border-radius:20px;padding:20px;font-weight:900}
+.cert b{display:block;font-size:22px;color:var(--xp)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.ana{margin:12px 0;padding:12px 14px;border-radius:14px;background:rgba(124,92,255,.12);border:1px solid rgba(124,92,255,.35);font-size:15px;line-height:1.5}
+.erro{margin:12px 0;padding:12px 14px;border-radius:14px;background:rgba(255,90,90,.1);border:1px solid rgba(255,90,90,.35);font-size:15px;line-height:1.5}
+.pv .pvi{width:100%;min-height:90px;border:0;background:#fff;border-radius:10px;display:block}
+</style>
+</head>
+<body>
+<header class="top"><div class="in"><button class="logo" id="logoBtn" style="background:none;border:0;padding:0">Criate <b>Academy</b></button><div class="st"><span title="Dias seguidos">🔥 <i id="sStreak">0</i></span><span title="XP total" style="color:var(--xp)">⚡ <i id="sXp">0</i></span><button class="som" id="som" aria-label="Som">🔊</button></div></div></header>
+<main class="wrap" id="mapa"></main>
+<section class="lesson" id="lesson" hidden>
+  <div class="lhead"><button class="x" id="sair" aria-label="Sair">✕</button><div class="bar"><i id="lbar" style="width:0"></i></div><span class="hearts" id="hearts">❤️ 5</span></div>
+  <div class="lbody"><div class="in" id="ex"></div></div>
+  <div class="lfoot" id="foot"><div class="in" id="footIn"></div></div>
+</section>
+
+<script>
+{
+const CURSOS=[
+{id:'html',nome:'HTML',icone:'🧱',cor:'#ff8a3d',sub:'A estrutura de todo site',nivel:'Iniciante',meta:'Montar a estrutura de uma página do zero: títulos, textos, listas, links, imagens e formulários.',units:[
+{u:'Unidade 1',t:'Primeiros passos',l:[
+ {n:'O que é HTML',i:'🧱',obj:['Entender o que é HTML','Reconhecer uma tag','Abrir e fechar tags'],ex:[
+  {t:'info',q:'HTML é o esqueleto de qualquer site',ana:'Pense numa mudança de casa. Você escreve etiquetas nas caixas: "cozinha", "quarto", "frágil". O HTML faz isso com o conteúdo do site: ele etiqueta cada pedaço dizendo o que ele é.',b:'Todo site que você abre é feito de <b>HTML</b> (HyperText Markup Language).\n\nEle não é uma linguagem de programação: é uma linguagem de <b>marcação</b>. Ele não faz contas nem toma decisões. Ele só diz o que cada coisa é: isto é um título, isto é um texto, isto é uma imagem.\n\nEssas etiquetas se chamam <b>tags</b>: palavras entre <code>&lt; &gt;</code>.',code:'<h1>Olá, mundo!</h1>',show:true,tip:'O navegador lê o HTML de cima pra baixo e monta a página nessa ordem.'},
+  {t:'mc',q:'Como se chamam as "etiquetas" do HTML, como <h1>?',o:['Tags','Códigos','Pastas','Variáveis'],a:0,w:'São as tags! Elas marcam o que cada parte da página é.'},
+  {t:'info',q:'Abrir e fechar',b:'Quase toda tag tem duas partes:\n• a <b>abertura</b>: <code>&lt;p&gt;</code>\n• o <b>fechamento</b>: <code>&lt;/p&gt;</code>, com uma barra <code>/</code> antes do nome\n\nO conteúdo fica no meio. Abertura + conteúdo + fechamento formam um <b>elemento</b>.\n\nA abertura diz "começa aqui" e o fechamento diz "termina aqui".',code:'<p>Eu sou um parágrafo</p>',show:true,erro:'Esquecer de fechar a tag. Se você abre um <h1> e não fecha, o navegador acha que TUDO que vem depois também é título.'},
+  {t:'mc',q:'Qual destas tags FECHA um parágrafo?',o:['<p>','</p>','<p/>','<\\p>'],a:1,w:'A barra / vem logo depois do < na tag de fechamento.'},
+  {t:'mc',q:'O que está errado em <h1>Promoção<h1> ?',o:['Nada, está certo','Falta a barra no fechamento: </h1>','O texto deveria estar fora','h1 não existe'],a:1,w:'O segundo <h1> deveria ser </h1>. Sem a barra, o navegador entende que abriu outro título.'},
+  {t:'fill',q:'Complete pra fechar o título:',code:'<h1>Bem-vindo</___>',o:['/h1','h1','p','h2'],a:['h1'],w:'A barra já está ali. Falta só o nome da tag: </h1>.'},
+  {t:'type',q:'Sua vez! Escreva um título <h1> com o texto Olá',start:'',hint:'<h1>Olá</h1>',check:d=>{const h=d.querySelector('h1');return !!h&&/ol[aá]/i.test(h.textContent)},w:'<h1>Olá</h1>'}
+ ]},
+ {n:'Títulos',i:'🔠',obj:['Usar os 6 níveis de título','Entender a hierarquia da página','Escolher o título pela importância'],ex:[
+  {t:'info',q:'Seis níveis de título',ana:'Pense no sumário de um livro: o nome do livro, depois os capítulos, depois as partes de cada capítulo. Os títulos do HTML seguem essa mesma ordem de importância.',b:'Existem 6 tags de título:\n• <code>&lt;h1&gt;</code>: o mais importante (o nome do livro)\n• <code>&lt;h2&gt;</code>: as seções (os capítulos)\n• <code>&lt;h3&gt;</code>: partes de uma seção\n• ... até <code>&lt;h6&gt;</code>, o menos importante\n\nO "h" vem de <i>heading</i>, que é "título" em inglês.',code:'<h1>Clínica Sorriso</h1>\n<h2>Tratamentos</h2>\n<h3>Clareamento</h3>\n<h3>Implante</h3>',show:true,tip:'Use só UM h1 por página. O Google usa ele pra entender o assunto principal do site.'},
+  {t:'mc',q:'Qual é o título MAIS importante?',o:['<h6>','<h3>','<h1>','<title>'],a:2,w:'O h1 é o mais importante e geralmente o maior.'},
+  {t:'mc',q:'Quantos níveis de título existem no HTML?',o:['3','6','10','Infinitos'],a:1,w:'São 6: do h1 ao h6.'},
+  {t:'info',q:'Importância, não tamanho',b:'Um erro muito comum: escolher <code>h3</code> só porque ele é "menor e mais bonitinho".\n\nO número do h diz a <b>importância</b>. O <b>tamanho</b> você ajusta depois, com CSS.\n\nRegra prática: desça um nível de cada vez. Depois de um h2 vem h3, não h5.',erro:'Pular níveis (h1 → h4) ou usar h1 várias vezes. Isso confunde o Google e leitores de tela.'},
+  {t:'mc',q:'Num site de clínica, qual faz mais sentido?',o:['Nome da clínica em h1, "Tratamentos" em h2','Tudo em h1','Nome em h4 porque fica menor','Tratamentos em h1 e nome em h2'],a:0,w:'O nome da clínica é o assunto principal (h1). As seções vêm em h2.'},
+  {t:'build',q:'Monte um subtítulo:',o:['<h2>','Serviços','</h2>','<h7>'],a:['<h2>','Serviços','</h2>'],w:'<h2>Serviços</h2>. Não existe h7!'},
+  {t:'type',q:'Monte a hierarquia: um <h1>, um <h2> embaixo e um <h3> embaixo do h2',start:'<h1>Minha clínica</h1>\n',hint:'<h2>Tratamentos</h2>\n<h3>Clareamento</h3>',check:d=>!!d.querySelector('h1')&&!!d.querySelector('h2')&&!!d.querySelector('h3'),w:'<h1>Minha clínica</h1>\n<h2>Tratamentos</h2>\n<h3>Clareamento</h3>'}
+ ]},
+ {n:'Textos e quebras de linha',i:'📝',obj:['Criar parágrafos','Entender por que o Enter não pula linha','Usar <br> do jeito certo','Destacar palavras'],ex:[
+  {t:'info',q:'Parágrafos com <p>',b:'Textos ficam dentro de <code>&lt;p&gt;</code> (de <i>paragraph</i>).\n\nCada <code>&lt;p&gt;</code> é um parágrafo separado, e o navegador coloca um espaço automático entre um e outro.',code:'<p>Primeiro parágrafo.</p>\n<p>Segundo parágrafo.</p>',show:true},
+  {t:'info',q:'O mistério do Enter',ana:'Pense no HTML como alguém que só ouve as tags. Os espaços e Enters que você dá no código, pra ele, são só "respiro" pra você ler melhor. Ele ignora.',b:'Olhe este código: o texto está em 3 linhas no código, com vários Enters.\n\nMas veja o resultado: aparece <b>tudo numa linha só</b>!\n\nIsso acontece porque o HTML <b>junta todos os espaços e quebras em um único espaço</b>. Pra quebrar a linha de verdade, você precisa de uma tag.',code:'<p>Rua das Flores, 100\n\nCentro\n\nTangará - SC</p>',show:true},
+  {t:'mc',q:'Você deu 3 Enters no meio de um texto no código. O que acontece na página?',o:['Aparecem 3 linhas em branco','Nada: vira um espaço só','O texto some','Dá erro'],a:1,w:'O HTML ignora quebras do código. Vários Enters ou espaços viram um espaço só.'},
+  {t:'info',q:'A tag <br>: quebra de linha',b:'Pra pular de linha <b>dentro do mesmo parágrafo</b>, use <code>&lt;br&gt;</code> (de <i>break</i>, quebrar).\n\nDetalhes importantes:\n• Ela <b>não tem fechamento</b>. Não existe <code>&lt;/br&gt;</code>.\n• Ela vai exatamente onde você quer que a linha quebre.\n• Você pode escrever <code>&lt;br&gt;</code> ou <code>&lt;br /&gt;</code>, os dois funcionam.',code:'<p>Rua das Flores, 100<br>\nCentro<br>\nTangará - SC</p>',show:true,tip:'Agora sim: cada <br> pulou uma linha. Compare com o exemplo anterior, sem <br>.'},
+  {t:'info',q:'Quando usar <br> e quando usar <p>?',b:'<b>Use &lt;br&gt;</b> quando as linhas fazem parte da MESMA informação:\n• endereço (rua / bairro / cidade)\n• horário (Seg a Sex / Sábado)\n• versos de poema ou letra\n\n<b>Use outro &lt;p&gt;</b> quando é um assunto novo, outro parágrafo.',code:'<p>Seg a Sex: 8h às 18h<br>\nSábado: 8h às 12h</p>\n<p>Atendemos com hora marcada.</p>',show:true,erro:'Usar vários <br><br><br> só pra dar espaço entre blocos. Pra espaço, o certo é usar outro <p> (ou CSS, que você vai aprender).'},
+  {t:'mc',q:'Qual destas está ERRADA?',o:['Linha 1<br>Linha 2','Linha 1<br />Linha 2','Linha 1</br>Linha 2','<p>Oi<br>tchau</p>'],a:2,w:'Não existe </br>. A br não tem fechamento: só <br> ou <br />.'},
+  {t:'mc',q:'Você quer mostrar o endereço da clínica em 3 linhas. O melhor é:',o:['3 parágrafos <p> separados','1 parágrafo com <br> entre as linhas','Dar Enter no código','Usar <h1> em cada linha'],a:1,w:'É a mesma informação (o endereço), então fica num <p> só, com <br> separando as linhas.'},
+  {t:'fill',q:'Quebre a linha entre o nome e o telefone:',code:'<p>Dra. Ana<___>(49) 99999-0000</p>',o:['br','/br','p','hr'],a:['br'],w:'<br> sozinho, sem fechamento, bem onde a linha deve quebrar.'},
+  {t:'build',q:'Monte o horário em 2 linhas:',o:['<p>','Seg a Sex','<br>','Sábado','</p>','</br>'],a:['<p>','Seg a Sex','<br>','Sábado','</p>'],w:'O </br> não existe. Fica: <p>Seg a Sex<br>Sábado</p>.'},
+  {t:'type',q:'Escreva um parágrafo com um endereço em 3 linhas usando <br>',start:'<p>\n\n</p>',hint:'<p>Rua A, 10<br>Centro<br>Tangará - SC</p>',check:d=>{const p=d.querySelector('p');return !!p&&p.querySelectorAll('br').length>=2},w:'<p>Rua A, 10<br>Centro<br>Tangará - SC</p>'},
+  {t:'info',q:'Destacando palavras',b:'Dentro do texto você pode destacar palavras:\n• <code>&lt;strong&gt;</code> marca algo <b>importante</b> (aparece em negrito)\n• <code>&lt;em&gt;</code> dá <i>ênfase</i> (aparece em itálico)\n\nElas ficam <b>dentro</b> do <code>&lt;p&gt;</code>, em volta só da palavra que você quer destacar.',code:'<p>Avaliação <strong>grátis</strong> e <em>sem compromisso</em>!</p>',show:true},
+  {t:'mc',q:'Qual tag deixa um texto em negrito?',o:['<b-text>','<strong>','<em>','<big>'],a:1,w:'<strong> marca algo importante e aparece em negrito.'},
+  {t:'fill',q:'Deixe a palavra em itálico:',code:'<p>Eu <___>adoro</em> programar</p>',o:['em','strong','p','i/'],a:['em'],w:'<em> abre, </em> fecha.'},
+  {t:'type',q:'Escreva um parágrafo com uma palavra em <strong> e uma quebra de linha <br>',start:'',hint:'<p>Consulta <strong>grátis</strong><br>Agende já</p>',check:d=>!!d.querySelector('p strong')&&!!d.querySelector('p br'),w:'<p>Consulta <strong>grátis</strong><br>Agende já</p>'}
+ ]},
+ {n:'Listas',i:'📋',obj:['Criar listas com marcadores','Criar listas numeradas','Saber quando usar cada uma'],ex:[
+  {t:'info',q:'Listas com marcadores',ana:'Uma lista de compras: a ordem não importa, você só quer ver os itens. Isso é uma lista com bolinhas.',b:'Uma lista tem duas partes:\n• <code>&lt;ul&gt;</code> (<i>unordered list</i>): a "caixa" da lista, com bolinhas\n• <code>&lt;li&gt;</code> (<i>list item</i>): cada item, sempre DENTRO da ul',code:'<ul>\n  <li>Limpeza</li>\n  <li>Clareamento</li>\n  <li>Implante</li>\n</ul>',show:true,tip:'Menus de sites quase sempre são listas ul por baixo, só que estilizadas com CSS.'},
+  {t:'info',q:'Listas numeradas',ana:'Uma receita de bolo: a ordem importa (primeiro mistura, depois assa). Isso é uma lista numerada.',b:'Troque <code>ul</code> por <code>&lt;ol&gt;</code> (<i>ordered list</i>) e os itens viram 1, 2, 3... sozinhos. Você não precisa digitar os números.',code:'<ol>\n  <li>Chame no WhatsApp</li>\n  <li>Agende a avaliação</li>\n  <li>Comece o tratamento</li>\n</ol>',show:true,erro:'Colocar <li> solto, sem a <ul> ou <ol> em volta. O item até aparece, mas fica fora de uma lista de verdade.'},
+  {t:'mc',q:'Qual tag cria uma lista NUMERADA?',o:['<ul>','<li>','<ol>','<list>'],a:2,w:'ol = ordered list (lista ordenada).'},
+  {t:'mc',q:'"Como funciona a primeira consulta" em 3 passos. Qual lista usar?',o:['<ul>, porque é mais bonita','<ol>, porque a ordem importa','Nenhuma, usar 3 <h1>','<li> sozinho'],a:1,w:'Passos têm ordem: 1, 2, 3. Então ol.'},
+  {t:'build',q:'Monte uma lista com um item:',o:['<ul>','<li>','Pizza','</li>','</ul>'],a:['<ul>','<li>','Pizza','</li>','</ul>'],w:'A ul abre por fora, o li fica dentro.'},
+  {t:'fill',q:'Complete o item da lista:',code:'<ul>\n  <___>Café</li>\n</ul>',o:['li','ul','ol','p'],a:['li'],w:'Cada item é um <li>.'},
+  {t:'type',q:'Crie uma lista NUMERADA com 3 passos',start:'<ol>\n  \n</ol>',hint:'Coloque 3 <li> dentro da ol',check:d=>d.querySelectorAll('ol li').length>=3,w:'<ol>\n  <li>Um</li>\n  <li>Dois</li>\n  <li>Três</li>\n</ol>'}
+ ]}
+]},
+{u:'Unidade 2',t:'Links, imagens e estrutura',l:[
+ {n:'Links',i:'🔗',obj:['Criar links','Entender atributos','Fazer links de WhatsApp, telefone e e-mail'],ex:[
+  {t:'info',q:'A anatomia de um link',ana:'Um link é como uma placa de rua: tem o texto que as pessoas leem ("Centro →") e o destino real pra onde ela leva.',b:'Links usam a tag <code>&lt;a&gt;</code>. Repare nas partes:\n• <code>href="..."</code>: o <b>destino</b> (pra onde leva)\n• o texto entre as tags: o que a pessoa <b>vê e clica</b>\n\nO <code>href</code> é um <b>atributo</b>: uma configuração extra que fica DENTRO da tag de abertura, no formato <code>nome="valor"</code>.',code:'<a href="https://google.com">Ir pro Google</a>',show:true},
+  {t:'mc',q:'Onde fica o endereço do link?',o:['No texto entre as tags','No atributo href','No atributo src','Na tag </a>'],a:1,w:'href = endereço pra onde o link leva.'},
+  {t:'info',q:'Links que todo site de clínica tem',b:'O <code>href</code> não precisa ser um site. Ele pode abrir apps:\n• <b>WhatsApp:</b> <code>https://wa.me/5549999990000</code> (55 + DDD + número, só números)\n• <b>Ligar:</b> <code>tel:+5549999990000</code>\n• <b>E-mail:</b> <code>mailto:contato@clinica.com</code>\n• <b>Parte da página:</b> <code>#contato</code> (rola até o elemento com <code>id="contato"</code>)',code:'<a href="https://wa.me/5549999990000">Chamar no WhatsApp</a>\n<a href="tel:+5549999990000">Ligar</a>',show:true,erro:'Esquecer o https:// em links de outros sites. Sem ele, o navegador procura uma página com esse nome DENTRO do seu site e dá erro.'},
+  {t:'fill',q:'Complete o link do WhatsApp:',code:'<a ___="https://wa.me/5548999999999">WhatsApp</a>',o:['href','src','link','alt'],a:['href'],w:'Links usam href.'},
+  {t:'info',q:'Abrir em nova aba',b:'Coloque <code>target="_blank"</code> pro link abrir numa aba nova. Assim a pessoa não sai do seu site.\n\nUse em links pra OUTROS sites (Instagram, Google Maps). Em links do próprio site, não precisa.',code:'<a href="https://instagram.com" target="_blank">Instagram</a>'},
+  {t:'mc',q:'O que target="_blank" faz?',o:['Deixa o link em branco','Abre em nova aba','Esconde o link','Deixa o link azul'],a:1,w:'Abre o link numa aba nova.'},
+  {t:'mc',q:'Qual link LIGA pro número quando tocado no celular?',o:['<a href="49999990000">','<a href="tel:+5549999990000">','<a call="49999990000">','<a href="wa:49999990000">'],a:1,w:'tel: + número. No celular, abre o discador.'},
+  {t:'type',q:'Crie um link de WhatsApp pro número 5549999990000 com o texto Agendar',start:'',hint:'<a href="https://wa.me/5549999990000">Agendar</a>',check:d=>{const a=d.querySelector('a[href]');return !!a&&/wa\.me\/5549999990000/.test(a.getAttribute('href'))&&/agendar/i.test(a.textContent)},w:'<a href="https://wa.me/5549999990000">Agendar</a>'}
+ ]},
+ {n:'Imagens',i:'🖼️',obj:['Inserir imagens','Usar src e alt','Entender caminhos de arquivo'],ex:[
+  {t:'info',q:'Colocando imagens',b:'A tag <code>&lt;img&gt;</code> mostra uma imagem. Ela usa dois atributos:\n• <code>src</code> (<i>source</i>, origem): QUAL arquivo mostrar\n• <code>alt</code> (alternativo): uma descrição da imagem\n\n<b>Detalhe:</b> img não tem tag de fechamento, igual à br!',code:'<img src="foto.jpg" alt="Foto da equipe">'},
+  {t:'info',q:'O caminho do arquivo',ana:'O src é como um endereço de entrega. Se você erra a rua, o entregador não acha a casa: a imagem não aparece.',b:'O src depende de ONDE a imagem está em relação ao seu HTML:\n• mesma pasta: <code>src="foto.jpg"</code>\n• dentro de uma pasta img: <code>src="img/foto.jpg"</code>\n• na internet: <code>src="https://site.com/foto.jpg"</code>\n\nMaiúsculas importam: <code>Foto.JPG</code> é diferente de <code>foto.jpg</code>.',erro:'90% das imagens quebradas são caminho errado: nome diferente, pasta errada ou maiúscula trocada.'},
+  {t:'mc',q:'Qual atributo diz QUAL imagem mostrar?',o:['alt','href','src','img'],a:2,w:'src = source, a origem da imagem.'},
+  {t:'mc',q:'Pra que serve o alt?',o:['Deixar a imagem maior','Descrever a imagem','Trocar a cor','Virar um link'],a:1,w:'O alt descreve a imagem pra leitores de tela e pro Google. E aparece se a imagem não carregar.'},
+  {t:'mc',q:'A foto está em img/sorriso.jpg. Qual src está certo?',o:['src="sorriso.jpg"','src="img/sorriso.jpg"','src="img\\sorriso"','src="Img/Sorriso.JPG"'],a:1,w:'Pasta + barra + nome exato do arquivo: img/sorriso.jpg.'},
+  {t:'fill',q:'Complete a imagem:',code:'<img ___="logo.png" ___="Logo da empresa">',o:['src','alt','href','title'],a:['src','alt'],w:'Primeiro o src (arquivo), depois o alt (descrição).'},
+  {t:'mc',q:'Qual destas está CERTA?',o:['<img src="a.jpg"></img>','<img src="a.jpg" alt="Gato">','<image href="a.jpg">','<img>a.jpg</img>'],a:1,w:'img não fecha e usa src + alt.'},
+  {t:'type',q:'Coloque uma imagem com src e alt (pode inventar o nome do arquivo)',start:'',hint:'<img src="img/equipe.jpg" alt="Equipe da clínica">',check:d=>{const i=d.querySelector('img');return !!i&&!!i.getAttribute('src')&&!!(i.getAttribute('alt')||'').trim()},w:'<img src="img/equipe.jpg" alt="Equipe da clínica">'}
+ ]},
+ {n:'Estrutura',i:'🏗️',obj:['Montar o esqueleto completo','Diferenciar head e body','Criar a estrutura no VS Code em 1 segundo'],ex:[
+  {t:'info',q:'O esqueleto completo',ana:'Pense num teatro. O <b>body</b> é o palco: tudo que o público vê. O <b>head</b> são os bastidores: coisas importantes que o público não vê, como o nome da peça e a iluminação.',b:'Uma página de verdade tem uma estrutura fixa:\n• <code>&lt;!DOCTYPE html&gt;</code>: avisa que é HTML moderno\n• <code>&lt;html&gt;</code>: a caixa que envolve tudo\n• <code>&lt;head&gt;</code>: os bastidores (título da aba, acentos, CSS)\n• <code>&lt;body&gt;</code>: o palco, o que aparece na tela',code:'<!DOCTYPE html>\n<html lang="pt-BR">\n  <head>\n    <meta charset="utf-8">\n    <title>Minha página</title>\n  </head>\n  <body>\n    <h1>Oi!</h1>\n  </body>\n</html>',tip:'No VS Code, num arquivo .html vazio, digite ! e aperte Enter: ele escreve essa estrutura toda pra você.'},
+  {t:'mc',q:'Onde fica o conteúdo que APARECE na tela?',o:['<head>','<title>','<body>','<!DOCTYPE>'],a:2,w:'Tudo que aparece vai no body.'},
+  {t:'mc',q:'O <title> aparece onde?',o:['No meio da página','Na aba do navegador','No rodapé','Em lugar nenhum'],a:1,w:'O title é o nome que aparece na aba e no resultado do Google.'},
+  {t:'info',q:'Recuo: o código "em escadinha"',b:'Repare que o código acima tem espaços no começo das linhas. Isso se chama <b>recuo</b> (ou indentação).\n\nTudo que está DENTRO de uma tag fica um pouco mais pra direita. Assim você enxerga quem está dentro de quem.\n\nPro navegador não muda nada. É pra você (e quem for mexer depois) entender o código.',tip:'No VS Code, Shift+Alt+F arruma o recuo do arquivo inteiro sozinho.'},
+  {t:'build',q:'Monte a ordem certa:',o:['<html>','<head>','</head>','<body>','</body>','</html>'],a:['<html>','<head>','</head>','<body>','</body>','</html>'],w:'html por fora, head primeiro, body depois.'},
+  {t:'mc',q:'Se os acentos aparecem como "Ã©", o que falta?',o:['<title>','<meta charset="utf-8">','<body>','Um <h1>'],a:1,w:'O charset utf-8 resolve acentos quebrados.'}
+ ]},
+ {n:'Organizando',i:'📦',obj:['Agrupar conteúdo com div','Usar tags semânticas','Entender o que é "dentro de"'],ex:[
+  {t:'info',q:'Caixas pra organizar',ana:'Pense numa gaveta com divisórias: meias de um lado, camisetas do outro. As caixas do HTML separam a página em partes.',b:'<code>&lt;div&gt;</code> é uma caixa genérica, sem significado, só pra agrupar coisas.\n\nTambém existem caixas <b>semânticas</b>, que dizem o que a parte É:\n• <code>&lt;header&gt;</code>: o topo (logo e menu)\n• <code>&lt;nav&gt;</code>: o menu\n• <code>&lt;main&gt;</code>: o conteúdo principal\n• <code>&lt;section&gt;</code>: uma seção\n• <code>&lt;footer&gt;</code>: o rodapé',code:'<header>Logo e menu</header>\n<main>\n  <section>Sobre</section>\n  <section>Tratamentos</section>\n</main>\n<footer>Contato</footer>',show:true,tip:'Tags semânticas ajudam o Google a entender o site. Prefira elas à div quando fizer sentido.'},
+  {t:'mc',q:'Qual tag é usada pro RODAPÉ?',o:['<bottom>','<footer>','<end>','<header>'],a:1,w:'footer = rodapé.'},
+  {t:'mc',q:'Qual é a "caixa genérica" do HTML?',o:['<box>','<div>','<span>','<group>'],a:1,w:'div é a caixa mais usada pra agrupar.'},
+  {t:'info',q:'header não é head!',b:'Esses dois confundem todo mundo no começo:\n• <code>&lt;head&gt;</code>: os bastidores, NÃO aparece na tela\n• <code>&lt;header&gt;</code>: o topo do site, APARECE na tela, fica dentro do body',erro:'Colocar o logo e o menu dentro do <head>. Eles não aparecem, porque o head é invisível.'},
+  {t:'fill',q:'Complete o topo do site:',code:'<___>\n  <h1>Meu site</h1>\n</header>',o:['header','head','top','footer'],a:['header'],w:'header é o topo visível. Não confunda com head!'},
+  {t:'type',q:'Crie um <header> com um <h1> dentro e um <footer> com um <p> dentro',start:'',hint:'<header>\n  <h1>Meu site</h1>\n</header>\n<footer>\n  <p>Contato</p>\n</footer>',check:d=>!!d.querySelector('header h1')&&!!d.querySelector('footer p'),w:'<header>\n  <h1>Meu site</h1>\n</header>\n<footer>\n  <p>Contato</p>\n</footer>'}
+ ]}
+]},
+{u:'Unidade 3',t:'Tabelas e formulários',l:[
+ {n:'Tabelas',i:'🧮',obj:['Montar tabelas','Diferenciar th e td','Saber quando usar tabela'],ex:[
+  {t:'info',q:'Dados em linhas e colunas',ana:'Pense numa planilha: linhas na horizontal, colunas na vertical, e cada quadradinho é uma célula.',b:'Uma tabela é montada linha por linha:\n• <code>&lt;table&gt;</code>: a tabela inteira\n• <code>&lt;tr&gt;</code>: uma linha (<i>table row</i>)\n• <code>&lt;th&gt;</code>: célula de cabeçalho (o título da coluna)\n• <code>&lt;td&gt;</code>: célula comum (<i>table data</i>)\n\nAs células ficam SEMPRE dentro de uma tr.',code:'<table>\n  <tr><th>Tratamento</th><th>Sessões</th></tr>\n  <tr><td>Limpeza</td><td>1</td></tr>\n  <tr><td>Clareamento</td><td>3</td></tr>\n</table>',show:true,tip:'Tabela é pra dados (preços, horários). Nunca use tabela pra montar o layout da página.'},
+  {t:'mc',q:'Qual tag cria uma LINHA da tabela?',o:['<td>','<tr>','<th>','<line>'],a:1,w:'tr = table row (linha).'},
+  {t:'mc',q:'Qual a diferença entre th e td?',o:['Nenhuma','th é cabeçalho, td é célula comum','td é maior','th é uma imagem'],a:1,w:'th fica em negrito por padrão: é o título da coluna.'},
+  {t:'mc',q:'Uma tabela com 2 colunas e 3 linhas tem quantas <tr>?',o:['2','3','5','6'],a:1,w:'Uma tr pra cada linha: 3 linhas, 3 tr. As colunas são as células dentro de cada tr.'},
+  {t:'fill',q:'Complete a célula:',code:'<tr>\n  <___>Pizza</td>\n</tr>',o:['td','tr','th','table'],a:['td'],w:'Célula comum é td.'},
+  {t:'type',q:'Crie uma tabela com uma linha de cabeçalho (2 th) e uma linha de dados (2 td)',start:'<table>\n  \n</table>',hint:'<tr><th>Dia</th><th>Horário</th></tr>\n<tr><td>Sábado</td><td>8h</td></tr>',check:d=>d.querySelectorAll('table tr th').length>=2&&d.querySelectorAll('table tr td').length>=2,w:'<table>\n  <tr><th>Dia</th><th>Horário</th></tr>\n  <tr><td>Sábado</td><td>8h</td></tr>\n</table>'}
+ ]},
+ {n:'Formulários',i:'✍️',obj:['Criar campos','Usar tipos de input','Ligar label e campo','Campos obrigatórios'],ex:[
+  {t:'info',q:'Pegando informações',ana:'Um formulário é como uma ficha de cadastro de papel: tem os espaços pra preencher e, no fim, você entrega.',b:'• <code>&lt;form&gt;</code>: a ficha inteira\n• <code>&lt;input&gt;</code>: um espaço pra preencher (não tem fechamento!)\n• <code>&lt;button&gt;</code>: o botão de enviar\n\nO <code>placeholder</code> é o textinho cinza de exemplo, que some quando você digita.',code:'<form>\n  <input type="text" placeholder="Seu nome">\n  <button>Enviar</button>\n</form>',show:true},
+  {t:'mc',q:'Qual tag cria um CAMPO pra digitar?',o:['<field>','<input>','<text>','<write>'],a:1,w:'input é o campo. Ele também não tem fechamento.'},
+  {t:'info',q:'Tipos de campo',b:'O atributo <code>type</code> muda o campo, e no celular muda até o teclado:\n• <code>text</code>: texto comum\n• <code>email</code>: abre teclado com @\n• <code>tel</code>: abre teclado de números\n• <code>password</code>: esconde o que digita\n• <code>number</code>: só números\n\nPra textos longos, use <code>&lt;textarea&gt;&lt;/textarea&gt;</code> (essa fecha!).',code:'<input type="tel" placeholder="(49) 99999-0000">\n<textarea placeholder="Sua mensagem"></textarea>',show:true},
+  {t:'info',q:'Label: o nome do campo',b:'O <code>&lt;label&gt;</code> é o nome que fica em cima do campo.\n\nPra ligar os dois, o <code>for</code> do label tem que ser IGUAL ao <code>id</code> do input. Assim, tocar no nome já coloca o cursor no campo.\n\nE com <code>required</code>, o campo vira obrigatório: o navegador não deixa enviar vazio.',code:'<label for="nome">Nome</label>\n<input id="nome" required>',show:true,erro:'Escrever for e id diferentes (for="nome" e id="Nome"). Aí a ligação não funciona.'},
+  {t:'mc',q:'O que o atributo placeholder faz?',o:['Envia o formulário','Mostra um texto de exemplo no campo','Deixa o campo obrigatório','Esconde o campo'],a:1,w:'É a dica cinza que some quando você digita.'},
+  {t:'mc',q:'Qual type abre o teclado de NÚMEROS de telefone no celular?',o:['text','tel','phone','number-phone'],a:1,w:'type="tel" abre o teclado numérico de telefone.'},
+  {t:'fill',q:'Ligue o label ao campo:',code:'<label ___="email">E-mail</label>\n<input ___="email" type="email">',o:['for','id','name','href'],a:['for','id'],w:'O label usa for, o input usa id, e os dois valores são iguais.'},
+  {t:'type',q:'Crie um formulário com label + input ligados (for e id), o input obrigatório, e um button',start:'<form>\n  \n</form>',hint:'<label for="nome">Nome</label>\n<input id="nome" required>\n<button>Enviar</button>',check:d=>{const l=d.querySelector('form label[for]');if(!l)return false;const i=d.getElementById(l.getAttribute('for'));return !!i&&i.tagName==='INPUT'&&i.required&&!!d.querySelector('form button')},w:'<form>\n  <label for="nome">Nome</label>\n  <input id="nome" required>\n  <button>Enviar</button>\n</form>'}
+ ]},
+ {n:'Revisão de HTML',i:'🏆',obj:['Revisar tudo que você aprendeu','Montar um mini site de clínica'],ex:[
+  {t:'mc',q:'Qual tag NÃO tem fechamento?',o:['<p>','<img>','<h1>','<li>'],a:1,w:'img, br e input não fecham.'},
+  {t:'mc',q:'Como quebrar a linha dentro de um parágrafo?',o:['Dando Enter no código','Com <br>','Com </br>','Com <p> dentro do <p>'],a:1,w:'<br>, sem fechamento. O Enter no código é ignorado.'},
+  {t:'mc',q:'Link pro Instagram em nova aba:',o:['<a src="..." new>','<a href="..." target="_blank">','<link href="...">','<a href="..." open>'],a:1,w:'href + target="_blank".'},
+  {t:'build',q:'Monte um item de lista em negrito:',o:['<li>','<strong>','Promoção','</strong>','</li>'],a:['<li>','<strong>','Promoção','</strong>','</li>'],w:'A última tag aberta é a primeira a fechar.'},
+  {t:'mc',q:'Onde fica o título que aparece na aba?',o:['<h1> no body','<title> no head','<header>','<footer>'],a:1,w:'title, dentro do head.'},
+  {t:'mc',q:'Qual é a diferença entre head e header?',o:['Nenhuma','head é invisível (bastidores), header é o topo visível','header é invisível','head é o rodapé'],a:1,w:'head = bastidores. header = topo da página, que aparece.'},
+  {t:'type',q:'Desafio final! Mini site de clínica: um <header> com <h1>, um <p> com endereço em 2 linhas (<br>) e um link de WhatsApp',start:'',hint:'<header><h1>Clínica Sorriso</h1></header>\n<p>Rua A, 10<br>Centro</p>\n<a href="https://wa.me/5549999990000">WhatsApp</a>',check:d=>!!d.querySelector('header h1')&&!!d.querySelector('p br')&&!!d.querySelector('a[href*="wa.me"]'),w:'<header><h1>Clínica Sorriso</h1></header>\n<p>Rua A, 10<br>Centro</p>\n<a href="https://wa.me/5549999990000">WhatsApp</a>'}
+ ]}
+]}]},
+
+{id:'css',nome:'CSS',icone:'🎨',cor:'#4da3ff',sub:'Cores, tamanhos e layout',nivel:'Iniciante',req:'html',meta:'Deixar qualquer página bonita e organizada: cores, fontes, espaçamentos, layout lado a lado e versão de celular.',units:[
+{u:'Unidade 1',t:'Fundamentos do CSS',l:[
+ {n:'O que é CSS',i:'🎨',obj:['Entender o papel do CSS','Escrever uma regra','Saber onde colocar o CSS'],ex:[
+  {t:'info',q:'HTML é a estrutura. CSS é a aparência.',b:'O <b>CSS</b> (Cascading Style Sheets) define como as coisas ficam: cor, tamanho, espaço, posição.\n\nToda regra tem 3 partes: o <b>seletor</b> (quem), a <b>propriedade</b> (o quê) e o <b>valor</b> (como).',code:'h1 {\n  color: red;\n}',tip:'Leia assim: "todo h1, cor vermelha". Cada linha termina com ponto e vírgula.'},
+  {t:'mc',q:'Na regra  p { color: blue; }  quem é o seletor?',o:['color','blue','p','{ }'],a:2,w:'O seletor vem antes das chaves: é quem vai receber o estilo.'},
+  {t:'info',q:'Onde escrever o CSS',b:'Você pode colocar o CSS dentro de <code>&lt;style&gt;</code> no head, ou num arquivo separado (<code>estilo.css</code>) ligado com <code>&lt;link&gt;</code>.',code:'<link rel="stylesheet" href="estilo.css">',tip:'Em projetos reais, prefira o arquivo separado: um mesmo CSS serve pra várias páginas.'},
+  {t:'fill',q:'Deixe todos os parágrafos vermelhos:',code:'p {\n  ___: red;\n}',o:['color','text','font','paint'],a:['color'],w:'color muda a cor do texto.'},
+  {t:'mc',q:'O que separa uma declaração da outra?',o:['Vírgula ,','Ponto e vírgula ;','Ponto .','Espaço'],a:1,w:'Cada propriedade: valor; termina com ponto e vírgula.'},
+  {t:'type',live:1,q:'Deixe o título com cor vermelha (red)',start:'<style>\n  h1 {\n    \n  }\n</style>\n<h1>Meu site</h1>',hint:'Dentro das chaves: color: red;',check:(d,w)=>w.getComputedStyle(d.querySelector('h1')).color==='rgb(255, 0, 0)',w:'h1 {\n  color: red;\n}'}
+ ]},
+ {n:'Seletores',i:'🎯',obj:['Selecionar por tag, classe e id','Saber quando usar cada um'],ex:[
+  {t:'info',q:'Três jeitos de escolher',b:'• <b>Tag</b>: <code>p</code> pega todos os parágrafos\n• <b>Classe</b>: <code>.destaque</code> pega quem tem <code>class="destaque"</code>\n• <b>Id</b>: <code>#topo</code> pega quem tem <code>id="topo"</code>',code:'<p class="destaque">Oi</p>\n\n.destaque { color: green; }',tip:'No dia a dia, use classes. Elas podem se repetir em vários elementos. O id deve ser único na página.'},
+  {t:'mc',q:'Qual seletor pega class="botao"?',o:['#botao','.botao','botao','*botao'],a:1,w:'Classe usa ponto na frente.'},
+  {t:'fill',q:'Selecione o id "topo":',code:'___topo {\n  background: black;\n}',o:['#','.','*','@'],a:['#'],w:'Id usa # na frente.'},
+  {t:'mc',q:'Qual pode aparecer em VÁRIOS elementos?',o:['id','class','os dois','nenhum'],a:1,w:'Classe se repete. Id é único.'},
+  {t:'build',q:'Monte uma regra pra classe card:',o:['.card','{','color: blue;','}','#card'],a:['.card','{','color: blue;','}'],w:'.card { color: blue; }'},
+  {t:'type',live:1,q:'Crie a regra .aviso com color: red',start:'<style>\n  \n</style>\n<p class="aviso">Atenção!</p>\n<p>Texto normal</p>',hint:'.aviso { color: red; }',check:(d,w)=>w.getComputedStyle(d.querySelector('.aviso')).color==='rgb(255, 0, 0)'&&w.getComputedStyle(d.querySelectorAll('p')[1]).color!=='rgb(255, 0, 0)',w:'.aviso { color: red; }'}
+ ]},
+ {n:'Cores e fundos',i:'🌈',obj:['Usar cores por nome, hex e rgb','Mudar o fundo'],ex:[
+  {t:'info',q:'Formatos de cor',b:'• Nome: <code>red</code>, <code>white</code>, <code>black</code>\n• Hexadecimal: <code>#22e57a</code> (o mais usado)\n• RGB: <code>rgb(34, 229, 122)</code>\n\nPra fundo, use <code>background-color</code> ou só <code>background</code>.',code:'body {\n  background: #0a0a0f;\n  color: white;\n}',tip:'Pra pegar a cor exata de um logo, use um "conta-gotas" (color picker) e copie o código hex.'},
+  {t:'mc',q:'Qual é um código hex válido?',o:['#22e57a','22e57a#','hex(22e57a)','#22e57'],a:0,w:'# + 6 caracteres (0-9 e a-f).'},
+  {t:'fill',q:'Deixe o fundo do botão verde:',code:'.botao {\n  ___: green;\n}',o:['background','color','border','fill'],a:['background'],w:'background muda o fundo. color muda o texto.'},
+  {t:'mc',q:'Texto branco em fundo preto:',o:['color: black; background: white;','color: white; background: black;','text: white; fill: black;','font: white;'],a:1,w:'color = texto, background = fundo.'},
+  {t:'type',live:1,q:'Mude o fundo da página (body) pra black',start:'<style>\n  body {\n    \n  }\n</style>\n<p style="color:white">Noite</p>',hint:'background: black;',check:(d,w)=>w.getComputedStyle(d.body).backgroundColor==='rgb(0, 0, 0)',w:'body {\n  background: black;\n}'}
+ ]},
+ {n:'Textos e fontes',i:'🔤',obj:['Mudar tamanho e peso','Alinhar textos','Trocar a fonte'],ex:[
+  {t:'info',q:'Estilizando texto',b:'• <code>font-size</code>: tamanho (<code>18px</code>)\n• <code>font-weight</code>: peso (<code>400</code> normal, <code>700</code> negrito)\n• <code>text-align</code>: alinhamento (<code>left</code>, <code>center</code>, <code>right</code>)\n• <code>font-family</code>: a fonte',code:'h1 {\n  font-size: 32px;\n  font-weight: 700;\n  text-align: center;\n  font-family: Arial, sans-serif;\n}',tip:'No celular, texto de leitura deve ter no mínimo 16px.'},
+  {t:'mc',q:'Como centralizar um texto?',o:['align: middle;','text-align: center;','center: true;','font-align: center;'],a:1,w:'text-align: center.'},
+  {t:'fill',q:'Deixe o texto em negrito:',code:'p {\n  font-weight: ___;\n}',o:['700','big','bold-text','10px'],a:['700'],w:'700 (ou bold) é negrito.'},
+  {t:'mc',q:'O que "px" significa em 16px?',o:['Pixels','Porcentagem','Pontos extras','Peso'],a:0,w:'px = pixels, uma unidade de tamanho de tela.'},
+  {t:'type',live:1,q:'Centralize o título',start:'<style>\n  h1 {\n    \n  }\n</style>\n<h1>Centro</h1>',hint:'text-align: center;',check:(d,w)=>w.getComputedStyle(d.querySelector('h1')).textAlign==='center',w:'h1 {\n  text-align: center;\n}'}
+ ]}
+]},
+{u:'Unidade 2',t:'Layout de verdade',l:[
+ {n:'Box model',i:'📐',obj:['Entender content, padding, border e margin','Arredondar cantos'],ex:[
+  {t:'info',q:'Todo elemento é uma caixa',b:'De dentro pra fora:\n• <b>content</b>: o conteúdo\n• <b>padding</b>: espaço INTERNO\n• <b>border</b>: a borda\n• <b>margin</b>: espaço EXTERNO (afasta dos vizinhos)',code:'.card {\n  padding: 20px;\n  border: 2px solid #ccc;\n  margin: 16px;\n  border-radius: 12px;\n}',tip:'Coloque *{box-sizing:border-box} no início do CSS. Assim o padding não aumenta o tamanho da caixa, e o layout fica mais previsível.'},
+  {t:'mc',q:'Qual é o espaço INTERNO da caixa?',o:['margin','padding','border','gap'],a:1,w:'padding = recheio interno.'},
+  {t:'mc',q:'Pra afastar um card do outro, você usa:',o:['padding','margin','color','font-size'],a:1,w:'margin = espaço por fora.'},
+  {t:'fill',q:'Faça uma borda de 2px sólida preta:',code:'border: 2px ___ black;',o:['solid','line','full','thick'],a:['solid'],w:'Estilos de borda: solid, dashed, dotted.'},
+  {t:'type',live:1,q:'Dê padding de 20px e cantos arredondados na .caixa',start:'<style>\n  .caixa {\n    background: #eee;\n    \n  }\n</style>\n<div class="caixa">Conteúdo</div>',hint:'padding: 20px;\nborder-radius: 12px;',check:(d,w)=>{const c=w.getComputedStyle(d.querySelector('.caixa'));return parseFloat(c.paddingTop)>=20&&parseFloat(c.borderTopLeftRadius)>0},w:'padding: 20px;\nborder-radius: 12px;'}
+ ]},
+ {n:'Flexbox',i:'↔️',obj:['Colocar itens lado a lado','Alinhar e espaçar com flex'],ex:[
+  {t:'info',q:'Lado a lado com display: flex',b:'Colocando <code>display: flex</code> no elemento PAI, os filhos ficam lado a lado.\n\n• <code>gap</code>: espaço entre eles\n• <code>justify-content</code>: alinhamento na horizontal\n• <code>align-items</code>: alinhamento na vertical',code:'.menu {\n  display: flex;\n  gap: 16px;\n  justify-content: center;\n}',tip:'Flexbox resolve 80% dos layouts de site: menus, cards em linha, botões lado a lado.'},
+  {t:'mc',q:'Onde você coloca display: flex?',o:['Em cada filho','No elemento pai','No body sempre','No HTML'],a:1,w:'No pai. Ele organiza os filhos.'},
+  {t:'fill',q:'Coloque os itens lado a lado:',code:'.lista {\n  display: ___;\n}',o:['flex','block','none','side'],a:['flex'],w:'display: flex.'},
+  {t:'mc',q:'Qual propriedade dá espaço ENTRE os itens do flex?',o:['margin','gap','space','padding'],a:1,w:'gap é o jeito mais limpo.'},
+  {t:'mc',q:'Pra centralizar os itens na horizontal:',o:['align-items: center','justify-content: center','text-align: middle','center: all'],a:1,w:'justify-content cuida do eixo principal (horizontal).'},
+  {t:'type',live:1,q:'Deixe os botões do .menu lado a lado',start:'<style>\n  .menu {\n    \n  }\n</style>\n<div class="menu">\n  <button>Início</button>\n  <button>Sobre</button>\n  <button>Contato</button>\n</div>',hint:'display: flex;\ngap: 10px;',check:(d,w)=>w.getComputedStyle(d.querySelector('.menu')).display==='flex',w:'.menu {\n  display: flex;\n  gap: 10px;\n}'}
+ ]},
+ {n:'Responsivo',i:'📱',obj:['Fazer o site funcionar no celular','Usar media queries'],ex:[
+  {t:'info',q:'Um site, várias telas',b:'Sites <b>responsivos</b> se adaptam ao tamanho da tela. Três peças:\n• A tag <code>&lt;meta name="viewport"&gt;</code> no head\n• Medidas flexíveis (<code>%</code>, <code>max-width</code>)\n• <b>Media queries</b>: regras que só valem em certas larguras',code:'@media (max-width: 600px) {\n  .menu {\n    flex-direction: column;\n  }\n}',tip:'Mais da metade das visitas vem do celular. Sempre teste o site na tela pequena.'},
+  {t:'mc',q:'O que uma media query faz?',o:['Toca vídeo','Aplica estilos só em certos tamanhos de tela','Carrega imagens','Cria animações'],a:1,w:'Ela liga regras conforme a largura da tela.'},
+  {t:'fill',q:'Regras só pra telas até 600px:',code:'@media (___: 600px) {\n  ...\n}',o:['max-width','min-width','width-max','screen'],a:['max-width'],w:'max-width: até 600px de largura.'},
+  {t:'mc',q:'Pra imagem nunca passar da largura da tela:',o:['width: 2000px','max-width: 100%','size: auto','overflow: big'],a:1,w:'max-width: 100% faz a imagem caber em qualquer tela.'},
+  {t:'mc',q:'Sem a meta viewport, no celular o site...',o:['Fica perfeito','Aparece minúsculo, como no computador','Não abre','Fica sem cor'],a:1,w:'O celular finge ser uma tela grande e diminui tudo.'}
+ ]},
+ {n:'Revisão de CSS',i:'🏆',obj:['Revisar o curso de CSS'],ex:[
+  {t:'mc',q:'Estrutura de uma regra:',o:['seletor { propriedade: valor; }','propriedade { seletor: valor }','valor = seletor','{ seletor }'],a:0,w:'seletor { propriedade: valor; }'},
+  {t:'mc',q:'.botao seleciona:',o:['id="botao"','class="botao"','<botao>','todos os botões'],a:1,w:'Ponto = classe.'},
+  {t:'mc',q:'Espaço interno x externo:',o:['margin / padding','padding / margin','border / gap','gap / border'],a:1,w:'padding dentro, margin fora.'},
+  {t:'type',live:1,q:'Desafio! .card com fundo #22e57a, padding 16px e cantos arredondados',start:'<style>\n  .card {\n    \n  }\n</style>\n<div class="card">Card</div>',hint:'background: #22e57a;\npadding: 16px;\nborder-radius: 12px;',check:(d,w)=>{const c=w.getComputedStyle(d.querySelector('.card'));return c.backgroundColor==='rgb(34, 229, 122)'&&parseFloat(c.paddingTop)>=16&&parseFloat(c.borderTopLeftRadius)>0},w:'background: #22e57a;\npadding: 16px;\nborder-radius: 12px;'}
+ ]}
+]}]},
+
+{id:'js',nome:'JavaScript',icone:'⚡',cor:'#ffd53d',sub:'A lógica que dá vida',nivel:'Iniciante',req:'css',meta:'Criar interatividade: guardar informações, tomar decisões, reagir a cliques e mudar a página. É a base pra criar sistemas.',units:[
+{u:'Unidade 1',t:'Lógica de programação',l:[
+ {n:'O que é JavaScript',i:'⚡',obj:['Entender o papel do JS','Onde escrever','Usar o console'],ex:[
+  {t:'info',q:'A camada do comportamento',b:'HTML = estrutura. CSS = aparência. <b>JavaScript</b> = comportamento.\n\nÉ com JS que um botão faz algo quando você clica, um formulário calcula um valor ou uma lista aparece na tela. Ele é uma linguagem de <b>programação</b> de verdade.',code:'<script>\n  console.log("Olá!");\n<\/script>',tip:'Aperte F12 no navegador e vá na aba Console. É ali que o console.log mostra as mensagens. Isso é essencial pra achar erros.'},
+  {t:'mc',q:'Qual parte do site cuida do COMPORTAMENTO?',o:['HTML','CSS','JavaScript','Imagens'],a:2,w:'JS é quem age: cliques, cálculos, mudanças.'},
+  {t:'mc',q:'Em qual tag escrevemos JS no HTML?',o:['<js>','<code>','<script>','<style>'],a:2,w:'<script>. O <style> é pro CSS.'},
+  {t:'fill',q:'Mostre "oi" no console:',code:'console.___("oi");',o:['log','print','show','write'],a:['log'],w:'console.log() mostra mensagens no console.'},
+  {t:'mc',q:'Cada instrução em JS normalmente termina com:',o:[',',';','.',':'],a:1,w:'Ponto e vírgula, igual no CSS.'}
+ ]},
+ {n:'Variáveis',i:'📦',obj:['Guardar valores','Diferenciar let e const','Conhecer os tipos básicos'],ex:[
+  {t:'info',q:'Caixinhas com nome',b:'Variáveis guardam valores pra usar depois.\n• <code>let</code>: o valor pode mudar\n• <code>const</code>: o valor não muda\n\nTipos básicos: texto (<b>string</b>, entre aspas), <b>number</b> (número) e <b>boolean</b> (<code>true</code>/<code>false</code>).',code:'const nome = "Fabiano";\nlet idade = 25;\nlet online = true;',tip:'Regra de bolso: comece com const. Só troque pra let se precisar mudar o valor depois.'},
+  {t:'mc',q:'Qual NÃO pode ter o valor alterado depois?',o:['let','const','var','nenhuma'],a:1,w:'const = constante.'},
+  {t:'mc',q:'"25" (com aspas) é de que tipo?',o:['number','string','boolean','variável'],a:1,w:'Com aspas é texto (string), mesmo sendo número.'},
+  {t:'fill',q:'Crie uma variável que pode mudar:',code:'___ pontos = 0;',o:['let','const','set','int'],a:['let'],w:'let permite mudar depois.'},
+  {t:'type',live:1,q:'Crie uma const chamada preco com o valor 100',start:'<script>\n  \n<\/script>',hint:'const preco = 100;',check:(d,w)=>{try{return w.eval('preco')===100}catch(e){return false}},w:'const preco = 100;'}
+ ]},
+ {n:'Operações',i:'➕',obj:['Fazer contas','Juntar textos','Usar template strings'],ex:[
+  {t:'info',q:'Contas e textos',b:'Operadores: <code>+ - * /</code>.\n\nCom textos, o <code>+</code> <b>junta</b>. E o jeito moderno de montar textos é com crases e <code>${ }</code> (template string).',code:'const total = 10 * 3;   // 30\nconst nome = "Ana";\nconst msg = `Olá, ${nome}!`;',tip:'Template string é o que usamos pra montar a mensagem do WhatsApp com o nome do cliente.'},
+  {t:'mc',q:'Quanto dá "2" + "2"?',o:['4','"22"','Erro','"4"'],a:1,w:'Com aspas são textos: o + junta e vira "22".'},
+  {t:'fill',q:'Monte o texto com o nome:',code:'const msg = `Oi, ___{nome}!`;',o:['$','#','@','%'],a:['$'],w:'Dentro da crase: ${variavel}.'},
+  {t:'mc',q:'Qual operador multiplica?',o:['x','*','×','#'],a:1,w:'Asterisco * multiplica.'},
+  {t:'type',live:1,q:'Crie const total que seja 10 vezes 3',start:'<script>\n  \n<\/script>',hint:'const total = 10 * 3;',check:(d,w)=>{try{return w.eval('total')===30}catch(e){return false}},w:'const total = 10 * 3;'}
+ ]},
+ {n:'Condições',i:'🔀',obj:['Tomar decisões com if/else','Comparar valores'],ex:[
+  {t:'info',q:'Se isso, faça aquilo',b:'<code>if</code> executa algo só se a condição for verdadeira. <code>else</code> é o "senão".\n\nComparações: <code>===</code> igual, <code>!==</code> diferente, <code>&gt;</code> maior, <code>&lt;</code> menor, <code>&gt;=</code> maior ou igual.',code:'if (idade >= 18) {\n  console.log("Maior de idade");\n} else {\n  console.log("Menor de idade");\n}',tip:'Use sempre === (três iguais) pra comparar. O == tem regras estranhas que causam bugs.'},
+  {t:'mc',q:'Qual compara se dois valores são IGUAIS?',o:['=','===','=>','!='],a:1,w:'Um = guarda valor. === compara.'},
+  {t:'build',q:'Monte o começo de um if:',o:['if','(nota >= 7)','{','}','else'],a:['if','(nota >= 7)','{','}'],w:'if (condição) { ... }'},
+  {t:'mc',q:'O que o else faz?',o:['Repete o código','Roda quando o if é falso','Para o programa','Cria variável'],a:1,w:'else = senão.'},
+  {t:'type',live:1,q:'Se nota for >= 7, deixe aprovado = true',start:'<script>\n  const nota = 8;\n  let aprovado = false;\n  \n<\/script>',hint:'if (nota >= 7) {\n  aprovado = true;\n}',check:(d,w)=>{try{return w.eval('aprovado')===true}catch(e){return false}},w:'if (nota >= 7) {\n  aprovado = true;\n}'}
+ ]}
+]},
+{u:'Unidade 2',t:'Interagindo com a página',l:[
+ {n:'Funções',i:'🧩',obj:['Criar funções','Usar parâmetros e return'],ex:[
+  {t:'info',q:'Receitas reutilizáveis',b:'Uma <b>função</b> é um bloco de código com nome, que você chama quando quiser. Pode receber <b>parâmetros</b> (ingredientes) e devolver um resultado com <code>return</code>.',code:'function soma(a, b) {\n  return a + b;\n}\n\nsoma(2, 3); // 5',tip:'Se você copia e cola o mesmo código 2 vezes, provavelmente ele deveria virar uma função.'},
+  {t:'mc',q:'O que o return faz?',o:['Repete a função','Devolve um resultado','Apaga a função','Volta pro início'],a:1,w:'return entrega o resultado pra quem chamou.'},
+  {t:'fill',q:'Complete a função:',code:'___ dobro(n) {\n  return n * 2;\n}',o:['function','func','def','let'],a:['function'],w:'Funções começam com function.'},
+  {t:'mc',q:'Em soma(2, 3), o que são 2 e 3?',o:['Variáveis globais','Argumentos (valores passados)','Funções','Erros'],a:1,w:'São os valores que entram nos parâmetros a e b.'},
+  {t:'type',live:1,q:'Crie a função dobro(n) que devolve n * 2',start:'<script>\n  \n<\/script>',hint:'function dobro(n) {\n  return n * 2;\n}',check:(d,w)=>{try{return typeof w.dobro==='function'&&w.dobro(4)===8}catch(e){return false}},w:'function dobro(n) {\n  return n * 2;\n}'}
+ ]},
+ {n:'Listas (arrays)',i:'📚',obj:['Guardar vários valores','Acessar itens','Percorrer listas'],ex:[
+  {t:'info',q:'Vários valores numa variável',b:'Arrays guardam listas entre <code>[ ]</code>. A contagem começa no <b>0</b>.\n• <code>.length</code>: quantos itens\n• <code>.push()</code>: adiciona no fim\n• <code>for...of</code>: passa por cada item',code:'const frutas = ["maçã", "uva"];\nfrutas.push("pera");\nfrutas[0]; // "maçã"\nfor (const f of frutas) {\n  console.log(f);\n}',tip:'A lista de clientes do seu painel é um array por baixo.'},
+  {t:'mc',q:'Em ["a","b","c"], qual é a posição do "a"?',o:['1','0','-1','a'],a:1,w:'Arrays começam no 0.'},
+  {t:'fill',q:'Adicione um item no fim:',code:'lista.___("novo");',o:['push','add','append','insert'],a:['push'],w:'push coloca no final.'},
+  {t:'mc',q:'Como saber quantos itens tem?',o:['lista.size','lista.length','lista.count()','lista.total'],a:1,w:'.length'},
+  {t:'type',live:1,q:'Crie const frutas com 3 frutas',start:'<script>\n  \n<\/script>',hint:'const frutas = ["maçã", "uva", "pera"];',check:(d,w)=>{try{const f=w.eval('frutas');return Array.isArray(f)&&f.length>=3}catch(e){return false}},w:'const frutas = ["maçã", "uva", "pera"];'}
+ ]},
+ {n:'Mexendo na página',i:'🛠️',obj:['Pegar elementos com JS','Mudar texto e estilo'],ex:[
+  {t:'info',q:'O DOM',b:'O <b>DOM</b> é a página vista pelo JavaScript. Você pega um elemento e muda o que quiser:\n• <code>document.querySelector(".classe")</code> pega o primeiro que bate\n• <code>.textContent</code> muda o texto\n• <code>.style.color</code> muda o estilo',code:'const t = document.querySelector("#titulo");\nt.textContent = "Novo título";\nt.style.color = "green";',tip:'querySelector aceita os mesmos seletores do CSS: tag, .classe e #id.'},
+  {t:'mc',q:'Como pegar o elemento com id="preco"?',o:['document.querySelector("#preco")','document.get("preco")','page.preco','select(preco)'],a:0,w:'querySelector com # pra id.'},
+  {t:'fill',q:'Troque o texto do elemento:',code:'el.___ = "Olá";',o:['textContent','text','value','write'],a:['textContent'],w:'textContent muda o texto.'},
+  {t:'type',live:1,q:'Mude o texto do h1 pra Tchau',start:'<h1 id="titulo">Oi</h1>\n<script>\n  \n<\/script>',hint:'document.querySelector("#titulo").textContent = "Tchau";',check:d=>/tchau/i.test(d.querySelector('h1').textContent),w:'document.querySelector("#titulo").textContent = "Tchau";'}
+ ]},
+ {n:'Cliques e eventos',i:'🖱️',obj:['Reagir a cliques','Juntar tudo: DOM + função + evento'],ex:[
+  {t:'info',q:'Fazendo o botão funcionar',b:'<code>addEventListener</code> "escuta" um evento e roda uma função quando ele acontece. O mais comum é o <code>"click"</code>.',code:'const btn = document.querySelector("button");\nbtn.addEventListener("click", function () {\n  btn.textContent = "Clicou!";\n});',tip:'Esse padrão (pegar o elemento, escutar o evento, mudar a página) é a base de qualquer sistema web.'},
+  {t:'mc',q:'Qual evento acontece quando a pessoa clica?',o:['"press"','"click"','"tap"','"push"'],a:1,w:'"click"'},
+  {t:'build',q:'Monte o "escutador" de clique:',o:['btn','.addEventListener(','"click"',', mudar)','.onClick('],a:['btn','.addEventListener(','"click"',', mudar)'],w:'btn.addEventListener("click", mudar)'},
+  {t:'type',live:1,click:1,q:'Faça o botão mudar o texto do <p> pra Funcionou ao clicar',start:'<button>Clique</button>\n<p id="msg">...</p>\n<script>\n  const btn = document.querySelector("button");\n  \n<\/script>',hint:'btn.addEventListener("click", function () {\n  document.querySelector("#msg").textContent = "Funcionou";\n});',check:d=>{d.querySelector('button').click();return /funcionou/i.test(d.querySelector('#msg').textContent)},w:'btn.addEventListener("click", function () {\n  document.querySelector("#msg").textContent = "Funcionou";\n});'}
+ ]},
+ {n:'Revisão de JavaScript',i:'🏆',obj:['Revisar o curso de JavaScript'],ex:[
+  {t:'mc',q:'let x const:',o:['const muda, let não','let muda, const não','os dois mudam','nenhum muda'],a:1,w:'let muda, const não.'},
+  {t:'mc',q:'Primeira posição de um array:',o:['1','0','primeiro','-1'],a:1,w:'0.'},
+  {t:'mc',q:'Pra pegar um elemento da página:',o:['console.log','document.querySelector','function','return'],a:1,w:'document.querySelector.'},
+  {t:'type',live:1,q:'Desafio! Função saudacao(nome) que devolve `Olá, ${nome}!`',start:'<script>\n  \n<\/script>',hint:'function saudacao(nome) {\n  return `Olá, ${nome}!`;\n}',check:(d,w)=>{try{return w.saudacao('Ana')==='Olá, Ana!'}catch(e){return false}},w:'function saudacao(nome) {\n  return `Olá, ${nome}!`;\n}'}
+ ]}
+]}]},
+
+{id:'edit',nome:'Editando sites',icone:'🔧',cor:'#22e57a',sub:'Na prática, pro seu trabalho',nivel:'Prático',req:'html',meta:'Abrir um site pronto (como os do VitrineAI), achar o que precisa mudar e editar textos, links, cores e imagens com segurança.',units:[
+{u:'Unidade 1',t:'Mão na massa',l:[
+ {n:'Inspecionando um site',i:'🔍',obj:['Usar o Inspecionar do navegador','Achar qualquer elemento no código'],ex:[
+  {t:'info',q:'O raio-x do navegador',b:'Em qualquer site, clique com o botão direito e escolha <b>Inspecionar</b> (ou aperte <b>F12</b>). Abre o painel de desenvolvedor, onde dá pra ver o HTML e o CSS de cada parte.\n\nNa aba <b>Elements</b> você vê o HTML. Ao lado, em <b>Styles</b>, o CSS daquele elemento.',tip:'Dá pra mudar texto e cor ali mesmo, pra testar. Mas a mudança some ao recarregar: ela não altera o arquivo.'},
+  {t:'mc',q:'Qual tecla abre as ferramentas de desenvolvedor?',o:['F5','F12','Ctrl+S','Esc'],a:1,w:'F12 (ou botão direito > Inspecionar).'},
+  {t:'mc',q:'Você mudou a cor pelo Inspecionar e recarregou a página. O que acontece?',o:['A mudança fica salva','A mudança some','O site quebra','Muda pra todo mundo'],a:1,w:'O Inspecionar só testa. Pra valer, tem que editar o arquivo.'},
+  {t:'info',q:'Achando o texto no arquivo',b:'Pra editar de verdade, abra o <code>index.html</code> num editor (como o <b>VS Code</b>, gratuito) e use <b>Ctrl+F</b> pra buscar o texto que você quer mudar. Ele te leva direto ao lugar certo.',tip:'Nos sites do VitrineAI, os textos editáveis têm data-edit="..." do lado. Buscar por data-edit te mostra todos de uma vez.'},
+  {t:'mc',q:'Qual o jeito mais rápido de achar um texto num arquivo grande?',o:['Ler o arquivo todo','Ctrl+F e buscar','Apagar tudo','Inspecionar'],a:1,w:'Ctrl+F buscando o texto exato.'}
+ ]},
+ {n:'Trocando textos e links',i:'✏️',obj:['Editar textos sem quebrar tags','Montar links de WhatsApp certos'],ex:[
+  {t:'info',q:'Troque só o que está ENTRE as tags',b:'Ao editar, mude só o texto entre <code>&gt;</code> e <code>&lt;</code>. Se apagar um sinal de <code>&lt;</code> ou uma aspa, o layout pode quebrar inteiro.',code:'<h1 data-edit="hero.titulo">Texto antigo</h1>\n\n<h1 data-edit="hero.titulo">Texto novo</h1>',tip:'Antes de editar, faça uma cópia do arquivo (index-backup.html). Se algo quebrar, você volta em segundos.'},
+  {t:'mc',q:'Ao trocar um título, o que você muda?',o:['A tag inteira','Só o texto entre as tags','O atributo data-edit','O DOCTYPE'],a:1,w:'Só o conteúdo. Tags e atributos ficam iguais.'},
+  {t:'info',q:'Link de WhatsApp certo',b:'Formato: <code>https://wa.me/</code> + <b>55</b> + DDD + número, <b>só números</b>.\n\nPra já vir com mensagem: <code>?text=</code> + a mensagem (espaço vira <code>%20</code>).',code:'<a href="https://wa.me/5548999991234?text=Olá!%20Quero%20agendar">\n  Agendar\n</a>'},
+  {t:'mc',q:'Qual link de WhatsApp está CERTO?',o:['https://wa.me/(48) 99999-1234','https://wa.me/5548999991234','wa.me/48-99999-1234','https://whatsapp/48999991234'],a:1,w:'55 + DDD + número, sem espaço, traço ou parênteses.'},
+  {t:'type',q:'Crie um botão-link de WhatsApp pro número 48 99999-1234',start:'',hint:'<a href="https://wa.me/5548999991234">Chamar no WhatsApp</a>',check:d=>{const a=d.querySelector('a[href]');return !!a&&/^https:\/\/wa\.me\/5548999991234/.test(a.getAttribute('href'))},w:'<a href="https://wa.me/5548999991234">Chamar no WhatsApp</a>'}
+ ]},
+ {n:'Trocando cores',i:'🎨',obj:['Achar as cores do site','Usar variáveis CSS'],ex:[
+  {t:'info',q:'Variáveis de cor',b:'Sites bem feitos guardam as cores principais em <b>variáveis CSS</b>, dentro de <code>:root</code>. Mudando ali, o site inteiro muda.\n\nElas começam com <code>--</code> e são usadas com <code>var()</code>.',code:':root {\n  --cor-principal: #0e6e7e;\n}\n.botao {\n  background: var(--cor-principal);\n}',tip:'Pra combinar com o cliente, pegue a cor do logo dele (conta-gotas) e troque só a variável principal.'},
+  {t:'mc',q:'Onde normalmente ficam as variáveis de cor?',o:['No body','No :root','No <title>','No <img>'],a:1,w:':root, no começo do CSS.'},
+  {t:'fill',q:'Use a variável no botão:',code:'.botao {\n  background: ___(--cor-principal);\n}',o:['var','use','get','$'],a:['var'],w:'var(--nome-da-variavel).'},
+  {t:'type',live:1,q:'Troque a cor principal pra #22e57a',start:'<style>\n  :root {\n    --cor-principal: #0e6e7e;\n  }\n  .botao { background: var(--cor-principal); color: white; padding: 12px; border: 0; }\n</style>\n<button class="botao">Agendar</button>',hint:'Troque o valor da variável: --cor-principal: #22e57a;',check:(d,w)=>w.getComputedStyle(d.querySelector('.botao')).backgroundColor==='rgb(34, 229, 122)',w:'--cor-principal: #22e57a;'}
+ ]},
+ {n:'Imagens e publicação',i:'🚀',obj:['Entender caminhos de imagem','Publicar um site'],ex:[
+  {t:'info',q:'Por que a imagem some?',b:'O <code>src</code> aponta pra um <b>caminho</b>. <code>assets/foto.jpg</code> quer dizer "a pasta assets, ao lado do index.html".\n\nSe você publicar só o index.html, sem a pasta, as imagens quebram.',code:'<img src="assets/foto.jpg" alt="Consultório">',tip:'Sempre publique a pasta inteira (index.html + assets), ou embuta as imagens no HTML.'},
+  {t:'mc',q:'Você subiu só o index.html e as imagens sumiram. Por quê?',o:['O site está fora do ar','Faltou a pasta das imagens','O HTML está errado','As imagens expiraram'],a:1,w:'O src aponta pra uma pasta que não foi junto.'},
+  {t:'info',q:'Publicando de graça',b:'Netlify e Vercel publicam sites estáticos de graça. O arquivo principal precisa se chamar <code>index.html</code>, porque é ele que abre quando alguém entra no endereço.',tip:'No Netlify dá pra arrastar a pasta do site em app.netlify.com/drop e o site vai pro ar na hora.'},
+  {t:'mc',q:'Qual nome o arquivo principal precisa ter?',o:['site.html','home.html','index.html','principal.html'],a:2,w:'index.html é o que abre por padrão.'},
+  {t:'mc',q:'Antes de editar um site do cliente, o primeiro passo é:',o:['Apagar o CSS','Fazer uma cópia de segurança','Trocar todas as cores','Publicar'],a:1,w:'Backup sempre. Se quebrar, você volta.'}
+ ]}
+]}]}
+];
+
+/* ================= estado ================= */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dstr=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const hoje=()=>dstr(new Date());
+const ontem=()=>{const d=new Date();d.setDate(d.getDate()-1);return dstr(d)};
+let S={done:{},xp:0,streak:0,last:'',dayXp:0,day:'',som:true,ultimo:''};
+try{const v=JSON.parse(localStorage.getItem('criate-academy')||'null');if(v){S={...S,...v};
+  /* migra progresso antigo (só HTML) */
+  for(const k of Object.keys(S.done))if(/^\d+$/.test(k)){S.done['html:'+k]=true;delete S.done[k]}}}catch(e){}
+const salvar=()=>{try{localStorage.setItem('criate-academy',JSON.stringify(S))}catch(e){}};
+if(S.day!==hoje()){S.day=hoje();S.dayXp=0}
+if(S.last&&S.last!==hoje()&&S.last!==ontem())S.streak=0;
+const META=50;
+const FL={};CURSOS.forEach(c=>{FL[c.id]=[];c.units.forEach((u,ui)=>u.l.forEach(l=>FL[c.id].push({ui,l})))});
+const feitas=c=>FL[c.id].filter((x,k)=>S.done[c.id+':'+k]).length;
+const pct=c=>feitas(c)/FL[c.id].length;
+const curso=id=>CURSOS.find(c=>c.id===id);
+let VIEW={tela:'home',curso:null};
+
+/* ================= som ================= */
+let AC=null;
+function tom(seq,tipo='sine',vol=.18){if(!S.som)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const t0=AC.currentTime;seq.forEach(([f,ini,dur])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=tipo;o.frequency.setValueAtTime(f,t0+ini);g.gain.setValueAtTime(0,t0+ini);g.gain.linearRampToValueAtTime(vol,t0+ini+.015);g.gain.exponentialRampToValueAtTime(.001,t0+ini+dur);o.connect(g);g.connect(AC.destination);o.start(t0+ini);o.stop(t0+ini+dur+.02)})}catch(e){}}
+const sOk=()=>tom([[784,0,.12],[1175,.09,.22]],'sine',.2);
+const sBad=()=>tom([[220,0,.16],[165,.12,.26]],'triangle',.22);
+const sTap=()=>tom([[1400,0,.04]],'sine',.06);
+const sFim=()=>tom([[523,0,.15],[659,.12,.15],[784,.24,.15],[1047,.36,.4]],'sine',.2);
+
+/* ================= telas ================= */
+function topo(){$('sXp').textContent=S.xp;$('sStreak').textContent=S.streak;$('som').textContent=S.som?'🔊':'🔇'}
+function metaHtml(){return `<div class="goal"><div class="row"><span>🎯 Meta de hoje</span><span style="color:var(--xp)">${Math.min(S.dayXp,META)}/${META} XP</span></div><div class="bar"><i style="width:${Math.min(S.dayXp/META,1)*100}%"></i></div></div>`}
+function liberado(c){return !c.req||pct(curso(c.req))>=1}
+function render(){topo();VIEW.tela==='home'?renderHome():renderCurso()}
+function renderHome(){
+  const h=new Date().getHours(),oi=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+  const u=curso(S.ultimo)||CURSOS[0];
+  const prox=FL[u.id].findIndex((x,k)=>!S.done[u.id+':'+k]);
+  let html=`<div class="home"><h1>${oi}, Fabiano! 👋</h1><p class="sub">Escolha um curso e faça uma lição por vez. Constância vale mais que pressa.</p>${metaHtml()}`;
+  if(prox>=0)html+=`<button class="cont" data-cur="${u.id}" data-go="${prox}"><span class="ic">${FL[u.id][prox].l.i}</span><span><small>CONTINUAR · ${esc(u.nome)}</small><b>${esc(FL[u.id][prox].l.n)}</b></span></button>`;
+  html+=`<div class="cgrid">${CURSOS.map(c=>{const lib=liberado(c),p=pct(c);return `<button class="ccard ${lib?'':'lock'}" data-cur="${c.id}"><span class="ic" style="background:${c.cor}22;border:2px solid ${c.cor}66">${lib?c.icone:'🔒'}</span><span style="flex:1;min-width:0"><h3>${esc(c.nome)}</h3><p>${esc(c.sub)}</p><div class="bar"><i style="width:${p*100}%;background:${c.cor};box-shadow:0 0 10px ${c.cor}88"></i></div><div class="meta">${lib?`${feitas(c)} de ${FL[c.id].length} lições · ${esc(c.nivel)}`:`Libera ao terminar ${esc(curso(c.req).nome)}`}</div></span></button>`}).join('')}</div>
+  <div class="cinfo" style="margin-top:18px"><b>🗺️ Ordem recomendada:</b> HTML → CSS → JavaScript. O curso <b>Editando sites</b> libera depois do HTML e já serve direto pro seu trabalho com os sites dos clientes.</div></div>`;
+  $('mapa').innerHTML=html;
+}
+function renderCurso(){
+  const c=curso(VIEW.curso);let k=0;
+  let html=`<button class="voltar" data-home="1">← Cursos</button><div style="display:flex;gap:14px;align-items:center;margin-top:10px"><span style="font-size:44px">${c.icone}</span><div><h1 style="margin:0;font-size:26px;font-weight:900">${esc(c.nome)}</h1><div style="color:var(--mut);font-weight:800">${feitas(c)} de ${FL[c.id].length} lições</div></div></div>
+  <div class="cinfo"><b>Ao final você vai conseguir:</b> ${esc(c.meta)}</div>`;
+  if(pct(c)>=1)html+=`<div class="cert">🎓 Curso concluído!<b>${esc(c.nome)}</b><span style="font-size:14px;color:var(--mut)">Pode refazer qualquer lição pra revisar.</span></div>`;
+  c.units.forEach((u,ui)=>{
+    const prim=k;
+    html+=`<div class="unit ${S.done[c.id+':'+prim]||prim===0||S.done[c.id+':'+(prim-1)]?'':'lock'}" style="${S.done[c.id+':'+prim]||prim===0||S.done[c.id+':'+(prim-1)]?`background:${c.cor};box-shadow:0 5px 0 #0006`:''}"><small>${esc(u.u)}</small><h2>${esc(u.t)}</h2></div><div class="path">`;
+    u.l.forEach(l=>{const kk=k++,id=c.id+':'+kk,done=S.done[id],open=!done&&(kk===0||S.done[c.id+':'+(kk-1)]);
+      html+=`<button class="node n${kk%8} ${done?'done':open?'open':''}" data-k="${kk}" aria-label="${esc(l.n)}">${done?'⭐':open?l.i:'🔒'}<span class="lbl">${esc(l.n)}</span></button><div class="spacer"></div>`});
+    html+='</div>';
+  });
+  $('mapa').innerHTML=html;
+}
+$('mapa').addEventListener('click',e=>{
+  if(e.target.closest('[data-home]')){sTap();VIEW={tela:'home'};render();scrollTo(0,0);return}
+  const cc=e.target.closest('[data-cur]');
+  if(cc){const c=curso(cc.dataset.cur);if(!liberado(c)){cc.classList.remove('shake');void cc.offsetWidth;cc.classList.add('shake');sBad();return}sTap();
+    if(cc.dataset.go!=null){abrir(c.id,+cc.dataset.go);return}
+    VIEW={tela:'curso',curso:c.id};render();scrollTo(0,0);return}
+  const b=e.target.closest('.node');if(!b)return;const c=curso(VIEW.curso),k=+b.dataset.k;
+  if(!S.done[c.id+':'+k]&&!(k===0||S.done[c.id+':'+(k-1)])){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');sBad();return}
+  sTap();abrir(c.id,k);
+});
+$('som').onclick=()=>{S.som=!S.som;salvar();topo();sTap()};
+$('logoBtn').onclick=()=>{if(L)return;VIEW={tela:'home'};render();scrollTo(0,0)};
+
+/* ================= lição ================= */
+let L=null,resp=null;
+function abrir(cid,k){const lic=FL[cid][k].l;S.ultimo=cid;salvar();
+  L={cid,k,ex:[{t:'intro'},...lic.ex],i:0,vidas:5,xp:0,erros:0,fila:[]};$('lesson').hidden=false;document.body.style.overflow='hidden';mostrar()}
+function fecharLicao(){$('lesson').hidden=true;document.body.style.overflow='';const cid=L&&L.cid;L=null;if(cid&&VIEW.tela==='home'){VIEW={tela:'curso',curso:cid}}render()}
+$('sair').onclick=fecharLicao;
+function total(){return L.ex.length+L.fila.length}
+function atual(){return L.i<L.ex.length?L.ex[L.i]:L.fila[L.i-L.ex.length]}
+function mostrar(){
+  $('lbar').style.width=(L.i/total()*100)+'%';$('hearts').textContent='❤️ '+L.vidas;
+  const e=atual();resp=null;if(!e)return fim();
+  const lic=FL[L.cid][L.k].l,c=curso(L.cid);let h='';
+  if(e.t==='intro'){h=`<span class="tag" style="color:${c.cor}">${esc(c.nome.toUpperCase())} · LIÇÃO ${L.k+1}</span><div class="q" style="font-size:28px">${lic.i} ${esc(lic.n)}</div><div class="txt">Nesta lição você vai:</div><ul class="objs">${lic.obj.map(o=>`<li>${esc(o)}</li>`).join('')}</ul><div class="prof"><span>🧑‍🏫</span>Leva uns ${Math.max(3,Math.round(lic.ex.length/2.5))} minutos. Leia com calma, e se errar, sem problema: a atividade volta no final pra você fixar.</div>`;rodape('COMEÇAR',true)}
+  else if(e.t==='info'){h=`<span class="tag">NOVO CONCEITO</span><div class="q">${esc(e.q)}</div>${e.ana?`<div class="ana"><b>🧠 Comparando:</b> ${esc(e.ana)}</div>`:''}<div class="txt">${e.b.replace(/\n/g,'<br>')}</div>${e.code?`<div class="codebox">${cor(e.code)}</div>`:''}${e.show&&e.code?`<div class="pv"><b>👀 Como aparece na tela</b><iframe class="pvi" title="Resultado do exemplo"></iframe></div>`:''}${e.erro?`<div class="erro"><b>⚠️ Erro comum:</b> ${esc(e.erro)}</div>`:''}${e.tip?`<div class="tip"><b>💡 Dica do professor:</b> ${esc(e.tip)}</div>`:''}`;rodape('CONTINUAR',true)}
+  else if(e.t==='mc'){h=`<span class="tag">ESCOLHA A RESPOSTA</span><div class="q">${esc(e.q)}</div><div class="opts">${e.o.map((o,i)=>`<button class="opt" data-o="${i}">${/[<>{};]|\(|\)|===|\.\w/.test(o)?`<code>${esc(o)}</code>`:esc(o)}</button>`).join('')}</div>`;rodape('VERIFICAR',false)}
+  else if(e.t==='fill'){resp=[];h=`<span class="tag">COMPLETE O CÓDIGO</span><div class="q">${esc(e.q)}</div><div class="codebox" id="fillCode"></div><div class="chips">${e.o.map((o,i)=>`<button class="chip" data-c="${i}">${esc(o)}</button>`).join('')}</div><button class="reset" id="limpar">limpar</button>${e.tip?`<div class="tip"><b>💡</b> ${esc(e.tip)}</div>`:''}`;rodape('VERIFICAR',false)}
+  else if(e.t==='build'){resp=[];const ord=embaralhar(e.o.map((o,i)=>i));h=`<span class="tag">MONTE O CÓDIGO</span><div class="q">${esc(e.q)}</div><div class="ans" id="ans"></div><div class="chips">${ord.map(i=>`<button class="chip" data-b="${i}">${esc(e.o[i])}</button>`).join('')}</div>`;rodape('VERIFICAR',false)}
+  else if(e.t==='type'){h=`<span class="tag">ESCREVA O CÓDIGO</span><div class="q">${esc(e.q)}</div><textarea class="ed" id="ed" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Seu código">${esc(e.start||'')}</textarea><div class="pv"><b>Resultado${e.click?' (toque no botão pra testar)':''}</b><iframe id="pv" title="Resultado"></iframe></div><button class="reset" id="dica">💡 ver dica</button><div class="txt" id="dicaTxt" hidden style="margin-top:6px"><div class="codebox">${esc(e.hint)}</div></div>`;rodape('VERIFICAR',!!(e.start&&e.start.trim()))}
+  $('ex').innerHTML=h;
+  if(e.t==='info'&&e.show&&e.code){const f=document.querySelector('#ex .pvi');if(f){f.onload=()=>{try{f.style.height=Math.min(340,f.contentDocument.body.scrollHeight+18)+'px'}catch(x){}}}if(f)f.srcdoc='<meta charset="utf-8"><style>body{font-family:system-ui,sans-serif;padding:8px 12px;margin:0;color:#111;background:#fff}</style>'+(typeof e.show==='string'?e.show:e.code)}
+  if(e.t==='fill')desenhaFill();
+  if(e.t==='type'){atualizaPv();const ed=$('ed');
+    const pos=(e.start||'').indexOf('\n  \n');if(pos>=0){ed.focus();ed.selectionStart=ed.selectionEnd=pos+3}else ed.focus();
+    let tm;ed.addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(atualizaPv,250);$('acao').disabled=!ed.value.trim()});
+    ed.addEventListener('keydown',ev=>{if(ev.key==='Tab'){ev.preventDefault();const s=ed.selectionStart;ed.value=ed.value.slice(0,s)+'  '+ed.value.slice(ed.selectionEnd);ed.selectionStart=ed.selectionEnd=s+2;atualizaPv()}})}
+  $('ex').parentElement.scrollTop=0;
+}
+function cor(code){return esc(code).replace(/(&lt;\/?)([a-zA-Z0-9!]+)/g,'$1<span class="t">$2</span>').replace(/([a-z\-]+)=(&quot;[^&]*?&quot;)/g,'<span class="a">$1</span>=<span class="s">$2</span>')}
+function embaralhar(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}if(a.length>1&&a.every((v,i)=>v===i))[a[0],a[1]]=[a[1],a[0]];return a}
+function desenhaFill(){const e=atual();let n=0;$('fillCode').innerHTML=esc(e.code).replace(/___/g,()=>{const v=resp[n];const html=`<span class="blank ${v!=null?'fill':''}" data-bl="${n}">${v!=null?esc(e.o[v]):'&nbsp;'}</span>`;n++;return html});
+  document.querySelectorAll('[data-c]').forEach(b=>b.classList.toggle('used',resp.includes(+b.dataset.c)));$('acao').disabled=resp.length<e.a.length}
+function atualizaPv(){const f=$('pv');if(f)f.srcdoc='<style>body{font-family:system-ui,sans-serif;padding:8px 12px;margin:0;color:#111}</style>'+$('ed').value}
+function rodape(txt,ok){$('foot').className='lfoot';$('footIn').innerHTML=`<button class="big" id="acao" ${ok?'':'disabled'}>${txt}</button>`}
+function rodarLive(code){return new Promise(res=>{const f=document.createElement('iframe');f.setAttribute('aria-hidden','true');f.style.cssText='position:fixed;left:-9999px;top:0;width:400px;height:300px;border:0';let ok=false;f.onload=()=>{if(ok)return;ok=true;setTimeout(()=>res(f),30)};document.body.appendChild(f);f.srcdoc='<style>body{font-family:system-ui,sans-serif;margin:0}</style>'+code;setTimeout(()=>{if(!ok){ok=true;res(f)}},2500)})}
+$('ex').addEventListener('click',ev=>{
+  const e=L&&atual();if(!e)return;
+  const o=ev.target.closest('[data-o]');if(o){sTap();resp=+o.dataset.o;document.querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel',x===o));$('acao').disabled=false;return}
+  const c=ev.target.closest('[data-c]');if(c&&resp.length<e.a.length){sTap();resp.push(+c.dataset.c);desenhaFill();return}
+  const bl=ev.target.closest('[data-bl]');if(bl&&resp[+bl.dataset.bl]!=null){sTap();resp.splice(+bl.dataset.bl,1);desenhaFill();return}
+  if(ev.target.id==='limpar'){resp=[];desenhaFill();return}
+  const b=ev.target.closest('[data-b]');if(b&&!b.classList.contains('used')){sTap();resp.push(+b.dataset.b);b.classList.add('used');const s=document.createElement('button');s.className='chip';s.dataset.r=b.dataset.b;s.textContent=e.o[+b.dataset.b];$('ans').appendChild(s);$('acao').disabled=false;return}
+  const r=ev.target.closest('[data-r]');if(r){sTap();const i=+r.dataset.r;resp.splice(resp.indexOf(i),1);r.remove();document.querySelector(`[data-b="${i}"]`).classList.remove('used');$('acao').disabled=!resp.length;return}
+  if(ev.target.id==='dica'){$('dicaTxt').hidden=false;ev.target.hidden=true}
+});
+$('foot').addEventListener('click',async ev=>{
+  const b=ev.target.closest('#acao,#seguir');if(!b||b.disabled)return;
+  if(b.id==='seguir'){L.i++;return mostrar()}
+  const e=atual();
+  if(e.t==='info'||e.t==='intro'){sTap();L.i++;return mostrar()}
+  if(e.t==='type'){b.disabled=true;b.textContent='VERIFICANDO…';let ok=false;const code=$('ed').value;
+    try{if(e.live){const f=await rodarLive(code);try{ok=!!e.check(f.contentDocument,f.contentWindow)}catch(x){ok=false}f.remove()}else ok=!!e.check(new DOMParser().parseFromString(code,'text/html'))}catch(x){ok=false}
+    return feedback(ok,e)}
+  let ok=false;
+  if(e.t==='mc')ok=resp===e.a;
+  if(e.t==='fill'||e.t==='build')ok=resp.map(i=>e.o[i]).join('|')===e.a.join('|');
+  feedback(ok,e);
+});
+function feedback(ok,e){
+  if(ok){sOk();L.xp+=10}else{sBad();L.vidas=Math.max(0,L.vidas-1);L.erros++;if(L.i<L.ex.length)L.fila.push(e);$('ex').classList.remove('shake');void $('ex').offsetWidth;$('ex').classList.add('shake')}
+  $('hearts').textContent='❤️ '+L.vidas;
+  const certo=e.t==='mc'?e.o[e.a]:e.t==='type'?e.w:(e.a||[]).join(' ');
+  $('foot').className='lfoot fb '+(ok?'ok':'bad');
+  $('footIn').innerHTML=`<div class="fbt">${ok?['Mandou bem! 🎉','Isso aí! ✨','Perfeito! 💪','Arrasou! 🔥','Show! 🚀'][Math.floor(Math.random()*5)]:'Quase! 😅'}</div><div class="fbx">${ok?esc(e.w||''):`Resposta certa:<div class="codebox" style="margin:6px 0">${esc(certo)}</div>${e.t==='type'?'Essa atividade volta no final pra você tentar de novo.':esc(e.w||'')}`}</div><button class="big" id="seguir">${L.vidas===0&&!ok?'TENTAR DE NOVO':'CONTINUAR'}</button>`;
+  if(L.vidas===0&&!ok){$('seguir').onclick=ev=>{ev.stopPropagation();abrir(L.cid,L.k)}}
+}
+function fim(){
+  sFim();confete();
+  const id=L.cid+':'+L.k,prim=!S.done[id],bonus=L.erros===0?10:0,ganho=L.xp+bonus,c=curso(L.cid);
+  S.done[id]=true;S.xp+=ganho;S.dayXp+=ganho;
+  if(S.last!==hoje()){S.streak=S.last===ontem()?S.streak+1:1;S.last=hoje()}
+  salvar();
+  const fimCurso=pct(c)>=1&&prim;
+  $('lbar').style.width='100%';
+  $('ex').innerHTML=`<div class="end"><div class="trofeu">${fimCurso?'🎓':L.erros===0?'🏆':'⭐'}</div><h2>${fimCurso?'Curso concluído!':L.erros===0?'Lição perfeita!':'Lição concluída!'}</h2><div class="txt">${esc(FL[L.cid][L.k].l.n)}${fimCurso?` · você terminou o curso de ${esc(c.nome)}!`:prim&&L.k+1<FL[L.cid].length?' · próxima lição liberada':''}</div>
+  <div class="res"><div><b style="color:var(--xp)">+${ganho}</b><small>XP${bonus?' (+10 perfeito)':''}</small></div><div><b style="color:var(--bad)">${L.vidas}</b><small>vidas restantes</small></div><div><b>🔥${S.streak}</b><small>${S.streak===1?'dia':'dias'} seguidos</small></div></div>
+  ${S.dayXp>=META&&S.dayXp-ganho<META?'<div class="goal" style="text-align:center;font-weight:900">🎯 Meta do dia batida! Volta amanhã pra manter a sequência.</div>':''}</div>`;
+  $('foot').className='lfoot';$('footIn').innerHTML='<button class="big" id="voltar">CONTINUAR</button>';$('voltar').onclick=fecharLicao;
+}
+function confete(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const b=document.createElement('div');b.className='confete';const cs=['#22e57a','#ffc83d','#ff5a5a','#7ee2ff','#fff'];b.innerHTML=Array.from({length:70},(_,i)=>`<i style="left:${Math.random()*100}%;background:${cs[i%5]};animation-delay:${Math.random()*.4}s;animation-duration:${1.6+Math.random()*1.4}s"></i>`).join('');document.body.appendChild(b);setTimeout(()=>b.remove(),3600)}
+render();
+}
+</script>
+</body>
+</html>

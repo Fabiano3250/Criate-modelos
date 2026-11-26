@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Criate Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="icon" href="/icone.svg"><meta name="theme-color" content="#F6F6F9">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#F6F6F9;--card:#fff;--line:#E5E5EC;--ink:#14141A;--mut:#6C6C7D;--blu:#1F6FEB;--red:#E63946;--yel:#FFC21A}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:500 16px/1.5 Inter,system-ui,sans-serif}
+button,input{font:inherit;color:inherit}
+.tela{min-height:100%;display:grid;place-items:center;padding:28px 18px}
+.box{width:100%;max-width:400px}
+.marca{display:flex;align-items:center;justify-content:center;gap:10px}
+.logo{font:800 30px/1 Montserrat,Inter,sans-serif;letter-spacing:-.02em;margin:0}.logo b{font-weight:600;color:var(--mut)}
+.sub{text-align:center;color:var(--mut);font-weight:500;margin:10px 0 26px}
+.cartao{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 18px 40px -24px rgba(20,20,40,.35)}
+.abas{display:grid;grid-template-columns:1fr 1fr;background:#F0F0F5;border-radius:14px;padding:4px;margin-bottom:12px}
+.abas button{border:0;background:none;border-radius:11px;padding:10px;font-weight:700;color:var(--mut);cursor:pointer}
+.abas button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,20,40,.12)}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+input{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;outline:none}
+input:focus{border-color:var(--blu);box-shadow:0 0 0 3px rgba(31,111,235,.15)}
+.dica{font-size:13px;color:var(--mut);margin-top:6px}
+.big{width:100%;margin-top:20px;border:0;border-radius:16px;padding:15px;font:800 17px Montserrat,Inter,sans-serif;background:var(--blu);color:#fff;box-shadow:0 5px 0 #1550B3;cursor:pointer}
+.big:active{transform:translateY(3px);box-shadow:0 2px 0 #1550B3}
+.big:disabled{opacity:.6}
+.msg{margin-top:14px;border-radius:12px;padding:10px 12px;font-weight:600;font-size:14.5px}
+.msg.erro{background:#FDECEE;color:#A61E2A}.msg.ok{background:#E9F8F0;color:#0E7A43}
+.seg{margin-top:20px;font-size:13px;color:var(--mut);text-align:center}
+#app{position:fixed;inset:0;width:100%;height:100%;border:0;background:var(--bg)}
+.sync{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:9;background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--mut);pointer-events:none;transition:opacity .4s;box-shadow:0 6px 18px -10px rgba(20,20,40,.4)}
+.conta{position:fixed;inset:0;z-index:10;background:rgba(20,20,30,.45);display:grid;place-items:center;padding:20px}
+.conta .box{background:#fff;border-radius:22px;padding:22px}
+.sair{background:#FDECEE;color:#A61E2A;box-shadow:0 5px 0 #F3C5CB}
+.fechar{background:#F0F0F5;color:var(--ink);box-shadow:none;margin-top:10px}
+html.escuro{color-scheme:dark;--bg:#0F0F14;--card:#1A1A22;--line:#2E2E3A;--ink:#F1F1F6;--mut:#9A9AAD}
+html.escuro .abas{background:#24242E}html.escuro .abas button.on{background:#33333F;color:var(--ink)}
+html.escuro input,html.escuro .sync,html.escuro .conta .box{background:var(--card)}
+html.escuro .fechar{background:#24242E}
+html.escuro .sair{background:#2E1418;color:#FF8A94;box-shadow:0 5px 0 #4A1C22}
+html.escuro .msg.erro{background:#2E1418;color:#FF8A94}html.escuro .msg.ok{background:#0F2A1D;color:#6FDCA0}
+</style>
+</head>
+<body>
+<main class="tela" id="login">
+  <div class="box">
+    <div class="marca"><svg width="34" height="34" viewBox="0 0 120 120" aria-hidden="true"><circle cx="51" cy="36" r="15" fill="#E63946"/><circle cx="80" cy="66" r="13.5" fill="#FFC21A"/><circle cx="47" cy="86" r="16" fill="#1F6FEB"/></svg><h1 class="logo">Criate <b>Academy</b></h1></div>
+    <p class="sub">Aprenda a criar sites e sistemas, uma lição por dia.</p>
+    <div class="cartao">
+    <div class="abas" role="tablist"><button id="tEntrar" class="on" type="button">Entrar</button><button id="tCriar" type="button">Criar conta</button></div>
+    <form id="form" autocomplete="on" novalidate>
+      <label for="usuario">Usuário</label>
+      <input id="usuario" name="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="20" required>
+      <div class="dica" id="dUser" hidden>3 a 20 caracteres: letras, números ou _</div>
+      <label for="senha">Senha</label>
+      <input id="senha" name="password" type="password" autocomplete="current-password" maxlength="72" required>
+      <div class="dica" id="dSenha" hidden>Mínimo 8 caracteres. Use uma senha que você não usa em nenhum outro lugar.</div>
+      <div id="conf" hidden><label for="senha2">Repita a senha</label><input id="senha2" type="password" autocomplete="new-password" maxlength="72"></div>
+      <button class="big" id="btn" type="submit">ENTRAR</button>
+      <div class="msg" id="msg" hidden></div>
+    </form>
+    </div>
+    <p class="seg">🔒 Sem e-mail, sem dados pessoais. Só usuário, senha e progresso.</p>
+  </div>
+</main>
+<iframe id="app" title="Criate Academy" hidden></iframe>
+<div class="sync" id="sync" hidden></div>
+<div class="conta" id="conta" hidden><div class="box">
+  <h2 style="margin:0 0 4px;font-weight:900">👤 <span id="cNome"></span></h2>
+  <p style="margin:0;color:var(--mut);font-weight:700">Seu progresso é salvo automaticamente na nuvem.</p>
+  <p id="cSync" style="margin:10px 0 0;font-size:14px;color:var(--mut)"></p>
+  <button class="big fechar" id="bTema" type="button">🌙 Usar modo escuro</button>
+  <button class="big sair" id="bSair" type="button">SAIR DA CONTA</button>
+  <button class="big fechar" id="bFechar" type="button">Voltar</button>
+</div></div>
+<script>
+(()=>{
+'use strict';
+const URL_SB='https://ozdvjnqdkhzhegdnebso.supabase.co';
+const KEY='sb_publishable_t3hCFgwJh0IFrNi9fDd2bQ_MPHhwihB';
+const DOM='@criateacademy.app';
+const K_SES='ca-sessao',K_PROG='criate-academy',K_TEMA='ca-tema';
+const $=id=>document.getElementById(id);
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+let modo='entrar',ses=null,falhas=0,bloqAte=0;
+
+/* ---------- sessão ---------- */
+function lerSes(){try{const s=JSON.parse(ls.get(K_SES)||'null');return s&&s.access_token&&s.refresh_token&&s.user&&s.user.id?s:null}catch(e){return null}}
+function guardarSes(d){ses={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:d.expires_at||Math.floor(Date.now()/1000)+(d.expires_in||3600),user:{id:d.user.id,nome:String(d.user.email||'').split('@')[0]}};ls.set(K_SES,JSON.stringify(ses))}
+async function auth(path,body,extra){
+  const r=await fetch(URL_SB+'/auth/v1/'+path,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',...(extra||{})},body:JSON.stringify(body||{})});
+  let j={};try{j=await r.json()}catch(e){}
+  return {ok:r.ok,status:r.status,j};
+}
+async function renovar(){
+  if(!ses)return false;
+  const r=await auth('token?grant_type=refresh_token',{refresh_token:ses.refresh_token});
+  if(r.ok&&r.j.access_token){guardarSes(r.j);return true}
+  return false;
+}
+async function token(){
+  if(!ses)return null;
+  if(ses.expires_at-Date.now()/1000<90&&!(await renovar())){sairLocal('Sua sessão expirou. Entre de novo.');return null}
+  return ses.access_token;
+}
+
+/* ---------- dados ---------- */
+async function rest(method,qs,body,tentou){
+  const t=await token();if(!t)throw new Error('sem sessão');
+  const h={apikey:KEY,Authorization:'Bearer '+t,'Content-Type':'application/json'};
+  if(method==='POST')h.Prefer='resolution=merge-duplicates,return=minimal';
+  const r=await fetch(URL_SB+'/rest/v1/progresso'+qs,{method,headers:h,body:body?JSON.stringify(body):undefined});
+  if(r.status===401&&!tentou&&await renovar())return rest(method,qs,body,true);
+  if(!r.ok){let c='';try{const j=await r.json();c=j.code||j.message||''}catch(e){}const er=new Error('http '+r.status);er.status=r.status;er.code=String(c).slice(0,80);throw er}
+  return method==='GET'?r.json():null;
+}
+async function baixar(){const a=await rest('GET','?select=dados&user_id=eq.'+encodeURIComponent(ses.user.id));return a&&a[0]?a[0].dados:null}
+function lerLocal(){try{return JSON.parse(ls.get(K_PROG)||'null')}catch(e){return null}}
+function juntar(a,b){
+  if(!a)return b;if(!b)return a;
+  const m={...a,...b};
+  m.done={...(a.done||{}),...(b.done||{})};
+  m.xp=Math.max(+a.xp||0,+b.xp||0);
+  const ult=(a.last||'')>(b.last||'')?a:b;m.last=ult.last||'';m.streak=+ult.streak||0;
+  m.rev={...(a.rev||{})};for(const[k,v]of Object.entries(b.rev||{})){const o=m.rev[k];if(!o||String(v).split('|')[1]>String(o).split('|')[1])m.rev[k]=v}
+  m.des={...(a.des||{}),...(b.des||{})};m.prova={...(a.prova||{})};for(const[k,v]of Object.entries(b.prova||{}))m.prova[k]=Math.max(+m.prova[k]||0,+v||0);
+  m.desChk={...(a.desChk||{}),...(b.desChk||{})};m.expl={...(a.expl||{}),...(b.expl||{})};
+  if(a.day===b.day){m.day=a.day;m.dayXp=Math.max(+a.dayXp||0,+b.dayXp||0)}else{const d=(a.day||'')>(b.day||'')?a:b;m.day=d.day;m.dayXp=+d.dayXp||0}
+  return m;
+}
+function limpo(p){/* só os campos do app, nada além */
+  const o={done:{},xp:Math.max(0,Math.min(1e7,+p.xp||0)),streak:Math.max(0,Math.min(1e5,+p.streak||0)),last:String(p.last||'').slice(0,10),dayXp:Math.max(0,+p.dayXp||0),day:String(p.day||'').slice(0,10),som:p.som!==false,ultimo:String(p.ultimo||'').slice(0,10)};
+  for(const k of Object.keys(p.done||{}))if(/^[a-z]{1,10}:\d{1,3}$/.test(k)&&p.done[k])o.done[k]=true;
+  /* estudo: revisão espaçada, testes e desafios (formatos fixos, tamanho limitado) */
+  o.rev={};let n=0;for(const[k,v]of Object.entries(p.rev||{})){if(n>=700)break;if(/^[a-z]{1,10}:\d{1,3}:\d{1,2}$/.test(k)&&/^[1-5]\|\d{8}$/.test(String(v))){o.rev[k]=String(v);n++}}
+  o.des={};o.prova={};o.desChk={};o.expl={};
+  for(const[k,v]of Object.entries(p.des||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k)&&v)o.des[k]=1;
+  for(const[k,v]of Object.entries(p.prova||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k))o.prova[k]=Math.max(0,Math.min(100,Math.round(+v||0)));
+  for(const[k,v]of Object.entries(p.desChk||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k)&&/^[01]{1,12}$/.test(String(v)))o.desChk[k]=String(v);
+  for(const[k,v]of Object.entries(p.expl||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k))o.expl[k]=String(v||'').slice(0,300);
+  return o;
+}
+let tmr=null,enviando=false,pend=false,falhaSync=0,ultErro='',avisou=false;
+function agendar(ms){clearTimeout(tmr);tmr=setTimeout(enviar,ms||1500)}
+const BASE=['done','xp','streak','last','dayXp','day','som','ultimo'];
+function motivo(e){
+  if(!e||!e.status)return 'sem internet';
+  if(e.status===404)return 'tabela de progresso não encontrada no banco (404)';
+  if(e.status===401||e.status===403)return 'o banco recusou a permissão ('+e.status+(e.code?' · '+e.code:'')+')';
+  return 'o banco recusou os dados ('+e.status+(e.code?' · '+e.code:'')+')';
+}
+async function enviar(){
+  if(!ses)return;if(enviando){pend=true;return}
+  enviando=true;if(!falhaSync)aviso('☁️ salvando…');
+  try{
+    const remoto=await baixar();
+    const final=limpo(juntar(remoto,lerLocal()||{}));
+    try{await rest('POST','',{user_id:ses.user.id,dados:final,atualizado:new Date().toISOString()})}
+    catch(e){/* se o banco recusar os campos novos, salva pelo menos o progresso das aulas */
+      if(!e.status||e.status===401||e.status===404)throw e;
+      const b={};for(const k of BASE)b[k]=final[k];
+      await rest('POST','',{user_id:ses.user.id,dados:b,atualizado:new Date().toISOString()});
+      ultErro='revisões salvas só neste aparelho: '+motivo(e);
+    }
+    aviso('✓ salvo',1200);
+    falhaSync=0;if(!ultErro.startsWith('revisões'))ultErro='';avisou=true;
+  }catch(e){
+    if(ses){falhaSync++;ultErro=motivo(e);
+      /* avisa só na primeira falha; depois tenta de novo em silêncio, cada vez mais espaçado */
+      if(falhaSync===1)aviso('⚠️ não consegui salvar na nuvem agora. Seu progresso fica guardado aqui.',3500);
+      agendar(Math.min(300000,8000*Math.pow(2,falhaSync-1)))}
+  }
+  enviando=false;if(pend){pend=false;agendar()}
+}
+let avT;function aviso(t,ms){const s=$('sync');s.textContent=t;s.hidden=false;s.style.opacity=1;clearTimeout(avT);if(ms)avT=setTimeout(()=>{s.style.opacity=0},ms)}
+
+/* ---------- app ---------- */
+async function abrirApp(){
+  $('login').hidden=true;aviso('☁️ carregando seu progresso…');
+  try{const remoto=await baixar();falhaSync=0;const m=limpo(juntar(remoto,lerLocal()));ls.set(K_PROG,JSON.stringify(m));if(!remoto||JSON.stringify(limpo(remoto))!==JSON.stringify(m))agendar();aviso('✓ sincronizado',1200)}
+  catch(e){if(!ses)return;falhaSync=1;ultErro=motivo(e);aviso('⚠️ sem nuvem agora: salvando neste aparelho',3000);agendar(30000)}
+  const f=$('app');f.style.visibility='hidden';f.hidden=false;f.src='/app.html';
+}
+/* ---------- claro / escuro ---------- */
+const mqEsc=matchMedia('(prefers-color-scheme: dark)');
+function escuro(){const v=ls.get(K_TEMA);return v?v==='escuro':mqEsc.matches}
+function aplicarTema(){
+  const e=escuro();document.documentElement.classList.toggle('escuro',e);
+  const mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.content=e?'#0F0F14':'#F6F6F9';
+  $('bTema').textContent=e?'☀️ Usar modo claro':'🌙 Usar modo escuro';
+  try{const d=$('app').contentDocument;if(d&&d.documentElement&&d.head){
+    if(d.body&&d.body.dataset.proprio&&!d.getElementById('criateEscuro')){const l=d.createElement('link');l.id='criateEscuro';l.rel='stylesheet';l.href='/escuro.css';d.head.appendChild(l)}
+    d.documentElement.classList.toggle('escuro',e);
+    const m=d.querySelector('meta[name="theme-color"]');if(m)m.content=e?'#0F0F14':'#ffffff'}}catch(x){}
+}
+if(mqEsc.addEventListener)mqEsc.addEventListener('change',aplicarTema);
+$('bTema').onclick=()=>{ls.set(K_TEMA,escuro()?'claro':'escuro');aplicarTema()};
+aplicarTema();
+function tematizar(d){
+  try{
+    if(d.getElementById('criateTema'))return;
+    const h=d.head;
+    const f=d.createElement('link');f.rel='stylesheet';f.href='https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap';h.appendChild(f);
+    const l=d.createElement('link');l.id='criateTema';l.rel='stylesheet';l.href='/tema.css';h.appendChild(l);
+    const m=d.querySelector('meta[name="theme-color"]')||d.createElement('meta');m.name='theme-color';m.content=escuro()?'#0F0F14':'#ffffff';h.appendChild(m);
+    const lg=d.getElementById('logoBtn');
+    if(lg)lg.innerHTML='<svg width="22" height="22" viewBox="0 0 120 120" aria-hidden="true"><circle cx="51" cy="36" r="15" fill="#E63946"/><circle cx="80" cy="66" r="13.5" fill="#FFC21A"/><circle cx="47" cy="86" r="16" fill="#1F6FEB"/></svg><span>Criate</span><b>Academy</b>';
+  }catch(e){}
+}
+$('app').addEventListener('load',()=>{
+  aplicarTema();
+  try{const d=$('app').contentDocument;if(d.body&&d.body.dataset.proprio){$('app').style.visibility='visible';return}tematizar(d);const tl=d.getElementById('criateTema');const mostra=()=>{$('app').style.visibility='visible'};if(tl){tl.onload=mostra;setTimeout(mostra,1500)}else mostra()}catch(e){$('app').style.visibility='visible'}
+  try{const d=$('app').contentDocument,st=d.querySelector('.st');
+    if(st&&!d.getElementById('contaBtn')){const b=d.createElement('button');b.id='contaBtn';b.className='som';b.setAttribute('aria-label','Minha conta');b.textContent='👤';b.style.cssText='background:#F0F0F5;border-radius:99px;width:34px;height:34px';b.onclick=()=>{$('cNome').textContent=ses?ses.user.nome:'';$('cSync').textContent=ultErro?'⚠️ '+ultErro:'☁️ Tudo salvo na nuvem.';$('conta').hidden=false};st.appendChild(b)}
+    if(st&&!d.getElementById('estudoBtn')){let pen=0;try{const p=JSON.parse(ls.get(K_PROG)||'{}'),h=new Date(),hj=h.getFullYear()+String(h.getMonth()+1).padStart(2,'0')+String(h.getDate()).padStart(2,'0');pen=Object.values(p.rev||{}).filter(v=>String(v).split('|')[1]<=hj).length}catch(e){}
+      const a=d.createElement('a');a.id='estudoBtn';a.href='/estudo.html';a.setAttribute('aria-label','Estudar e revisar');a.innerHTML='📚'+(pen?'<b style="margin-left:4px;background:#E63946;color:#fff;border-radius:99px;padding:0 7px;font-size:12px;line-height:20px">'+pen+'</b>':'');a.style.cssText='display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;padding:0 8px;background:#FFF4D1;border-radius:99px;text-decoration:none;font-size:16px';st.insertBefore(a,st.firstChild)}}catch(e){}
+});
+addEventListener('storage',e=>{if(e.key===K_PROG&&ses)agendar()});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&tmr){clearTimeout(tmr);tmr=null;enviar()}else if(document.visibilityState==='visible'&&ses&&falhaSync)agendar(800)});
+addEventListener('online',()=>{if(ses&&falhaSync)agendar(800)});
+
+/* ---------- sair ---------- */
+function sairLocal(txt){
+  const t=ses&&ses.access_token;ses=null;ls.del(K_SES);ls.del(K_PROG);
+  if(t)fetch(URL_SB+'/auth/v1/logout',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+t}}).catch(()=>{});
+  $('app').hidden=true;$('app').removeAttribute('src');$('conta').hidden=true;$('sync').hidden=true;$('login').hidden=false;$('senha').value='';setModo('entrar');
+  if(txt)mostrar(txt,'erro');
+}
+$('bSair').onclick=async()=>{clearTimeout(tmr);try{await enviar()}catch(e){}sairLocal()};
+$('bFechar').onclick=()=>{$('conta').hidden=true};
+
+/* ---------- formulário ---------- */
+function mostrar(t,tipo){const m=$('msg');m.textContent=t;m.className='msg '+tipo;m.hidden=false}
+function setModo(x){modo=x;$('tEntrar').classList.toggle('on',x==='entrar');$('tCriar').classList.toggle('on',x==='criar');
+  $('conf').hidden=$('dUser').hidden=$('dSenha').hidden=x!=='criar';$('btn').textContent=x==='criar'?'CRIAR CONTA':'ENTRAR';
+  $('senha').autocomplete=x==='criar'?'new-password':'current-password';$('msg').hidden=true}
+$('tEntrar').onclick=()=>setModo('entrar');$('tCriar').onclick=()=>setModo('criar');
+$('form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const u=$('usuario').value.trim().toLowerCase(),p=$('senha').value;
+  if(Date.now()<bloqAte)return mostrar('Muitas tentativas. Espere '+Math.ceil((bloqAte-Date.now())/1000)+' segundos.','erro');
+  if(!/^[a-z0-9_]{3,20}$/.test(u))return mostrar('Usuário: 3 a 20 caracteres, só letras sem acento, números ou _','erro');
+  if(p.length<8)return mostrar('A senha precisa ter pelo menos 8 caracteres.','erro');
+  if(modo==='criar'){
+    if(p!==$('senha2').value)return mostrar('As senhas não são iguais.','erro');
+    if(p.toLowerCase().includes(u))return mostrar('A senha não pode conter o usuário.','erro');
+  }
+  const b=$('btn');b.disabled=true;b.textContent='AGUARDE…';
+  try{
+    const r=modo==='criar'?await auth('signup',{email:u+DOM,password:p}):await auth('token?grant_type=password',{email:u+DOM,password:p});
+    if(r.ok&&r.j.access_token){falhas=0;guardarSes(r.j);$('senha').value=$('senha2').value='';return abrirApp()}
+    if(r.ok&&modo==='criar')return mostrar('Conta criada, mas falta desligar "Confirm email" no Supabase.','erro');
+    const cod=String(r.j.error_code||r.j.code||'');
+    if(r.status===429)mostrar('Muitas tentativas. Espere um pouco e tente de novo.','erro');
+    else if(modo==='criar'&&/exist|registered/i.test(cod+(r.j.msg||'')))mostrar('Esse usuário já existe. Escolha outro.','erro');
+    else if(modo==='criar'&&/weak/i.test(cod))mostrar('Senha fraca demais. Use uma senha maior e diferente.','erro');
+    else if(modo==='criar')mostrar('Não deu pra criar a conta agora. Tente de novo.','erro');
+    else{falhas++;if(falhas>=5){bloqAte=Date.now()+30000;falhas=0}mostrar('Usuário ou senha incorretos.','erro')}
+  }catch(e){mostrar('Sem conexão. Confira a internet.','erro')}
+  finally{b.disabled=false;b.textContent=modo==='criar'?'CRIAR CONTA':'ENTRAR'}
+});
+
+/* ---------- início ---------- */
+ses=lerSes();
+if(ses)abrirApp();else $('usuario').focus();
+})();
+</script>
+</body>
+</html>

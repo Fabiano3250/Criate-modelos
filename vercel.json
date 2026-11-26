@@ -41,5 +41,17 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/academy",
+      "destination": "https://criateacademy.vercel.app/",
+      "permanent": false
+    },
+    {
+      "source": "/academy/:path*",
+      "destination": "https://criateacademy.vercel.app/",
+      "permanent": false
+    }
   ]
 }
