@@ -140,6 +140,9 @@ async function carregar(){
   if(!linhas.length){$('mErro').textContent='Ainda falta criar a área do portfólio no Supabase (o código SQL que te mandei). Depois disso, é só entrar de novo.';$('mErro').hidden=false;$('bSalvar').disabled=true;return}
   const base=await padrao(),x=linhas[0].dados||{};
   D={...base,...x};D.servicos=Array.isArray(D.servicos)?D.servicos:[];D.works=Array.isArray(D.works)?D.works:[];D.inclui=Array.isArray(D.inclui)?D.inclui:[];
+  /* modelos novos que eu (Claude) coloco no site entram aqui sozinhos */
+  const norm=u=>String(u||'').replace(/\/?$/,'/');const tem=new Set(D.works.map(w=>norm(w.link)));
+  for(const w of (Array.isArray(base.works)?base.works:[]))if(w.modelo&&!tem.has(norm(w.link)))D.works.push({...w});
   preencher();marcar(false);
 }
 function erro(e){
