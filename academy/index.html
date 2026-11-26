@@ -128,7 +128,7 @@ function juntar(a,b){
   const ult=(a.last||'')>(b.last||'')?a:b;m.last=ult.last||'';m.streak=+ult.streak||0;
   m.rev={...(a.rev||{})};for(const[k,v]of Object.entries(b.rev||{})){const o=m.rev[k];if(!o||String(v).split('|')[1]>String(o).split('|')[1])m.rev[k]=v}
   m.des={...(a.des||{}),...(b.des||{})};m.prova={...(a.prova||{})};for(const[k,v]of Object.entries(b.prova||{}))m.prova[k]=Math.max(+m.prova[k]||0,+v||0);
-  m.desChk={...(a.desChk||{}),...(b.desChk||{})};m.expl={...(a.expl||{}),...(b.expl||{})};
+  m.desChk={...(a.desChk||{}),...(b.desChk||{})};m.expl={...(a.expl||{}),...(b.expl||{})};m.proj={...(a.proj||{}),...(b.proj||{})};m.projCode={...(a.projCode||{}),...(b.projCode||{})};
   if(a.day===b.day){m.day=a.day;m.dayXp=Math.max(+a.dayXp||0,+b.dayXp||0)}else{const d=(a.day||'')>(b.day||'')?a:b;m.day=d.day;m.dayXp=+d.dayXp||0}
   return m;
 }
@@ -142,6 +142,10 @@ function limpo(p){/* só os campos do app, nada além */
   for(const[k,v]of Object.entries(p.prova||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k))o.prova[k]=Math.max(0,Math.min(100,Math.round(+v||0)));
   for(const[k,v]of Object.entries(p.desChk||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k)&&/^[01]{1,12}$/.test(String(v)))o.desChk[k]=String(v);
   for(const[k,v]of Object.entries(p.expl||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k))o.expl[k]=String(v||'').slice(0,300);
+  /* testes práticos: concluído + código salvo */
+  o.proj={};o.projCode={};
+  for(const[k,v]of Object.entries(p.proj||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k)&&v)o.proj[k]=1;
+  for(const[k,v]of Object.entries(p.projCode||{}))if(/^[a-z]{1,10}:\d{1,2}$/.test(k)&&typeof v==='string')o.projCode[k]=v.slice(0,8000);
   return o;
 }
 let tmr=null,enviando=false,pend=false,falhaSync=0,ultErro='',avisou=false;
