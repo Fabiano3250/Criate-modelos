@@ -157,3 +157,36 @@ html{scroll-behavior:smooth}
 .paj:not([hidden]){animation:sobe .35s var(--suave)}
 #dicaLock{transition:opacity .25s,transform .35s var(--mola)}
 @media (prefers-reduced-motion:reduce){.tr-f *,.tr-b *,.bigcat *,.aceno,.ex-in,.lesson,.lfoot.fb{animation:none!important}}
+
+/* ===== lição concluída: visual moderno ===== */
+.node.done{background:linear-gradient(150deg,color-mix(in srgb,var(--cc,#1F6FEB) 55%,#fff),var(--cc,#1F6FEB) 75%);border:0;color:#fff;box-shadow:0 6px 0 color-mix(in srgb,var(--cc,#1F6FEB) 70%,#000),0 14px 26px -12px var(--cc,#1F6FEB)}
+.node.done::before{content:"";position:absolute;inset:6px;border-radius:50%;border:2px solid rgba(255,255,255,.35);pointer-events:none}
+.node .chk{width:38px;height:38px;fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 3px rgba(0,0,0,.18))}
+.node.done .redo{background:#fff;color:var(--cc,#1F6FEB);box-shadow:0 2px 8px rgba(20,20,40,.18)}
+html.escuro .node.done .redo{background:#24242E;color:#fff}
+.node.done .lbl i{color:var(--cc,#1F6FEB);font-style:normal;font-weight:800}
+@keyframes conquista{0%{transform:scale(.6)}45%{transform:scale(1.18)}70%{transform:scale(.95)}100%{transform:scale(1)}}
+@keyframes onda{from{opacity:.7;transform:scale(1)}to{opacity:0;transform:scale(2.2)}}
+@keyframes desenha{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+.node.recem{animation:conquista .8s var(--mola) .45s both!important}
+.node.recem .chk path{--len:24;stroke-dasharray:24;animation:desenha .5s ease-out .9s both}
+.node .brilho{position:absolute;inset:0;border-radius:50%;border:3px solid var(--cc,#1F6FEB);animation:onda 1s ease-out 1s 2 both;pointer-events:none}
+/* tela de conclusão */
+.end{padding-top:18px}
+.selo{position:relative;width:150px;height:150px;margin:6px auto 4px;display:grid;place-items:center}
+.selo svg{width:130px;height:130px;position:relative;z-index:1}
+.selo .s-halo{position:absolute;inset:-6px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--cc) 30%,transparent),transparent 68%);animation:sobe .6s var(--suave) both}
+.selo .s-ring{fill:none;stroke:color-mix(in srgb,var(--cc) 30%,transparent);stroke-width:6;--len:340;stroke-dasharray:340;animation:desenha .8s var(--suave) both}
+.selo .s-fill{fill:var(--cc);transform-origin:60px 60px;animation:brota .6s var(--mola) .25s both}
+.selo .s-chk{fill:none;stroke:#fff;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;--len:70;stroke-dasharray:70;animation:desenha .45s ease-out .75s both}
+.selo .s-ic{position:absolute;z-index:2;right:4px;bottom:6px;font-size:34px;animation:brota .5s var(--mola) 1.1s both;filter:drop-shadow(0 4px 6px rgba(0,0,0,.15))}
+.selo .sp{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--cc);opacity:0;animation:faisca .9s ease-out .7s both;transform:rotate(var(--a)) translateY(0)}
+.selo .sp:nth-of-type(even){background:#FFC21A;width:6px;height:6px}
+@keyframes faisca{0%{opacity:0;transform:rotate(var(--a)) translateY(-30px) scale(.4)}30%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(-86px) scale(1)}}
+.end h2{animation:sobe .5s var(--suave) .5s both}.end .txt{animation:sobe .5s var(--suave) .6s both}
+.res{gap:10px}.res div{border-radius:20px;padding:14px 6px 12px;background:var(--card);border:1px solid var(--line);box-shadow:0 8px 22px -14px rgba(20,20,40,.25);animation:sobe .55s var(--mola) both}
+.res div:nth-child(1){animation-delay:.75s}.res div:nth-child(2){animation-delay:.85s}.res div:nth-child(3){animation-delay:.95s}
+.res .r-ic{display:block;font-size:20px;margin-bottom:2px}.res b{font-family:Montserrat,Inter,sans-serif;font-size:26px;font-variant-numeric:tabular-nums}
+.res small{color:var(--mut);font-weight:700}
+.res.r2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (prefers-reduced-motion:reduce){.selo *,.res div,.end h2,.end .txt,.node.recem,.node .brilho{animation:none!important}.selo .sp{display:none}}

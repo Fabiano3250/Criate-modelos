@@ -723,6 +723,7 @@ const sFim=()=>tom([[523,0,.15],[659,.12,.15],[784,.24,.15],[1047,.36,.4]],'sine
 /* ================= telas ================= */
 function topo(){$('sXp').textContent=S.xp;$('sStreak').textContent=S.streak;$('som').textContent=S.som?'🔊':'🔇'}
 function metaHtml(){return `<div class="goal"><div class="row"><span>🎯 Meta de hoje</span><span style="color:var(--xp)">${Math.min(S.dayXp,META)}/${META} XP</span></div><div class="bar"><i style="width:${Math.min(S.dayXp/META,1)*100}%"></i></div></div>`}
+const CHK='<svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const BASE={html:11,css:8,js:9};
 const unidadeFeita=(cid,ui)=>FL[cid].every((x,k)=>x.ui!==ui||S.done[cid+':'+k]);
 function liberado(c){if(!c.req)return true;const r=curso(c.req),n=BASE[r.id]||FL[r.id].length;for(let k=0;k<n;k++)if(!S.done[r.id+':'+k])return false;return true}
@@ -763,13 +764,14 @@ function renderCurso(){
     const prim=k;
     html+=`<div class="unit ${S.done[c.id+':'+prim]||prim===0||S.done[c.id+':'+(prim-1)]?'':'lock'}" style="${S.done[c.id+':'+prim]||prim===0||S.done[c.id+':'+(prim-1)]?`background:${c.cor};box-shadow:0 5px 0 #0006`:''}"><small>${esc(u.u)}</small><h2>${esc(u.t)}</h2></div><div class="path">`;
     u.l.forEach(l=>{const kk=k++,id=c.id+':'+kk,done=S.done[id],open=!done&&(kk===0||S.done[c.id+':'+(kk-1)]);
-      html+=`<button class="node n${kk%8} ${done?'done':open?'open':''}" data-k="${kk}" aria-label="${esc(l.n)}">${done?'⭐':open?l.i:'🔒'}${done?'<span class="redo" aria-hidden="true">↺</span>':''}<span class="lbl">${esc(l.n)}${done?' <i>· refazer</i>':''}</span></button><div class="spacer"></div>`});
+      html+=`<button class="node n${kk%8} ${done?'done':open?'open':''}${done&&VIEW.recem===id?' recem':''}" data-k="${kk}" aria-label="${esc(l.n)}">${done?CHK:open?l.i:'🔒'}${done&&VIEW.recem===id?'<span class="brilho" aria-hidden="true"></span>':''}${done?'<span class="redo" aria-hidden="true">↺</span>':''}<span class="lbl">${esc(l.n)}${done?' <i>· refazer</i>':''}</span></button><div class="spacer"></div>`});
     html+='</div>';
     const pk=c.id+':'+ui,P=PROJ[pk];
     if(P){const ab=unidadeFeita(c.id,ui),ft=(S.proj||{})[pk];
       html+=`<button class="pnode ${ft?'done':ab?'open':''}" data-proj="${pk}"><span class="pi">${ft?'🏆':ab?'🏁':'🔒'}</span><span><small>TESTE PRÁTICO · ${esc(u.u.toUpperCase())}</small><b>${esc(P.t)}</b><em>${ft?'Concluído · toque pra refazer':ab?(P.conv?'Uma conversa completa, do começo ao fim':'Use tudo que aprendeu, com a ajuda do professor'):'Libera ao terminar as lições da unidade'}</em></span></button>`}
   });
-  $('mapa').innerHTML=html;
+  $('mapa').innerHTML=html;$('mapa').style.setProperty('--cc',c.cor);
+  if(VIEW.recem){const r=$('mapa').querySelector('.node.recem');if(r)setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'center'}),350);setTimeout(()=>{VIEW.recem=null},2500)}
 }
 $('mapa').addEventListener('click',e=>{
   const hm=e.target.closest('[data-home]');if(hm){sTap();if(hm.dataset.home==='cat'){ir({tela:'cat',cat:(curso(VIEW.curso).cat||'prog')},'b')}else ir({tela:'home'},'b');return}
@@ -818,6 +820,8 @@ function mostrar(){
     ed.addEventListener('keydown',ev=>{if(ev.key==='Tab'){ev.preventDefault();const s=ed.selectionStart;ed.value=ed.value.slice(0,s)+'  '+ed.value.slice(ed.selectionEnd);ed.selectionStart=ed.selectionEnd=s+2;atualizaPv()}})}
   $('ex').parentElement.scrollTop=0;
 }
+function selo(cor,ic){return `<div class="selo" style="--cc:${cor}"><span class="s-halo"></span>${[0,1,2,3,4,5,6,7].map(i=>`<i class="sp" style="--a:${i*45}deg"></i>`).join('')}<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="s-ring" cx="60" cy="60" r="54"/><circle class="s-fill" cx="60" cy="60" r="45"/><path class="s-chk" d="M40 61l13 13 28-30"/></svg>${ic?`<span class="s-ic">${ic}</span>`:''}</div>`}
+function contar(){document.querySelectorAll('[data-n]').forEach(el=>{const n=+el.dataset.n,pre=el.dataset.pre||'';if(calmo()){el.textContent=pre+n;return}const t0=performance.now(),d=900;const f=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.textContent=pre+Math.round(n*e);if(k<1)requestAnimationFrame(f)};setTimeout(()=>requestAnimationFrame(f),450)})}
 function troca(){const x=$('ex');if(calmo())return;x.classList.remove('ex-in');void x.offsetWidth;x.classList.add('ex-in')}
 function cor(code){return esc(code).replace(/(&lt;\/?)([a-zA-Z0-9!]+)/g,'$1<span class="t">$2</span>').replace(/([a-z\-]+)=(&quot;[^&]*?&quot;)/g,'<span class="a">$1</span>=<span class="s">$2</span>')}
 function embaralhar(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}if(a.length>1&&a.every((v,i)=>v===i))[a[0],a[1]]=[a[1],a[0]];return a}
@@ -871,9 +875,10 @@ function fim(){
   salvar();
   const fimCurso=pct(c)>=1&&prim;
   $('lbar').style.width='100%';
-  $('ex').innerHTML=`<div class="end"><div class="trofeu">${fimCurso?'🎓':L.erros===0?'🏆':'⭐'}</div><h2>${fimCurso?'Curso concluído!':L.erros===0?'Lição perfeita!':'Lição concluída!'}</h2><div class="txt">${esc(FL[L.cid][L.k].l.n)}${fimCurso?` · você terminou o curso de ${esc(c.nome)}!`:prim&&L.k+1<FL[L.cid].length?' · próxima lição liberada':''}</div>
-  <div class="res"><div><b style="color:var(--xp)">+${ganho}</b><small>XP${bonus?' (+10 perfeito)':''}</small></div><div><b style="color:var(--bad)">${L.vidas}</b><small>vidas restantes</small></div><div><b>🔥${S.streak}</b><small>${S.streak===1?'dia':'dias'} seguidos</small></div></div>
+  $('ex').innerHTML=`<div class="end">${selo(c.cor,fimCurso?'🎓':L.erros===0?'🏆':'')}<h2>${fimCurso?'Curso concluído!':L.erros===0?'Lição perfeita!':'Lição concluída!'}</h2><div class="txt">${esc(FL[L.cid][L.k].l.n)}${fimCurso?` · você terminou o curso de ${esc(c.nome)}!`:prim&&L.k+1<FL[L.cid].length?' · próxima lição liberada':''}</div>
+  <div class="res"><div><span class="r-ic">⚡</span><b data-n="${ganho}" data-pre="+">+${ganho}</b><small>XP${bonus?' · perfeito':''}</small></div><div><span class="r-ic">❤️</span><b data-n="${L.vidas}">${L.vidas}</b><small>vidas</small></div><div><span class="r-ic">🔥</span><b data-n="${S.streak}">${S.streak}</b><small>${S.streak===1?'dia seguido':'dias seguidos'}</small></div></div>
   ${S.dayXp>=META&&S.dayXp-ganho<META?'<div class="goal" style="text-align:center;font-weight:900">🎯 Meta do dia batida! Volta amanhã pra manter a sequência.</div>':''}</div>`;
+  contar();VIEW.recem=L.cid+':'+L.k;
   $('foot').className='lfoot';$('footIn').innerHTML='<button class="big" id="voltar">CONTINUAR</button>';$('voltar').onclick=fecharLicao;
 }
 /* ================= teste prático ================= */
@@ -920,11 +925,11 @@ function fimProj(){
   const ganho=prim?50:10;S.xp+=ganho;S.dayXp+=ganho;
   if(S.last!==hoje()){S.streak=S.last===ontem()?S.streak+1:1;S.last=hoje()}
   salvar();const P=PROJ[L.proj];$('lbar').style.width='100%';$('hearts').textContent='🏁';
-  $('ex').innerHTML=`<div class="end"><div class="trofeu">🏆</div><h2>Teste prático concluído!</h2><div class="txt">${esc(P.t)}${P.conv?' · Compare sempre suas respostas com as do professor: é assim que se pega o jeito.':' · Você construiu algo de verdade sozinho. Tente fazer o mesmo no VS Code!'}</div>
-  <div class="res"><div><b style="color:var(--xp)">+${ganho}</b><small>XP${prim?'':' (refeito)'}</small></div><div><b>🔥${S.streak}</b><small>${S.streak===1?'dia':'dias'} seguidos</small></div></div></div>`;
+  $('ex').innerHTML=`<div class="end">${selo(curso(L.cid).cor,'🏆')}<h2>Teste prático concluído!</h2><div class="txt">${esc(P.t)}${P.conv?' · Compare sempre suas respostas com as do professor: é assim que se pega o jeito.':' · Você construiu algo de verdade sozinho. Tente fazer o mesmo no VS Code!'}</div>
+  <div class="res r2"><div><span class="r-ic">⚡</span><b data-n="${ganho}" data-pre="+">+${ganho}</b><small>XP${prim?'':' · refeito'}</small></div><div><span class="r-ic">🔥</span><b data-n="${S.streak}">${S.streak}</b><small>${S.streak===1?'dia seguido':'dias seguidos'}</small></div></div></div>`;contar();
   $('foot').className='lfoot';$('footIn').innerHTML='<button class="big" id="voltar">CONTINUAR</button>';$('voltar').onclick=fecharLicao;
 }
-function confete(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const b=document.createElement('div');b.className='confete';const cs=['#22e57a','#ffc83d','#ff5a5a','#7ee2ff','#fff'];b.innerHTML=Array.from({length:70},(_,i)=>`<i style="left:${Math.random()*100}%;background:${cs[i%5]};animation-delay:${Math.random()*.4}s;animation-duration:${1.6+Math.random()*1.4}s"></i>`).join('');document.body.appendChild(b);setTimeout(()=>b.remove(),3600)}
+function confete(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const b=document.createElement('div');b.className='confete';const cs=['#1F6FEB','#E63946','#FFC21A','#5B8DFF','#ffffff'];b.innerHTML=Array.from({length:70},(_,i)=>`<i style="left:${Math.random()*100}%;background:${cs[i%5]};animation-delay:${Math.random()*.4}s;animation-duration:${1.6+Math.random()*1.4}s"></i>`).join('');document.body.appendChild(b);setTimeout(()=>b.remove(),3600)}
 render('f');
 }
 </script>
