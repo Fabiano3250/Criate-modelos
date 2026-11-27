@@ -117,6 +117,30 @@ footer{padding:30px 0 100px;text-align:center;font-size:13px;color:var(--mut)}
 .rev{opacity:0;transform:translateY(26px);transition:opacity .8s var(--suave),transform .8s var(--suave);transition-delay:var(--d,0s)}
 .rev.on{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rev{opacity:1;transform:none}}
+
+/* ===== ajustes: mais fiel à referência ===== */
+.bg{background:
+  radial-gradient(55% 60% at 100% 25%,#F37F2E 0%,rgba(243,127,46,.55) 35%,transparent 72%),
+  radial-gradient(45% 45% at 0% 0%,#FFFAF4 0%,transparent 70%),
+  radial-gradient(60% 50% at 30% 100%,#F9C08E 0%,transparent 70%),
+  linear-gradient(120deg,#FCEFE2 0%,#FAD9B6 45%,#F6A766 100%)}
+h1{font-weight:400;letter-spacing:-.055em}
+h1 .o{color:#A8521A;background:none}
+h1 .g1{background:linear-gradient(180deg,#3B1C08 20%,#7A3A12 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 .g2{background:linear-gradient(180deg,#5A2A0C 10%,#C6631F 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.palco{min-height:380px}
+.d3{position:absolute;inset:-10% -20%;z-index:1;opacity:0;transition:opacity 1s var(--suave)}
+.d3.pronto{opacity:1}
+.d3 canvas{width:100%!important;height:100%!important;display:block}
+.dente.reserva{display:none}
+body.sem3d .dente.reserva{display:block}
+.anel{background:radial-gradient(circle,rgba(255,255,255,.18),transparent 65%)}
+.stat{border-radius:12px;padding:12px 12px 10px}
+.stat svg{width:22px;height:22px;padding:3px;border:1px solid rgba(90,44,14,.45);border-radius:50%}
+.eq{display:flex;gap:10px;margin-right:-20px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 80%,transparent);mask-image:linear-gradient(90deg,#000 80%,transparent)}
+.eq .doutora{flex:0 0 240px;max-width:none}
+.doutora.d2{background:linear-gradient(160deg,#FFE2BE,#F39A52 70%,#CF6A24)}
+@media(min-width:900px){.palco{min-height:560px}.eq{margin-right:-40px}}
 </style>
 </head>
 <body>
@@ -134,7 +158,7 @@ footer{padding:30px 0 100px;text-align:center;font-size:13px;color:var(--mut)}
 <main id="topo">
 <div class="hero">
   <div>
-    <h1 class="rev"><span class="o">Cuidado</span> para<br><span class="g">sorrisos</span><br><span class="g">melhores</span></h1>
+    <h1 class="rev">Cuidado <span class="o">para</span><br><span class="g g1">sorrisos</span><br><span class="g g2">melhores</span></h1>
     <p class="sub rev" style="--d:.12s">Tecnologia odontológica moderna com especialistas experientes, para um tratamento preciso e confortável.</p>
     <a class="pill escuro rev" style="--d:.2s" href="https://wa.me/5548999999999?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener">Agendar avaliação <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12L12 4M5.5 4H12v6.5"/></svg></a>
     <div class="stats rev" style="--d:.3s">
@@ -145,7 +169,8 @@ footer{padding:30px 0 100px;text-align:center;font-size:13px;color:var(--mut)}
 
   <div class="palco" aria-hidden="true">
     <div class="anel"></div><div class="anel a2"></div>
-    <svg class="dente" viewBox="0 0 200 250">
+    <div id="dente3d" class="d3"></div>
+    <svg class="dente reserva" viewBox="0 0 200 250">
       <defs>
         <radialGradient id="esm" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#F4F1EE"/><stop offset="1" stop-color="#D9CFC6"/></radialGradient>
         <linearGradient id="ouro" x1="0" x2="1"><stop offset="0" stop-color="#8A4A1C"/><stop offset=".3" stop-color="#F2C08A"/><stop offset=".55" stop-color="#B5672A"/><stop offset=".8" stop-color="#F7CF9E"/><stop offset="1" stop-color="#7A3D14"/></linearGradient>
@@ -165,7 +190,7 @@ footer{padding:30px 0 100px;text-align:center;font-size:13px;color:var(--mut)}
 
   <div class="lado">
     <div class="chips rev" style="--d:.25s"><span>Personalizado</span><span>Confiável</span><span>Confortável</span><span>Preciso</span><span>Confiança</span></div>
-    <div class="doutora rev" style="--d:.35s" id="equipe"><div class="mono">AL</div><div class="info"><b>Dra. Ana Lima</b><small>Implantodontista</small></div></div>
+    <div class="eq rev" style="--d:.35s" id="equipe"><div class="doutora"><div class="mono">AL</div><div class="info"><b>Dra. Ana Lima</b><small>Implantodontista</small></div></div><div class="doutora d2"><div class="mono">RC</div><div class="info"><b>Dr. Rafael Costa</b><small>Ortodontista</small></div></div></div>
   </div>
 </div>
 
@@ -214,7 +239,9 @@ footer{padding:30px 0 100px;text-align:center;font-size:13px;color:var(--mut)}
 
 <a class="whats" href="https://wa.me/5548999999999?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.4 8.6 3.4 15.5c0 2.4.7 4.7 1.9 6.6L3.3 29l7.1-1.9c1.8 1 3.8 1.5 5.9 1.5 7 0 12.6-5.6 12.6-12.6S23 3 16 3zm7.3 17.8c-.3.9-1.8 1.7-2.5 1.8-.6.1-1.5.1-2.4-.2-.5-.2-1.3-.4-2.2-.8-3.8-1.6-6.3-5.5-6.5-5.7-.2-.3-1.5-2-1.5-3.9s1-2.8 1.3-3.2c.4-.4.8-.5 1-.5h.8c.2 0 .6-.1.9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.4 0 .7-.1.3-.2.4-.4.7l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.3 2.8 1.7 3.2 1.9.4.2.6.2.8-.1.2-.3 1-1.1 1.2-1.5.3-.4.5-.3.9-.2.4.1 2.3 1.1 2.7 1.3.4.2.7.3.8.5.1.1.1 1-.2 1.9z"/></svg></a>
 
+<script type="module" src="js/dente3d.js"></script>
 <script>
+setTimeout(()=>{const d=document.getElementById('dente3d');if(!d.classList.contains('pronto'))document.body.classList.add('sem3d')},3500);
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rev').forEach(el=>io.observe(el));
 </script>
