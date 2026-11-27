@@ -122,3 +122,38 @@ html.escuro .zb.eu{background:#005c4b;color:#e9edef}
 html.escuro .node .redo{background:#24242E;color:#fff}
 html.escuro body{background:var(--bg)}
 @media (prefers-reduced-motion:reduce){.node.open{animation:none}.nao{animation:none}}
+
+/* ===== movimento suave ===== */
+:root{--mola:cubic-bezier(.22,1.2,.36,1);--suave:cubic-bezier(.2,.8,.2,1)}
+html{scroll-behavior:smooth}
+@keyframes sobe{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes vemDir{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes vemEsq{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
+@keyframes brota{0%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes aceno{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-8deg)}}
+@keyframes flutua{50%{transform:translate(-10px,8px) scale(1.06)}}
+@keyframes rodape{from{transform:translateY(100%)}to{transform:none}}
+@keyframes pulinho{40%{transform:scale(1.05)}}
+@keyframes overlay{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.tr-f .anim,.tr-f .unit,.tr-f .pnode{animation:sobe .6s var(--suave) both;animation-delay:calc(var(--i,0)*55ms)}
+.tr-b .anim,.tr-b .unit,.tr-b .pnode{animation:vemEsq .5s var(--suave) both;animation-delay:calc(var(--i,0)*40ms)}
+.tr-f .node:not(.open),.tr-b .node:not(.open){animation:brota .55s var(--mola) both;animation-delay:calc(var(--i,0)*45ms)}
+.tr-f .node.open,.tr-b .node.open{animation:brota .55s var(--mola) both,respira 2.4s ease-in-out .9s infinite;animation-delay:calc(var(--i,0)*45ms),.9s}
+.aceno{display:inline-block;transform-origin:70% 80%;animation:aceno 2.2s ease-in-out .6s 2}
+.bigcat{transition:transform .35s var(--mola),box-shadow .35s var(--suave)}
+.bigcat:active{transform:scale(.97)}
+.bigcat .bc-b1{animation:flutua 7s ease-in-out infinite}.bigcat .bc-b2{animation:flutua 9s ease-in-out infinite reverse}
+.bigcat .bc-seta{transition:transform .35s var(--mola)}.bigcat:active .bc-seta{transform:translateX(6px)}
+.bigcat .bc-bar i,.bar i{transition:width 1s var(--suave)}
+.ccard,.cont,.voltar,.opt,.chip,.big,.pnode,.pajuda{transition:transform .25s var(--mola),box-shadow .25s var(--suave),background-color .2s,border-color .2s}
+.ccard:active,.cont:active,.opt:active,.chip:active,.pnode:active{transform:scale(.97)}
+.big:active{transform:translateY(3px) scale(.99)}
+.node{transition:transform .3s var(--mola)}.node:active{transform:scale(.92)}
+.lesson:not([hidden]){animation:overlay .4s var(--suave)}
+.ex-in{animation:vemDir .45s var(--suave)}
+.lfoot.fb{animation:rodape .35s var(--mola)}
+.opt.sel,.chip.used{animation:pulinho .3s var(--mola)}
+#lbar{transition:width .6s var(--mola)}
+.paj:not([hidden]){animation:sobe .35s var(--suave)}
+#dicaLock{transition:opacity .25s,transform .35s var(--mola)}
+@media (prefers-reduced-motion:reduce){.tr-f *,.tr-b *,.bigcat *,.aceno,.ex-in,.lesson,.lfoot.fb{animation:none!important}}

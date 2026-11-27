@@ -49,6 +49,17 @@ code,.code{font-family:"JetBrains Mono",ui-monospace,monospace}
 .paj{margin-top:8px;font-size:14px;line-height:1.5}.paj .codebox{margin-top:6px}
 textarea.ped{min-height:230px}.ppv iframe{height:260px}
 .pfb{margin-top:12px}.psol{margin:16px 0 6px;font-size:14px}.psol summary{font-weight:900;cursor:pointer;padding:6px 0}
+.bigcats{display:grid;gap:14px;margin-top:20px}
+.bigcat{position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;width:100%;text-align:left;padding:22px 18px;border-radius:26px;border:0;background:var(--c);color:#fff;font:inherit;min-height:150px;box-shadow:0 18px 40px -18px var(--c)}
+.bigcat .bc-ic{position:relative;font-size:40px;width:72px;height:72px;border-radius:22px;display:grid;place-items:center;background:rgba(255,255,255,.18);flex:none}
+.bigcat .bc-tx{position:relative;flex:1;min-width:0;display:grid;gap:3px}.bigcat b{font-size:24px;font-weight:900;letter-spacing:-.02em}.bigcat small{font-size:14px;opacity:.9;font-weight:600}
+.bigcat .bc-meta{font-size:12.5px;font-weight:800;opacity:.85;margin-top:6px}
+.bigcat .bc-bar{display:block;height:7px;border-radius:9px;background:rgba(255,255,255,.25);overflow:hidden;margin-top:4px}.bigcat .bc-bar i{display:block;height:100%;background:#fff;border-radius:9px}
+.bigcat .bc-seta{position:relative;font-size:24px;font-weight:900;opacity:.9}
+.bigcat .bc-b1,.bigcat .bc-b2{position:absolute;border-radius:50%;background:rgba(255,255,255,.12)}
+.bigcat .bc-b1{width:180px;height:180px;right:-50px;top:-70px}.bigcat .bc-b2{width:110px;height:110px;right:60px;bottom:-60px;background:rgba(255,255,255,.08)}
+.cat-h{display:flex;gap:14px;align-items:center;margin:14px 0 18px}.cat-h h1{margin:0;font-size:28px;font-weight:900;letter-spacing:-.02em}.cat-h p{margin:2px 0 0;color:var(--mut);font-weight:600}
+.cat-ic{font-size:34px;width:62px;height:62px;border-radius:20px;display:grid;place-items:center;background:var(--c);box-shadow:0 12px 26px -12px var(--c)}
 .node .lbl{position:absolute;top:100%;margin-top:12px;white-space:nowrap;font-size:14px;font-weight:800;color:var(--ink)}
 .node.open::after{content:"COMEÇAR";position:absolute;bottom:100%;margin-bottom:10px;background:var(--ink);color:var(--bg);font-size:12px;font-weight:900;padding:4px 10px;border-radius:10px;animation:bob 1.6s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-5px)}}
@@ -715,26 +726,38 @@ function metaHtml(){return `<div class="goal"><div class="row"><span>🎯 Meta d
 const BASE={html:11,css:8,js:9};
 const unidadeFeita=(cid,ui)=>FL[cid].every((x,k)=>x.ui!==ui||S.done[cid+':'+k]);
 function liberado(c){if(!c.req)return true;const r=curso(c.req),n=BASE[r.id]||FL[r.id].length;for(let k=0;k<n;k++)if(!S.done[r.id+':'+k])return false;return true}
-function render(){topo();VIEW.tela==='home'?renderHome():renderCurso()}
+function render(anim){topo();VIEW.tela==='home'?renderHome():VIEW.tela==='cat'?renderCat():renderCurso();if(anim)entrar(anim)}
+const calmo=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+function entrar(dir){const m=$('mapa');if(calmo())return;
+  m.classList.remove('tr-f','tr-b');void m.offsetWidth;m.classList.add(dir==='b'?'tr-b':'tr-f');
+  m.querySelectorAll('.anim,.node,.unit,.pnode').forEach((el,i)=>el.style.setProperty('--i',Math.min(i,14)));
+  clearTimeout(entrar.t);entrar.t=setTimeout(()=>m.classList.remove('tr-f','tr-b'),1400)}
+function ir(v,dir){VIEW=v;render(dir||'f');scrollTo({top:0})}
+const CATS={prog:{ic:'💻',t:'Programação',sub:'Criar sites e sistemas do zero',cor:'#1F6FEB',info:'<b>🗺️ Ordem recomendada:</b> HTML → CSS → JavaScript. O curso <b>Editando sites</b> libera depois do HTML e já serve direto pro seu trabalho com os sites dos clientes.'},neg:{ic:'💼',t:'Negócios',sub:'Vender e negociar melhor',cor:'#E63946',info:'<b>💼 Como usar:</b> faça uma lição antes de prospectar. As atividades de escrever são treino de verdade: escreva como se fosse mandar pro cliente.'}};
+const doCat=k=>CURSOS.filter(c=>(c.cat||'prog')===k);
 function renderHome(){
   const h=new Date().getHours(),oi=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
-  let cat0='prog';try{cat0=localStorage.getItem('ca-cat')||'prog'}catch(x){}
-  let u=curso(S.ultimo);if(!u||(u.cat||'prog')!==cat0)u=CURSOS.find(c=>(c.cat||'prog')===cat0)||CURSOS[0];
-  const prox=FL[u.id].findIndex((x,k)=>!S.done[u.id+':'+k]);
   let nm='';try{nm=(localStorage.getItem('ca-nome')||'').trim()}catch(x){}nm=nm?nm[0].toUpperCase()+nm.slice(1):'';
-  let cat='prog';try{cat=localStorage.getItem('ca-cat')||'prog'}catch(x){}
-  const CATS=[['prog','💻','Programação','Criar sites e sistemas'],['neg','💼','Negócios','Vender e negociar melhor']];
-  let html=`<div class="home"><h1>${oi}${nm?', '+esc(nm):''}! 👋</h1><p class="sub">Escolha uma área e faça uma lição por vez. Constância vale mais que pressa.</p>${metaHtml()}`;
-  if(prox>=0)html+=`<button class="cont" data-cur="${u.id}" data-go="${prox}"><span class="ic">${FL[u.id][prox].l.i}</span><span><small>CONTINUAR · ${esc(u.nome)}</small><b>${esc(FL[u.id][prox].l.n)}</b></span></button>`;
-  html+=`<div class="cats">${CATS.map(([k,ic,t,sub])=>`<button class="catb ${cat===k?'on':''}" data-cat="${k}"><span>${ic}</span><b>${t}</b><small>${sub}</small></button>`).join('')}</div>`;
-  html+=`<div class="cgrid">${CURSOS.filter(c=>(c.cat||'prog')===cat).map(c=>{const lib=liberado(c),p=pct(c);return `<button class="ccard ${lib?'':'lock'}" data-cur="${c.id}"><span class="ic" style="background:${c.cor}22;border:2px solid ${c.cor}66">${lib?c.icone:'🔒'}</span><span style="flex:1;min-width:0"><h3>${esc(c.nome)}</h3><p>${esc(c.sub)}</p><div class="bar"><i style="width:${p*100}%;background:${c.cor};box-shadow:0 0 10px ${c.cor}88"></i></div><div class="meta">${lib?`${feitas(c)} de ${FL[c.id].length} lições · ${esc(c.nivel)}`:`Libera ao terminar o básico de ${esc(curso(c.req).nome)}`}</div></span></button>`}).join('')}</div>
-  ${cat==='prog'?'<div class="cinfo" style="margin-top:18px"><b>🗺️ Ordem recomendada:</b> HTML → CSS → JavaScript. O curso <b>Editando sites</b> libera depois do HTML e já serve direto pro seu trabalho com os sites dos clientes.</div>':'<div class="cinfo" style="margin-top:18px"><b>💼 Como usar:</b> faça uma lição antes de prospectar. As atividades de escrever são treino de verdade: escreva como se fosse mandar pro cliente.</div>'}</div>`;
+  let html=`<div class="home"><h1 class="anim">${oi}${nm?', '+esc(nm):''}! <span class="aceno">👋</span></h1><p class="sub anim">O que você quer aprender hoje?</p><div class="anim">${metaHtml()}</div><div class="bigcats">`;
+  html+=Object.entries(CATS).map(([k,C])=>{const cs=doCat(k),tot=cs.reduce((a,c)=>a+FL[c.id].length,0),fe=cs.reduce((a,c)=>a+feitas(c),0);
+    return `<button class="bigcat anim" data-cat="${k}" style="--c:${C.cor}"><i class="bc-b1" aria-hidden="true"></i><i class="bc-b2" aria-hidden="true"></i><span class="bc-ic">${C.ic}</span><span class="bc-tx"><b>${C.t}</b><small>${C.sub}</small><span class="bc-meta">${cs.length} ${cs.length===1?'curso':'cursos'} · ${fe} de ${tot} lições</span><span class="bc-bar"><i style="width:${tot?fe/tot*100:0}%"></i></span></span><span class="bc-seta" aria-hidden="true">→</span></button>`}).join('');
+  html+='</div></div>';
+  $('mapa').innerHTML=html;
+}
+function renderCat(){
+  const k=VIEW.cat,C=CATS[k],cs=doCat(k);
+  let u=curso(S.ultimo);if(!u||(u.cat||'prog')!==k)u=cs[0];
+  const prox=FL[u.id].findIndex((x,i)=>!S.done[u.id+':'+i]);
+  let html=`<button class="voltar anim" data-home="1">← Início</button><div class="cat-h anim" style="--c:${C.cor}"><span class="cat-ic">${C.ic}</span><div><h1>${C.t}</h1><p>${C.sub}</p></div></div>`;
+  if(prox>=0&&liberado(u))html+=`<button class="cont anim" data-cur="${u.id}" data-go="${prox}"><span class="ic">${FL[u.id][prox].l.i}</span><span><small>CONTINUAR · ${esc(u.nome)}</small><b>${esc(FL[u.id][prox].l.n)}</b></span></button>`;
+  html+=`<div class="cgrid">${cs.map(c=>{const lib=liberado(c),p=pct(c);return `<button class="ccard anim ${lib?'':'lock'}" data-cur="${c.id}"><span class="ic" style="background:${c.cor}22;border:2px solid ${c.cor}66">${lib?c.icone:'🔒'}</span><span style="flex:1;min-width:0"><h3>${esc(c.nome)}</h3><p>${esc(c.sub)}</p><div class="bar"><i style="width:${p*100}%;background:${c.cor};box-shadow:0 0 10px ${c.cor}88"></i></div><div class="meta">${lib?`${feitas(c)} de ${FL[c.id].length} lições · ${esc(c.nivel)}`:`Libera ao terminar o básico de ${esc(curso(c.req).nome)}`}</div></span></button>`}).join('')}</div>
+  <div class="cinfo anim" style="margin-top:18px">${C.info}</div>`;
   $('mapa').innerHTML=html;
 }
 function renderCurso(){
   const c=curso(VIEW.curso);let k=0;
-  let html=`<button class="voltar" data-home="1">← Cursos</button><div style="display:flex;gap:14px;align-items:center;margin-top:10px"><span style="font-size:44px">${c.icone}</span><div><h1 style="margin:0;font-size:26px;font-weight:900">${esc(c.nome)}</h1><div style="color:var(--mut);font-weight:800">${feitas(c)} de ${FL[c.id].length} lições</div></div></div>
-  <div class="cinfo"><b>Ao final você vai conseguir:</b> ${esc(c.meta)}</div>`;
+  let html=`<button class="voltar anim" data-home="cat">← ${esc(CATS[c.cat||'prog'].t)}</button><div class="anim" style="display:flex;gap:14px;align-items:center;margin-top:10px"><span style="font-size:44px">${c.icone}</span><div><h1 style="margin:0;font-size:26px;font-weight:900">${esc(c.nome)}</h1><div style="color:var(--mut);font-weight:800">${feitas(c)} de ${FL[c.id].length} lições</div></div></div>
+  <div class="cinfo anim"><b>Ao final você vai conseguir:</b> ${esc(c.meta)}</div>`;
   if(pct(c)>=1)html+=`<div class="cert">🎓 Curso concluído!<b>${esc(c.nome)}</b><span style="font-size:14px;color:var(--mut)">Pode refazer qualquer lição pra revisar.</span></div>`;
   c.units.forEach((u,ui)=>{
     const prim=k;
@@ -749,12 +772,12 @@ function renderCurso(){
   $('mapa').innerHTML=html;
 }
 $('mapa').addEventListener('click',e=>{
-  if(e.target.closest('[data-home]')){sTap();VIEW={tela:'home'};render();scrollTo(0,0);return}
-  const ct=e.target.closest('[data-cat]');if(ct){sTap();try{localStorage.setItem('ca-cat',ct.dataset.cat)}catch(x){}render();return}
+  const hm=e.target.closest('[data-home]');if(hm){sTap();if(hm.dataset.home==='cat'){ir({tela:'cat',cat:(curso(VIEW.curso).cat||'prog')},'b')}else ir({tela:'home'},'b');return}
+  const ct=e.target.closest('[data-cat]');if(ct){sTap();try{localStorage.setItem('ca-cat',ct.dataset.cat)}catch(x){}ir({tela:'cat',cat:ct.dataset.cat});return}
   const cc=e.target.closest('[data-cur]');
   if(cc){const c=curso(cc.dataset.cur);if(!liberado(c)){nao(cc,'🔒 Libera quando você terminar o básico de '+curso(c.req).nome);return}sTap();
     if(cc.dataset.go!=null){abrir(c.id,+cc.dataset.go);return}
-    VIEW={tela:'curso',curso:c.id};render();scrollTo(0,0);return}
+    ir({tela:'curso',curso:c.id});return}
   const pj=e.target.closest('[data-proj]');if(pj){const[cid,ui]=pj.dataset.proj.split(':');if(!unidadeFeita(cid,+ui)){nao(pj,'🔒 Termine as lições desta unidade pra liberar o teste');return}sTap();abrirProj(pj.dataset.proj);return}
   const b=e.target.closest('.node');if(!b)return;const c=curso(VIEW.curso),k=+b.dataset.k;
   if(!S.done[c.id+':'+k]&&!(k===0||S.done[c.id+':'+(k-1)])){nao(b,'🔒 Termine a lição anterior pra liberar');return}
@@ -764,13 +787,13 @@ function nao(el,txt){el.classList.remove('nao');void el.offsetWidth;el.classList
   let t=document.getElementById('dicaLock');if(!t){t=document.createElement('div');t.id='dicaLock';t.setAttribute('role','status');document.body.appendChild(t)}
   t.textContent=txt;t.classList.add('show');clearTimeout(nao.tm);nao.tm=setTimeout(()=>t.classList.remove('show'),2200)}
 $('som').onclick=()=>{S.som=!S.som;salvar();topo();sTap()};
-$('logoBtn').onclick=()=>{if(L)return;VIEW={tela:'home'};render();scrollTo(0,0)};
+$('logoBtn').onclick=()=>{if(L)return;ir({tela:'home'},'b')};
 
 /* ================= lição ================= */
 let L=null,resp=null;
 function abrir(cid,k){const dl=document.getElementById('dicaLock');if(dl)dl.classList.remove('show');const lic=FL[cid][k].l;S.ultimo=cid;salvar();
   L={cid,k,ex:[{t:'intro'},...lic.ex],i:0,vidas:5,xp:0,erros:0,fila:[]};$('lesson').hidden=false;document.body.style.overflow='hidden';mostrar()}
-function fecharLicao(){$('lesson').hidden=true;document.body.style.overflow='';const cid=L&&L.cid;L=null;if(cid&&VIEW.tela==='home'){VIEW={tela:'curso',curso:cid}}render()}
+function fecharLicao(){$('lesson').hidden=true;document.body.style.overflow='';const cid=L&&L.cid;L=null;if(cid&&VIEW.tela!=='curso'){VIEW={tela:'curso',curso:cid}}render()}
 $('sair').onclick=fecharLicao;
 function total(){return L.ex.length+L.fila.length}
 function atual(){return L.i<L.ex.length?L.ex[L.i]:L.fila[L.i-L.ex.length]}
@@ -785,7 +808,7 @@ function mostrar(){
   else if(e.t==='build'){resp=[];const ord=embaralhar(e.o.map((o,i)=>i));h=`<span class="tag">MONTE O CÓDIGO</span><div class="q">${esc(e.q)}</div><div class="ans" id="ans"></div><div class="chips">${ord.map(i=>`<button class="chip" data-b="${i}">${esc(e.o[i])}</button>`).join('')}</div>`;rodape('VERIFICAR',false)}
   else if(e.t==='type'){h=`<span class="tag">ESCREVA O CÓDIGO</span><div class="q">${esc(e.q)}</div><textarea class="ed" id="ed" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Seu código">${esc(e.start||'')}</textarea><div class="pv"><b>Resultado${e.click?' (toque no botão pra testar)':''}</b><iframe id="pv" title="Resultado"></iframe></div><button class="reset" id="dica">💡 ver dica</button><div class="txt" id="dicaTxt" hidden style="margin-top:6px"><div class="codebox">${esc(e.hint)}</div></div>`;rodape('VERIFICAR',!!(e.start&&e.start.trim()))}
   else if(e.t==='escreva'){h=`<span class="tag">SUA VEZ DE RESPONDER</span><div class="q">${esc(e.q)}</div>${e.cli?`<div class="zap"><div class="zb cli"><small>${esc(e.quem||'Cliente')}</small>${esc(e.cli)}</div></div>`:''}<textarea class="msgEd" id="ed2" placeholder="Escreva aqui como se fosse mandar no WhatsApp…" aria-label="Sua resposta"></textarea><div class="small2">Não existe uma única resposta certa. Escreva do seu jeito e depois compare com a do professor.</div>`;rodape('COMPARAR COM O PROFESSOR',false)}
-  $('ex').innerHTML=h;
+  $('ex').innerHTML=h;troca();
   if(e.t==='escreva'){const t=$('ed2');t.focus();t.addEventListener('input',()=>{$('acao').disabled=t.value.trim().length<10})}
   if(e.t==='info'&&e.show&&e.code){const f=document.querySelector('#ex .pvi');if(f){f.onload=()=>{try{f.style.height=Math.min(340,f.contentDocument.body.scrollHeight+18)+'px'}catch(x){}}}if(f)f.srcdoc='<meta charset="utf-8"><style>body{font-family:system-ui,sans-serif;padding:8px 12px;margin:0;color:#111;background:#fff}</style>'+(typeof e.show==='string'?e.show:e.code)}
   if(e.t==='fill')desenhaFill();
@@ -795,6 +818,7 @@ function mostrar(){
     ed.addEventListener('keydown',ev=>{if(ev.key==='Tab'){ev.preventDefault();const s=ed.selectionStart;ed.value=ed.value.slice(0,s)+'  '+ed.value.slice(ed.selectionEnd);ed.selectionStart=ed.selectionEnd=s+2;atualizaPv()}})}
   $('ex').parentElement.scrollTop=0;
 }
+function troca(){const x=$('ex');if(calmo())return;x.classList.remove('ex-in');void x.offsetWidth;x.classList.add('ex-in')}
 function cor(code){return esc(code).replace(/(&lt;\/?)([a-zA-Z0-9!]+)/g,'$1<span class="t">$2</span>').replace(/([a-z\-]+)=(&quot;[^&]*?&quot;)/g,'<span class="a">$1</span>=<span class="s">$2</span>')}
 function embaralhar(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}if(a.length>1&&a.every((v,i)=>v===i))[a[0],a[1]]=[a[1],a[0]];return a}
 function desenhaFill(){const e=atual();let n=0;$('fillCode').innerHTML=esc(e.code).replace(/___/g,()=>{const v=resp[n];const html=`<span class="blank ${v!=null?'fill':''}" data-bl="${n}">${v!=null?esc(e.o[v]):'&nbsp;'}</span>`;n++;return html});
@@ -901,7 +925,7 @@ function fimProj(){
   $('foot').className='lfoot';$('footIn').innerHTML='<button class="big" id="voltar">CONTINUAR</button>';$('voltar').onclick=fecharLicao;
 }
 function confete(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const b=document.createElement('div');b.className='confete';const cs=['#22e57a','#ffc83d','#ff5a5a','#7ee2ff','#fff'];b.innerHTML=Array.from({length:70},(_,i)=>`<i style="left:${Math.random()*100}%;background:${cs[i%5]};animation-delay:${Math.random()*.4}s;animation-duration:${1.6+Math.random()*1.4}s"></i>`).join('');document.body.appendChild(b);setTimeout(()=>b.remove(),3600)}
-render();
+render('f');
 }
 </script>
 </body>
