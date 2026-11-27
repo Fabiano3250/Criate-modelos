@@ -53,5 +53,6 @@
       "destination": "https://criateacademy.vercel.app/",
       "permanent": false
     }
-  ]
+  ],
+  "trailingSlash": true
 }
