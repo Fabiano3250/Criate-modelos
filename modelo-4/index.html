@@ -144,6 +144,12 @@ body.sem3d .dente.reserva{display:block}
 .doutora.d2{background:linear-gradient(160deg,#FFE2BE,#F39A52 70%,#CF6A24)}
 @media(min-width:900px){.palco{min-height:560px}.eq{margin-right:-40px}}
 </style>
+<script>
+if(/debug/.test(location.search)){window.__errs=[];addEventListener('error',e=>__errs.push((e.message||'')+' '+((e.target&&e.target.src)||e.filename||'')),true);addEventListener('unhandledrejection',e=>__errs.push(String(e.reason)));
+addEventListener('load',()=>setTimeout(()=>{let g2=null,g1=null,r='-';try{g2=document.createElement('canvas').getContext('webgl2');g1=document.createElement('canvas').getContext('webgl');const g=g2||g1;const x=g&&g.getExtension('WEBGL_debug_renderer_info');r=g?(x?g.getParameter(x.UNMASKED_RENDERER_WEBGL):g.getParameter(g.RENDERER)):'nenhuma'}catch(e){r='erro: '+e.message}
+const d=document.getElementById('dente3d'),b=document.createElement('pre');b.style.cssText='position:fixed;left:8px;right:8px;top:84px;z-index:99;background:#111;color:#7CFC9A;font:12px/1.45 monospace;padding:12px;border-radius:12px;white-space:pre-wrap;word-break:break-word';
+b.textContent=['Navegador: '+navigator.userAgent,'WebGL2: '+!!g2+' · WebGL1: '+!!g1,'GPU: '+r,'Canvas 3D na página: '+!!(d&&d.querySelector('canvas')),'3D pronto: '+!!(d&&d.classList.contains('pronto')),'Desenho 2D reserva ativo: '+document.body.classList.contains('sem3d'),'Sistema em modo escuro: '+matchMedia('(prefers-color-scheme: dark)').matches,'Erros: '+(__errs.join(' | ')||'nenhum')].join('\n');document.body.appendChild(b)},6000))}
+</script>
 </head>
 <body>
 <div class="bg" aria-hidden="true"></div>
