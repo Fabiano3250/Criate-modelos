@@ -7,7 +7,7 @@ const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let renderer;
 try {
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-} catch (e) { box.classList.add('sem3d'); throw e; }
+} catch (e) { document.body.classList.add('sem3d'); throw e; }
 
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -20,14 +20,16 @@ const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
 const cam = new THREE.PerspectiveCamera(28, 1, 0.1, 50);
-cam.position.set(0, 0.05, 9.4);
-cam.lookAt(0, -0.2, 0);
+cam.position.set(0, 0.9, 9.4);
+cam.lookAt(0, -0.15, 0);
 
 // luzes quentes, como no estúdio da referência
 const key = new THREE.DirectionalLight(0xfff1e0, 2.2); key.position.set(-3, 4, 4); scene.add(key);
 const rim = new THREE.DirectionalLight(0xff9a4d, 3.2); rim.position.set(4, 1.5, -3); scene.add(rim);
 const fill = new THREE.DirectionalLight(0xffd2a8, 0.9); fill.position.set(2, -2, 3); scene.add(fill);
 scene.add(new THREE.HemisphereLight(0xfff6ec, 0xf08a3c, 0.6));
+const laranja = new THREE.PointLight(0xff8a3a, 6, 8); laranja.position.set(2.2, 0.4, 1.5); scene.add(laranja);
+const laranja2 = new THREE.PointLight(0xffb070, 4, 8); laranja2.position.set(-2.4, -0.6, 1.2); scene.add(laranja2);
 
 const grupo = new THREE.Group(); scene.add(grupo);
 
@@ -91,12 +93,12 @@ const rosca = new THREE.Mesh(new THREE.TubeGeometry(new Helice(), 700, 0.034, 16
 rosca.position.y = -1.08; grupo.add(rosca);
 
 grupo.position.y = 0.15;
-grupo.rotation.set(-0.06, -0.5, 0.05);
+grupo.rotation.set(0.1, 0, 0);
 
 /* ---------- tamanho, movimento ---------- */
 function ajustar() {
   const w = box.clientWidth, h = box.clientHeight;
-  renderer.setSize(w, h, false); cam.aspect = w / h; cam.position.z = w < 560 ? 12 : 9.4; cam.updateProjectionMatrix();
+  renderer.setSize(w, h, false); cam.aspect = w / h; cam.position.z = w < 560 ? 12 : 9.4; cam.lookAt(0, -0.15, 0); cam.updateProjectionMatrix();
 }
 new ResizeObserver(ajustar).observe(box); ajustar();
 
@@ -112,11 +114,11 @@ function quadro(now) {
   if (!visivel) return;
   const t = (now - t0) / 1000;
   if (!reduz) {
-    grupo.position.y = 0.15 + Math.sin(t * 1.1) * 0.08;
-    grupo.rotation.y += ((-0.5 + Math.sin(t * 0.35) * 0.45 + alvoX * 0.5) - grupo.rotation.y) * 0.04;
-    grupo.rotation.x += ((-0.06 + alvoY * 0.15) - grupo.rotation.x) * 0.04;
+    grupo.position.y = 0.15 + Math.sin(t * 0.9) * 0.05;
+    grupo.rotation.y += ((Math.sin(t * 0.4) * 0.06 + alvoX * 0.12) - grupo.rotation.y) * 0.05;
+    grupo.rotation.x += ((0.1 + alvoY * 0.06) - grupo.rotation.x) * 0.05;
   }
   renderer.render(scene, cam);
 }
 requestAnimationFrame(quadro);
-box.classList.add('pronto');
+box.classList.add('pronto'); document.body.classList.remove('sem3d');

@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="color-scheme" content="only light">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clínica Aurora Odonto | Cuidado para sorrisos melhores</title>
 <meta name="description" content="Tecnologia odontológica moderna com especialistas experientes, para um tratamento preciso e confortável. Agende sua avaliação pelo WhatsApp.">
@@ -10,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+:root{color-scheme:only light}
 :root{
   --ink:#1B120C; --brown:#5A2C0E; --org:#E8762B; --org2:#F6A15C; --peach:#FFE2C2; --cream:#FBF1E6;
   --glass:rgba(255,248,240,.55); --line:rgba(255,255,255,.65); --mut:#6E5546;
@@ -239,9 +241,9 @@ body.sem3d .dente.reserva{display:block}
 
 <a class="whats" href="https://wa.me/5548999999999?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.4 8.6 3.4 15.5c0 2.4.7 4.7 1.9 6.6L3.3 29l7.1-1.9c1.8 1 3.8 1.5 5.9 1.5 7 0 12.6-5.6 12.6-12.6S23 3 16 3zm7.3 17.8c-.3.9-1.8 1.7-2.5 1.8-.6.1-1.5.1-2.4-.2-.5-.2-1.3-.4-2.2-.8-3.8-1.6-6.3-5.5-6.5-5.7-.2-.3-1.5-2-1.5-3.9s1-2.8 1.3-3.2c.4-.4.8-.5 1-.5h.8c.2 0 .6-.1.9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.4 0 .7-.1.3-.2.4-.4.7l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.3 2.8 1.7 3.2 1.9.4.2.6.2.8-.1.2-.3 1-1.1 1.2-1.5.3-.4.5-.3.9-.2.4.1 2.3 1.1 2.7 1.3.4.2.7.3.8.5.1.1.1 1-.2 1.9z"/></svg></a>
 
-<script type="module" src="js/dente3d.js"></script>
+<script type="module" src="js/dente3d.js" onerror="document.body.classList.add('sem3d')"></script>
 <script>
-setTimeout(()=>{const d=document.getElementById('dente3d');if(!d.classList.contains('pronto'))document.body.classList.add('sem3d')},3500);
+(()=>{try{const c=document.createElement('canvas');if(!(c.getContext('webgl2')||c.getContext('webgl')))document.body.classList.add('sem3d')}catch(e){document.body.classList.add('sem3d')}})();
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rev').forEach(el=>io.observe(el));
 </script>
