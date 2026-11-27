@@ -6,51 +6,74 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <title>Criate Academy</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="icon" href="/icone.svg"><meta name="theme-color" content="#F6F6F9">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="icon" href="/icone.svg"><meta name="theme-color" content="#F4F2EC">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;--bg:#F6F6F9;--card:#fff;--line:#E5E5EC;--ink:#14141A;--mut:#6C6C7D;--blu:#1F6FEB;--red:#E63946;--yel:#FFC21A}
+:root{color-scheme:light;--bg:#F4F2EC;--card:#fff;--card2:#ECE9E1;--line:#E2DED3;--ink:#17171B;--ink2:#3A3A42;--mut:#6E6C74;--blu:#1F6FEB;--red:#E63946;--yel:#FFC21A;--pri:#17171B;--onpri:#fff;--fd:"Bricolage Grotesque",system-ui,sans-serif;--fb:"Instrument Sans",system-ui,sans-serif}
 *{box-sizing:border-box}[hidden]{display:none!important}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:500 16px/1.5 Inter,system-ui,sans-serif}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--fb);-webkit-font-smoothing:antialiased}
 button,input{font:inherit;color:inherit}
-.tela{min-height:100%;display:grid;place-items:center;padding:28px 18px}
+.tela{min-height:100%;display:grid;grid-template-columns:1fr;place-items:center;padding:28px 18px}
+.lado{display:none}
 .box{width:100%;max-width:400px}
-.marca{display:flex;align-items:center;justify-content:center;gap:10px}
-.logo{font:800 30px/1 Montserrat,Inter,sans-serif;letter-spacing:-.02em;margin:0}.logo b{font-weight:600;color:var(--mut)}
-.sub{text-align:center;color:var(--mut);font-weight:500;margin:10px 0 26px}
-.cartao{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 18px 40px -24px rgba(20,20,40,.35)}
-.abas{display:grid;grid-template-columns:1fr 1fr;background:#F0F0F5;border-radius:14px;padding:4px;margin-bottom:12px}
-.abas button{border:0;background:none;border-radius:11px;padding:10px;font-weight:700;color:var(--mut);cursor:pointer}
-.abas button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,20,40,.12)}
-label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
-input{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;outline:none}
-input:focus{border-color:var(--blu);box-shadow:0 0 0 3px rgba(31,111,235,.15)}
+.marca{display:flex;align-items:center;gap:10px}
+.logo{font:700 26px/1 var(--fd);letter-spacing:-.03em;margin:0}.logo b{font-weight:500;color:var(--mut)}
+.titulo{font:700 clamp(30px,7vw,40px)/1.05 var(--fd);letter-spacing:-.035em;margin:28px 0 8px}
+.sub{color:var(--mut);margin:0 0 24px;font-size:16px}
+.cartao{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 1px 0 rgba(23,23,27,.04),0 18px 40px -26px rgba(23,23,27,.35)}
+.abas{display:grid;grid-template-columns:1fr 1fr;background:var(--card2);border-radius:14px;padding:4px;margin-bottom:8px}
+.abas button{border:0;background:none;border-radius:11px;padding:10px;font-weight:600;color:var(--mut);cursor:pointer}
+.abas button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(20,20,40,.1)}
+label{display:block;font-weight:600;font-size:14px;margin:16px 0 6px}
+input{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(23,23,27,.08)}
 .dica{font-size:13px;color:var(--mut);margin-top:6px}
-.big{width:100%;margin-top:20px;border:0;border-radius:16px;padding:15px;font:800 17px Montserrat,Inter,sans-serif;background:var(--blu);color:#fff;box-shadow:0 5px 0 #1550B3;cursor:pointer}
-.big:active{transform:translateY(3px);box-shadow:0 2px 0 #1550B3}
-.big:disabled{opacity:.6}
+.big{width:100%;margin-top:22px;border:0;border-radius:16px;padding:15px;font:700 17px var(--fd);background:var(--pri);color:var(--onpri);cursor:pointer;transition:transform .2s,opacity .2s}
+.big:active{transform:scale(.985)}
+.big:disabled{opacity:.55}
 .msg{margin-top:14px;border-radius:12px;padding:10px 12px;font-weight:600;font-size:14.5px}
-.msg.erro{background:#FDECEE;color:#A61E2A}.msg.ok{background:#E9F8F0;color:#0E7A43}
-.seg{margin-top:20px;font-size:13px;color:var(--mut);text-align:center}
+.msg.erro{background:#FBE7E8;color:#A61E2A}.msg.ok{background:#E4F3EA;color:#0E6B3C}
+.seg{margin-top:18px;font-size:13px;color:var(--mut);display:flex;gap:8px;align-items:flex-start}
+.seg svg{flex:none;margin-top:1px}
 #app{position:fixed;inset:0;width:100%;height:100%;border:0;background:var(--bg)}
-.sync{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:9;background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--mut);pointer-events:none;transition:opacity .4s;box-shadow:0 6px 18px -10px rgba(20,20,40,.4)}
-.conta{position:fixed;inset:0;z-index:10;background:rgba(20,20,30,.45);display:grid;place-items:center;padding:20px}
-.conta .box{background:#fff;border-radius:22px;padding:22px}
-.sair{background:#FDECEE;color:#A61E2A;box-shadow:0 5px 0 #F3C5CB}
-.fechar{background:#F0F0F5;color:var(--ink);box-shadow:none;margin-top:10px}
-html.escuro{color-scheme:dark;--bg:#0F0F14;--card:#1A1A22;--line:#2E2E3A;--ink:#F1F1F6;--mut:#9A9AAD}
-html.escuro .abas{background:#24242E}html.escuro .abas button.on{background:#33333F;color:var(--ink)}
-html.escuro input,html.escuro .sync,html.escuro .conta .box{background:var(--card)}
-html.escuro .fechar{background:#24242E}
-html.escuro .sair{background:#2E1418;color:#FF8A94;box-shadow:0 5px 0 #4A1C22}
-html.escuro .msg.erro{background:#2E1418;color:#FF8A94}html.escuro .msg.ok{background:#0F2A1D;color:#6FDCA0}
+.sync{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:9;background:var(--pri);color:var(--onpri);border-radius:12px;padding:8px 14px;font-size:13px;font-weight:600;pointer-events:none;transition:opacity .4s;box-shadow:0 10px 26px -12px rgba(0,0,0,.45);white-space:nowrap}
+@media(min-width:900px){.sync{bottom:22px}}
+.conta{position:fixed;inset:0;z-index:10;background:rgba(17,17,19,.5);backdrop-filter:blur(4px);display:grid;place-items:center;padding:20px}
+.conta .box{background:var(--card);border-radius:24px;padding:24px;border:1px solid var(--line)}
+.conta h2{font:700 24px var(--fd);letter-spacing:-.02em;margin:0 0 4px}
+.conta .big{margin-top:12px}
+.sair{background:#FBE7E8;color:#A61E2A}
+.fechar{background:var(--card2);color:var(--ink)}
+html.escuro{color-scheme:dark;--bg:#111113;--card:#1A1A1D;--card2:#242428;--line:#2C2C31;--ink:#F2F1EC;--ink2:#CFCDC6;--mut:#9A98A0;--pri:#F2F1EC;--onpri:#17171B}
+html.escuro .sair{background:#2C1416;color:#FF8A94}
+html.escuro .msg.erro{background:#2C1416;color:#FF8A94}html.escuro .msg.ok{background:#10291C;color:#6FDCA0}
+html.escuro input:focus{box-shadow:0 0 0 3px rgba(255,255,255,.08)}
+@media(min-width:900px){
+  .tela{grid-template-columns:1.1fr 1fr;padding:0;place-items:stretch}
+  .lado{display:flex;flex-direction:column;justify-content:space-between;padding:48px 56px;background:var(--pri);color:var(--onpri);position:relative;overflow:hidden}
+  .lado h2{font:700 clamp(40px,4.4vw,60px)/1.02 var(--fd);letter-spacing:-.04em;margin:0;max-width:12ch}
+  .lado p{opacity:.7;max-width:40ch;font-size:17px;margin:18px 0 0}
+  .lado ul{list-style:none;margin:0;padding:0;display:flex;gap:28px;font-size:14px;opacity:.8}
+  .lado ul b{display:block;font:700 28px var(--fd);opacity:1}
+  .lado .dots{position:absolute;right:-60px;bottom:-60px;width:340px;height:340px;opacity:.9}
+  .direita{display:grid;place-items:center;padding:40px}
+  .titulo{margin-top:0}
+  .direita .marca{display:none}
+}
 </style>
 </head>
 <body>
 <main class="tela" id="login">
-  <div class="box">
-    <div class="marca"><svg width="34" height="34" viewBox="0 0 120 120" aria-hidden="true"><circle cx="51" cy="36" r="15" fill="#E63946"/><circle cx="80" cy="66" r="13.5" fill="#FFC21A"/><circle cx="47" cy="86" r="16" fill="#1F6FEB"/></svg><h1 class="logo">Criate <b>Academy</b></h1></div>
-    <p class="sub">Aprenda a criar sites e sistemas, uma lição por dia.</p>
+  <section class="lado" aria-hidden="true">
+    <div class="marca"><svg width="30" height="30" viewBox="0 0 120 120"><circle cx="51" cy="36" r="15" fill="#E63946"/><circle cx="80" cy="66" r="13.5" fill="#FFC21A"/><circle cx="47" cy="86" r="16" fill="#1F6FEB"/></svg><span class="logo" style="color:inherit">Criate <b style="color:inherit;opacity:.6">Academy</b></span></div>
+    <div><h2>Aprenda um pouco todo dia.</h2><p>Programação, vendas e segurança digital em lições curtas, com prática de verdade e um ranking pra te manter no ritmo.</p></div>
+    <ul><li><b>3</b>áreas</li><li><b>6</b>cursos</li><li><b>5 min</b>por lição</li></ul>
+    <svg class="dots" viewBox="0 0 120 120"><circle cx="51" cy="36" r="15" fill="#E63946"/><circle cx="80" cy="66" r="13.5" fill="#FFC21A"/><circle cx="47" cy="86" r="16" fill="#1F6FEB"/></svg>
+  </section>
+  <div class="direita"><div class="box">
+    <div class="marca"><svg width="30" height="30" viewBox="0 0 120 120" aria-hidden="true"><circle cx="51" cy="36" r="15" fill="#E63946"/><circle cx="80" cy="66" r="13.5" fill="#FFC21A"/><circle cx="47" cy="86" r="16" fill="#1F6FEB"/></svg><h1 class="logo">Criate <b>Academy</b></h1></div>
+    <p class="titulo">Bem-vindo de volta.</p>
+    <p class="sub">Entre pra continuar de onde parou.</p>
     <div class="cartao">
     <div class="abas" role="tablist"><button id="tEntrar" class="on" type="button">Entrar</button><button id="tCriar" type="button">Criar conta</button></div>
     <form id="form" autocomplete="on" novalidate>
@@ -65,16 +88,16 @@ html.escuro .msg.erro{background:#2E1418;color:#FF8A94}html.escuro .msg.ok{backg
       <div class="msg" id="msg" hidden></div>
     </form>
     </div>
-    <p class="seg">🔒 Sem e-mail, sem dados pessoais. Só usuário, senha e progresso.</p>
-  </div>
+    <p class="seg"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Sem e-mail e sem dados pessoais. Só usuário, senha e progresso.</p>
+  </div></div>
 </main>
 <iframe id="app" title="Criate Academy" hidden></iframe>
 <div class="sync" id="sync" hidden></div>
 <div class="conta" id="conta" hidden><div class="box">
-  <h2 style="margin:0 0 4px;font-weight:900">👤 <span id="cNome"></span></h2>
-  <p style="margin:0;color:var(--mut);font-weight:700">Seu progresso é salvo automaticamente na nuvem.</p>
+  <h2 id="cNome"></h2>
+  <p style="margin:0;color:var(--mut)">Seu progresso é salvo automaticamente na nuvem.</p>
   <p id="cSync" style="margin:10px 0 0;font-size:14px;color:var(--mut)"></p>
-  <button class="big fechar" id="bTema" type="button">🌙 Usar modo escuro</button>
+  <button class="big fechar" id="bTema" type="button">Usar modo escuro</button>
   <button class="big sair" id="bSair" type="button">SAIR DA CONTA</button>
   <button class="big fechar" id="bFechar" type="button">Voltar</button>
 </div></div>
@@ -131,10 +154,12 @@ function juntar(a,b){
   m.des={...(a.des||{}),...(b.des||{})};m.prova={...(a.prova||{})};for(const[k,v]of Object.entries(b.prova||{}))m.prova[k]=Math.max(+m.prova[k]||0,+v||0);
   m.desChk={...(a.desChk||{}),...(b.desChk||{})};m.expl={...(a.expl||{}),...(b.expl||{})};m.proj={...(a.proj||{}),...(b.proj||{})};m.projCode={...(a.projCode||{}),...(b.projCode||{})};
   if(a.day===b.day){m.day=a.day;m.dayXp=Math.max(+a.dayXp||0,+b.dayXp||0)}else{const d=(a.day||'')>(b.day||'')?a:b;m.day=d.day;m.dayXp=+d.dayXp||0}
+  m.best=Math.max(+a.best||0,+b.best||0,+m.streak||0);m.top1=(a.top1||b.top1)?1:0;
+  if((a.sem||'')===(b.sem||'')){m.sem=a.sem||'';m.semXp=Math.max(+a.semXp||0,+b.semXp||0)}else{const w=(a.sem||'')>(b.sem||'')?a:b;m.sem=w.sem||'';m.semXp=+w.semXp||0}
   return m;
 }
 function limpo(p){/* só os campos do app, nada além */
-  const o={done:{},xp:Math.max(0,Math.min(1e7,+p.xp||0)),streak:Math.max(0,Math.min(1e5,+p.streak||0)),last:String(p.last||'').slice(0,10),dayXp:Math.max(0,+p.dayXp||0),day:String(p.day||'').slice(0,10),som:p.som!==false,ultimo:String(p.ultimo||'').slice(0,10)};
+  const o={done:{},xp:Math.max(0,Math.min(1e7,+p.xp||0)),streak:Math.max(0,Math.min(1e5,+p.streak||0)),last:String(p.last||'').slice(0,10),dayXp:Math.max(0,+p.dayXp||0),day:String(p.day||'').slice(0,10),som:p.som!==false,ultimo:String(p.ultimo||'').slice(0,10),best:Math.max(0,Math.min(1e5,+p.best||0)),sem:/^\d{4}-\d{2}-\d{2}$/.test(String(p.sem||''))?String(p.sem):'',semXp:Math.max(0,Math.min(1e7,+p.semXp||0)),top1:p.top1?1:0};
   for(const k of Object.keys(p.done||{}))if(/^[a-z]{1,10}:\d{1,3}$/.test(k)&&p.done[k])o.done[k]=true;
   /* estudo: revisão espaçada, testes e desafios (formatos fixos, tamanho limitado) */
   o.rev={};let n=0;for(const[k,v]of Object.entries(p.rev||{})){if(n>=700)break;if(/^[a-z]{1,10}:\d{1,3}:\d{1,2}$/.test(k)&&/^[1-5]\|\d{8}$/.test(String(v))){o.rev[k]=String(v);n++}}
@@ -151,7 +176,7 @@ function limpo(p){/* só os campos do app, nada além */
 }
 let tmr=null,enviando=false,pend=false,falhaSync=0,ultErro='',avisou=false;
 function agendar(ms){clearTimeout(tmr);tmr=setTimeout(enviar,ms||1500)}
-const BASE=['done','xp','streak','last','dayXp','day','som','ultimo'];
+const BASE=['done','xp','streak','last','dayXp','day','som','ultimo','best','sem','semXp','top1'];
 function motivo(e){
   if(!e||!e.status)return 'sem internet';
   if(e.status===404)return 'tabela de progresso não encontrada no banco (404)';
@@ -160,7 +185,7 @@ function motivo(e){
 }
 async function enviar(){
   if(!ses)return;if(enviando){pend=true;return}
-  enviando=true;if(!falhaSync)aviso('☁️ salvando…');
+  enviando=true;if(!falhaSync)aviso('Salvando…');
   try{
     const remoto=await baixar();
     const final=limpo(juntar(remoto,lerLocal()||{}));
@@ -171,23 +196,32 @@ async function enviar(){
       await rest('POST','',{user_id:ses.user.id,dados:b,atualizado:new Date().toISOString()});
       ultErro='revisões salvas só neste aparelho: '+motivo(e);
     }
-    aviso('✓ salvo',1200);
+    aviso('Salvo',1200);
     falhaSync=0;if(!ultErro.startsWith('revisões'))ultErro='';avisou=true;
   }catch(e){
     if(ses){falhaSync++;ultErro=motivo(e);
       /* avisa só na primeira falha; depois tenta de novo em silêncio, cada vez mais espaçado */
-      if(falhaSync===1)aviso('⚠️ não consegui salvar na nuvem agora. Seu progresso fica guardado aqui.',3500);
+      if(falhaSync===1)aviso('Sem conexão com a nuvem agora. Seu progresso fica guardado aqui.',3500);
       agendar(Math.min(300000,8000*Math.pow(2,falhaSync-1)))}
   }
   enviando=false;if(pend){pend=false;agendar()}
 }
 let avT;function aviso(t,ms){const s=$('sync');s.textContent=t;s.hidden=false;s.style.opacity=1;clearTimeout(avT);if(ms)avT=setTimeout(()=>{s.style.opacity=0},ms)}
 
+/* ---------- ranking (só nome, XP e XP da semana) ---------- */
+window.caRanking=async()=>{
+  const t=await token();if(!t)throw new Error('sem sessão');
+  const r=await fetch(URL_SB+'/rest/v1/rpc/ranking',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+t,'Content-Type':'application/json'},body:'{}'});
+  if(!r.ok)throw new Error('http '+r.status);
+  const j=await r.json();
+  return Array.isArray(j)?j.slice(0,100).map(x=>({nome:String(x.nome||'').slice(0,20),xp:+x.xp||0,sem:String(x.sem||'').slice(0,10),sem_xp:+x.sem_xp||0})):[];
+};
+window.caConta=()=>{$('cNome').textContent=ses?ses.user.nome:'';$('cSync').textContent=ultErro?'Aviso: '+ultErro:'Tudo salvo na nuvem.';$('conta').hidden=false};
 /* ---------- app ---------- */
 async function abrirApp(){
-  $('login').hidden=true;aviso('☁️ carregando seu progresso…');
-  try{const remoto=await baixar();falhaSync=0;const m=limpo(juntar(remoto,lerLocal()));ls.set(K_PROG,JSON.stringify(m));if(!remoto||JSON.stringify(limpo(remoto))!==JSON.stringify(m))agendar();aviso('✓ sincronizado',1200)}
-  catch(e){if(!ses)return;falhaSync=1;ultErro=motivo(e);aviso('⚠️ sem nuvem agora: salvando neste aparelho',3000);agendar(30000)}
+  $('login').hidden=true;aviso('Carregando seu progresso…');
+  try{const remoto=await baixar();falhaSync=0;const m=limpo(juntar(remoto,lerLocal()));ls.set(K_PROG,JSON.stringify(m));if(!remoto||JSON.stringify(limpo(remoto))!==JSON.stringify(m))agendar();aviso('Sincronizado',1200)}
+  catch(e){if(!ses)return;falhaSync=1;ultErro=motivo(e);aviso('Sem nuvem agora: salvando neste aparelho',3000);agendar(30000)}
   const f=$('app');f.style.visibility='hidden';f.hidden=false;f.src='/app.html';
 }
 /* ---------- claro / escuro ---------- */
@@ -195,12 +229,12 @@ const mqEsc=matchMedia('(prefers-color-scheme: dark)');
 function escuro(){const v=ls.get(K_TEMA);return v?v==='escuro':mqEsc.matches}
 function aplicarTema(){
   const e=escuro();document.documentElement.classList.toggle('escuro',e);
-  const mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.content=e?'#0F0F14':'#F6F6F9';
-  $('bTema').textContent=e?'☀️ Usar modo claro':'🌙 Usar modo escuro';
+  const mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.content=e?'#111113':'#F4F2EC';
+  $('bTema').textContent=e?'Usar modo claro':'Usar modo escuro';
   try{const d=$('app').contentDocument;if(d&&d.documentElement&&d.head){
-    if(d.body&&d.body.dataset.proprio&&!d.getElementById('criateEscuro')){const l=d.createElement('link');l.id='criateEscuro';l.rel='stylesheet';l.href='/escuro.css';d.head.appendChild(l)}
+    if(d.body&&d.body.dataset.proprio==='1'&&!d.getElementById('criateEscuro')){const l=d.createElement('link');l.id='criateEscuro';l.rel='stylesheet';l.href='/escuro.css';d.head.appendChild(l)}
     d.documentElement.classList.toggle('escuro',e);
-    const m=d.querySelector('meta[name="theme-color"]');if(m)m.content=e?'#0F0F14':'#ffffff'}}catch(x){}
+    const m=d.querySelector('meta[name="theme-color"]');if(m)m.content=e?'#111113':(d.body&&d.body.dataset.proprio==='app'?'#F4F2EC':'#ffffff')}}catch(x){}
 }
 if(mqEsc.addEventListener)mqEsc.addEventListener('change',aplicarTema);
 $('bTema').onclick=()=>{ls.set(K_TEMA,escuro()?'claro':'escuro');aplicarTema()};
@@ -242,7 +276,8 @@ $('bFechar').onclick=()=>{$('conta').hidden=true};
 function mostrar(t,tipo){const m=$('msg');m.textContent=t;m.className='msg '+tipo;m.hidden=false}
 function setModo(x){modo=x;$('tEntrar').classList.toggle('on',x==='entrar');$('tCriar').classList.toggle('on',x==='criar');
   $('conf').hidden=$('dUser').hidden=$('dSenha').hidden=x!=='criar';$('btn').textContent=x==='criar'?'CRIAR CONTA':'ENTRAR';
-  $('senha').autocomplete=x==='criar'?'new-password':'current-password';$('msg').hidden=true}
+  $('senha').autocomplete=x==='criar'?'new-password':'current-password';$('msg').hidden=true;
+  const t=document.querySelector('#login .titulo'),sb=document.querySelector('#login .sub');if(t){t.textContent=x==='criar'?'Crie sua conta.':'Bem-vindo de volta.';sb.textContent=x==='criar'?'Leva 10 segundos. Seu progresso fica salvo na nuvem.':'Entre pra continuar de onde parou.'}}
 $('tEntrar').onclick=()=>setModo('entrar');$('tCriar').onclick=()=>setModo('criar');
 $('form').addEventListener('submit',async ev=>{
   ev.preventDefault();
